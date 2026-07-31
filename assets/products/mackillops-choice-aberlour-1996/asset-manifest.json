@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "brand": "威熏邑境",
+  "product_id": "mackillops-choice-aberlour-1996",
+  "product_name": "马克瑞普之选亚伯乐1996年单桶",
+  "asset_type": "AIGC高清产品参考图",
+  "asset_count": 17,
+  "license": "All rights reserved",
+  "apache_2_0_covered": false,
+  "consumer_evidence": false,
+  "reference_rule": "每次按页面或镜头职责选择2至3张，不要一次输入全部17张；酒瓶正面与酒标图为当前最高优先级身份参考。",
+  "fact_rule": "这些图片用于产品身份、角度、材质和构图控制，不替代真实酒标、实物照片、报关或溯源文件。",
+  "assets": [
+    {
+      "id": "bottle-back",
+      "file": "酒瓶-背面.png",
+      "category": "酒瓶",
+      "view": "背面",
+      "primary_uses": ["背面瓶型", "玻璃折射", "酒液光线"],
+      "sha256": "B105FAC8125A17031121CEB4DA62D26633BF0CEE4AE1BD432A0F85EAB7594D0B"
+    },
+    {
+      "id": "bottle-label",
+      "file": "酒瓶-酒标.png",
+      "category": "酒瓶",
+      "view": "正面酒标近景",
+      "primary_uses": ["酒标位置", "字段核对", "身份锁定"],
+      "sha256": "7539AD71D76835D07F2406A284E66E248F03DE1A67B389F51C324E2E3234C7B7"
+    },
+    {
+      "id": "bottle-right-45",
+      "file": "酒瓶-右侧45°.png",
+      "category": "酒瓶",
+      "view": "右侧45度",
+      "primary_uses": ["立体构图", "图生视频首帧", "套图角度变化"],
+      "sha256": "EB2AB39813567434ED1B7E61C1AAA6AE3C753F0A427A2E662BD7DB86A369D197"
+    },
+    {
+      "id": "bottle-front",
+      "file": "酒瓶-正面.png",
+      "category": "酒瓶",
+      "view": "正面",
+      "primary_uses": ["标准瓶型", "封面主视觉", "产品身份锁定"],
+      "sha256": "8BEEBB208F197F0A7A5E43059CC4312A223B1C7CA8E8E6B71CF8427E036DD76F"
+    },
+    {
+      "id": "bottle-left-45",
+      "file": "酒瓶-左侧45°.png",
+      "category": "酒瓶",
+      "view": "左侧45度",
+      "primary_uses": ["立体构图", "轮播角度变化", "视频转场"],
+      "sha256": "C0B87B9AA91B45A9B012E88428401026EB01134681E7C455B95B0C75F2725299"
+    },
+    {
+      "id": "wood-box-back",
+      "file": "木质礼盒-背面.png",
+      "category": "木质礼盒",
+      "view": "背面",
+      "primary_uses": ["包装品鉴词版式", "木纹", "知识页背景参考"],
+      "sha256": "427163C22475DAC551280B90C3BFE81E2F182A6145CFAB3EAED2E2F0CB36AA89"
+    },
+    {
+      "id": "wood-box-open-with-bottle",
+      "file": "木质礼盒-内置酒瓶.png",
+      "category": "木质礼盒",
+      "view": "开盒正面",
+      "primary_uses": ["开盒画面", "礼赠", "内页故事"],
+      "sha256": "D316180801C1F455E3ABAC5ADD4293F611566C978AAE0A682AD9D7BD29C3FEED"
+    },
+    {
+      "id": "wood-box-right-45",
+      "file": "木质礼盒-右侧45°.png",
+      "category": "木质礼盒",
+      "view": "右侧45度",
+      "primary_uses": ["礼盒立体感", "木纹", "金色字"],
+      "sha256": "91C32F75E2AFF022857FAE823103B555F4ADCE3DCCDC504A2B5EC5630330E394"
+    },
+    {
+      "id": "wood-box-front",
+      "file": "木质礼盒-正面.png",
+      "category": "木质礼盒",
+      "view": "正面",
+      "primary_uses": ["礼赠主视觉", "包装正面", "产品档案页"],
+      "sha256": "830451A475BFBF60C16E0C3D3DF6E9E0066F5BAC78FF3C428F9601593A20B12A"
+    },
+    {
+      "id": "wood-box-left-45",
+      "file": "木质礼盒-左侧45°.png",
+      "category": "木质礼盒",
+      "view": "左侧45度",
+      "primary_uses": ["礼盒立体感", "合页结构", "套图角度变化"],
+      "sha256": "DE820BD9A8F0269CB9C498A6FA204EC0C4DAE064C2264AEF6437D9A4E6845099"
+    },
+    {
+      "id": "outer-carton-right-45",
+      "file": "外包装-右侧45°.png",
+      "category": "白色外包装",
+      "view": "右侧45度",
+      "primary_uses": ["外箱立体展示", "开箱前画面", "包装层级"],
+      "sha256": "AE3D6F63377475E1A0DEDBD1F66C91E80C74959C4539B8CBE74085A651E15E96"
+    },
+    {
+      "id": "outer-carton-right-45-top",
+      "file": "外包装-右侧45°俯视.png",
+      "category": "白色外包装",
+      "view": "右侧45度俯视",
+      "primary_uses": ["俯视开箱", "顶部结构", "视频转场"],
+      "sha256": "A6BCF0435E7E0015F6FCE84FC8C2DF6562D196354F8480CCC8961EFE87DBE6BB"
+    },
+    {
+      "id": "outer-carton-right-side",
+      "file": "外包装-右侧面.png",
+      "category": "白色外包装",
+      "view": "右侧面",
+      "primary_uses": ["侧面版式", "包装比例", "信息页辅助"],
+      "sha256": "189B07ED57ECF59A795C24218CB823E45F2E1FA25A064A15254B7694A1735E38"
+    },
+    {
+      "id": "outer-carton-front-back",
+      "file": "外包装-正面背面.png",
+      "category": "白色外包装",
+      "view": "正面或背面版式参考",
+      "primary_uses": ["包装正面比例", "品牌版式", "外箱主视觉"],
+      "sha256": "378164C6CE1BCB81FE3AE211A5BA225C9C42F796DADD60D384BFAB22275A5F97"
+    },
+    {
+      "id": "outer-carton-left-45",
+      "file": "外包装-左侧45°.png",
+      "category": "白色外包装",
+      "view": "左侧45度",
+      "primary_uses": ["外箱立体展示", "物流贴纸位置参考", "角度变化"],
+      "sha256": "6129E0C3AFDDF366889E6731D4999F0311C0C1FD36DC30032E73C7AD1E0B091A"
+    },
+    {
+      "id": "outer-carton-left-45-top",
+      "file": "外包装-左侧45°俯视.png",
+      "category": "白色外包装",
+      "view": "左侧45度俯视",
+      "primary_uses": ["俯视开箱", "顶部结构", "视频转场"],
+      "sha256": "37CAD3462645248A28AF1979DD1E1AC2324B624002BBA2A316A361C439CB9FBA"
+    },
+    {
+      "id": "outer-carton-left-side",
+      "file": "外包装-左侧面.png",
+      "category": "白色外包装",
+      "view": "左侧面",
+      "primary_uses": ["物流贴纸位置", "包装侧面", "信息页辅助"],
+      "sha256": "83C5A59D234E9742503E69964AFE665024513465D3A013E08F7F9414B650C540"
+    }
+  ]
+}

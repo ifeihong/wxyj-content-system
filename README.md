@@ -1,20 +1,64 @@
 # 威熏邑境自媒体内容生成系统
 
-**威熏邑境自媒体内容生成系统（WXYJ Content System）是一套面向小红书、抖音和视频号的产品型威士忌内容运营 Codex Skill。** 它把产品事实、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
+**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务“马克瑞普之选亚伯乐1996年单桶”在小红书、抖音和视频号上的持续内容创作。** 它把该产品的事实、包装文案、品牌故事、17张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
 
-当前版本：`2.1.1`<br>
+当前版本：`2.2.0`<br>
 Skill ID：`wxyj-content-system`<br>
 GitHub Repository ID：`wxyj-content-system`
 
-项目名称、版本、平台与 GitHub Topics 同时保存在
-[`metadata/project.json`](metadata/project.json)，供脚本和代理读取。
+## 专属定位
+
+- 品牌：威熏邑境。
+- 业务范围：威士忌品牌在中国市场的销售、运营与宣传。
+- 当前核心产品：马克瑞普之选亚伯乐1996年单桶。
+- 当前核心平台：小红书、抖音、视频号。
+- 当前目标：先建立账号影响力、专业认知与粉丝规模，再承接私信、企微、店铺和线下品鉴。
+- 内容原则：所有威士忌知识、节日表达和热点切入都必须回到当前产品，不经营脱离产品的泛知识账号。
 
 ## 适合谁
 
-- 运营中高端威士忌品牌、酒类产品或进口酒业务的团队；
-- 需要持续生成小红书图文、抖音脚本和视频号内容的创作者；
-- 主要使用 AIGC 视觉，但必须保持真实产品、酒标和溯源边界的运营者；
-- 希望把标题、正文、标签、首评、提示词和媒体文件规范归档的内容团队。
+- 威熏邑境自营内容、品牌、销售与品鉴活动团队；
+- 负责马克瑞普之选亚伯乐1996年单桶中国市场传播的运营人员；
+- 需要持续生成小红书图文、抖音脚本和视频号内容的 AIGC 创作者；
+- 需要统一产品事实、参考图、标题、正文、标签、首评、提示词和媒体归档的协作人员。
+
+## 当前核心产品知识
+
+| 字段 | 已确认信息 |
+| --- | --- |
+| 产品 | 马克瑞普之选亚伯乐1996年单桶 |
+| 产区 | 苏格兰斯佩塞 |
+| 入桶 / 装瓶 | 1996年2月14日 / 2026年2月14日 |
+| 酒龄 | 30年 |
+| 桶型 / 桶号 | PX Sherry Hogshead / 261311 |
+| 酒精度 / 容量 | 51% ABV / 70cl（700ml） |
+| 总装瓶数 | 184瓶 |
+| 当前标准样瓶号 | 180 of 184 |
+| 标示价格 | 7888元 |
+| 经营身份 | 运营方自行进口并单桶装瓶，具备合法销售与宣传授权 |
+| 核心传播词 | 亚伯乐30年、30年、2月14日、情人节 |
+
+完整知识体系已经内置：
+
+- [产品事实、推导、团队品鉴与发布前核对](references/product-facts.md)
+- [木盒品鉴词、礼盒内页故事与传播边界](references/product-packaging-copy.md)
+- [品牌定位、受众、栏目与内容比例](references/brand-positioning.md)
+- [产品参考图选择和生成约束](references/visual-asset-library.md)
+
+## 内置17张产品参考图
+
+仓库内置酒瓶5张、木质礼盒5张、白色外包装7张，共17张 AIGC 高清产品参考图。原始 PNG、中文角度文件名和 SHA-256 均被保留，可直接用于小红书逐页生图以及抖音、视频号逐镜生产。
+
+<p>
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-正面.png" alt="马克瑞普之选亚伯乐1996年单桶酒瓶正面参考图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-酒标.png" alt="马克瑞普之选亚伯乐1996年单桶酒标参考图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-内置酒瓶.png" alt="马克瑞普之选亚伯乐1996年单桶木质礼盒内置酒瓶参考图" width="220">
+</p>
+
+- [查看17张参考图](assets/products/mackillops-choice-aberlour-1996/reference-images/)
+- [查看资产清单、用途与文件哈希](assets/products/mackillops-choice-aberlour-1996/asset-manifest.json)
+
+这些图片属于威熏邑境受限品牌资产，不适用 Apache-2.0。它们是 AIGC 高清参考图，不是消费者事实证据；发布事实仍应以真实酒标、实物照片、报关和溯源文件为准。
 
 ## 系统能生成什么
 
@@ -55,6 +99,11 @@ wxyj-content-system/
 ├── SKILL.md
 ├── agents/
 ├── assets/
+│   ├── products/
+│   │   └── mackillops-choice-aberlour-1996/
+│   │       ├── asset-manifest.json
+│   │       └── reference-images/  # 17张产品参考图
+│   └── templates/
 ├── references/
 ├── scripts/
 ├── examples/
@@ -87,7 +136,8 @@ C:\Users\<用户名>\.codex\skills\wxyj-content-system
 ### 2. 调用
 
 ```text
-使用 $wxyj-content-system，为8月1日生成一套小红书图文，
+使用 $wxyj-content-system，为马克瑞普之选亚伯乐1996年单桶
+生成一套8月1日小红书图文，
 同时生成标题A/B、发布正文、Tag、首评、逐页提示词和QA。
 ```
 
@@ -119,11 +169,13 @@ outputs/2026/08/2026-08-01-label-reading/
 ### 4. 验证
 
 ```powershell
+python scripts\validate_product_assets.py
+
 python scripts\validate_content_run.py `
   outputs\2026\08\2026-08-01-label-reading
 ```
 
-校验器会检查目录、文件名、标题、正文、Tag、首评、CTA、AIGC披露和高风险表达。
+产品资产校验器会检查17张参考图的数量、登记状态与 SHA-256；内容运行校验器会检查目录、文件名、标题、正文、Tag、首评、CTA、AIGC披露和高风险表达。
 
 ## 小红书发布包标准
 
@@ -176,7 +228,7 @@ python scripts\validate_content_run.py `
 
 ### 能否用于其他威士忌产品？
 
-可以。先使用产品卡接入事实、证据、素材与传播边界，再纳入同一内容系统。
+当前 Skill 默认且主要服务马克瑞普之选亚伯乐1996年单桶。未来产品只有在威熏邑境明确提供并核验产品卡、素材和传播边界后才接入，不会自动把通用威士忌内容替代当前产品。
 
 ## 文档与维护
 

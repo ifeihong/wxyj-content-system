@@ -4,8 +4,8 @@
 
 - Codex 或兼容 Agent Skills 的运行环境；
 - Python 3.10 或更高版本；
-- 已确认的产品事实与可用素材；
-- 需要生成视觉时，提供真实产品参考图或经过核验的高保真参考图。
+- Skill 已内置马克瑞普之选亚伯乐1996年单桶的产品知识与17张 AIGC 高清参考图；
+- 发布前仍需使用真实酒标、实物照片及运营方文件核对消费者事实。
 
 ## 安装
 
@@ -16,6 +16,7 @@
 
 ```text
 <Codex Skills>/wxyj-content-system/SKILL.md
+<Codex Skills>/wxyj-content-system/assets/products/mackillops-choice-aberlour-1996/reference-images/
 ```
 
 ## 第一次调用
@@ -65,11 +66,13 @@ python scripts\create_content_run.py `
 ## 验证
 
 ```powershell
+python scripts\validate_product_assets.py
+
 python scripts\validate_content_run.py `
   outputs\2026\08\2026-08-01-label-reading
 ```
 
-验证通过后，仍需人工查看最终图片、视频、酒标细节、平台预览和实时商品信息。
+第一条命令验证17张内置参考图及其 SHA-256，第二条命令验证内容运行包。验证通过后，仍需人工查看最终图片、视频、酒标细节、平台预览和实时商品信息。
 
 ## 推荐工作频率
 

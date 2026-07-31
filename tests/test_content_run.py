@@ -46,6 +46,18 @@ class ContentRunContractTests(unittest.TestCase):
         cls.pack_validator = load_module(
             "validate_content_pack", "validate_content_pack.py"
         )
+        cls.asset_validator = load_module(
+            "validate_product_assets", "validate_product_assets.py"
+        )
+
+    def test_bundled_product_assets_validate(self):
+        product_root = (
+            PROJECT_ROOT
+            / "assets"
+            / "products"
+            / "mackillops-choice-aberlour-1996"
+        )
+        self.assertEqual(self.asset_validator.validate_assets(product_root), [])
 
     def test_create_run_builds_platform_native_structure(self):
         with workspace_tempdir() as tmp:

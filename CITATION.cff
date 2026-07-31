@@ -1,8 +1,9 @@
 cff-version: 1.2.0
 message: "If this content operations skill supports your work, cite it using this metadata."
 title: "威熏邑境自媒体内容生成系统"
-version: 2.1.1
-date-released: 2026-07-30
+version: 2.2.0
+date-released: 2026-07-31
+abstract: "Code and documentation are Apache-2.0; restricted 威熏邑境 product reference images are All rights reserved."
 authors:
   - name: "威熏邑境内容团队"
 license: Apache-2.0

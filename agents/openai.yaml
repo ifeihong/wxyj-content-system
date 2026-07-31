@@ -1,4 +1,4 @@
 interface:
   display_name: "威熏邑境自媒体内容生成系统"
-  short_description: "生成并管理威士忌三平台内容、AIGC资产与发布文案"
-  default_prompt: "Use $wxyj-content-system to create a product-led content run for 小红书, 抖音, or 视频号."
+  short_description: "为威熏邑境亚伯乐1996单桶生成三平台内容"
+  default_prompt: "Use $wxyj-content-system to create a 威熏邑境 content run for 马克瑞普之选亚伯乐1996年单桶 on 小红书, 抖音, or 视频号."

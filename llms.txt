@@ -3,12 +3,13 @@
 Canonical name: 威熏邑境自媒体内容生成系统
 English name: WXYJ Content System
 Skill ID: wxyj-content-system
-Version: 2.1.1
+Version: 2.2.0
 
 Purpose:
-A Codex Skill for product-led whisky content operations across Xiaohongshu,
-Douyin, and WeChat Channels. It creates titles, captions, tags, comments,
-AIGC prompts, storyboards, QA reports, and standardized content-run folders.
+A brand-specific Codex Skill for 威熏邑境, currently centered on
+马克瑞普之选亚伯乐1996年单桶 across Xiaohongshu, Douyin, and WeChat
+Channels. It bundles product knowledge, 17 AIGC product references, titles,
+captions, tags, comments, prompts, storyboards, QA, and content-run folders.
 
 Primary documentation:
 - README.md
@@ -18,6 +19,7 @@ Primary documentation:
 - docs/naming-convention.md
 - docs/compliance.md
 - SKILL.md
+- assets/products/mackillops-choice-aberlour-1996/asset-manifest.json
 
 Important boundaries:
 - Real product facts must be checked against labels and files.

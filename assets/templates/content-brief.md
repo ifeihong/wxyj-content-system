@@ -20,7 +20,8 @@
 
 ## 素材根目录
 
-- `asset_root`：
+- `asset_root`：`assets/products/mackillops-choice-aberlour-1996/reference-images/`
+- `asset_manifest`：`assets/products/mackillops-choice-aberlour-1996/asset-manifest.json`
 - 已验证存在：是 / 否
 
 ## AIGC 素材

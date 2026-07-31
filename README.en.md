@@ -1,8 +1,8 @@
 # WXYJ Content System
 
-**WXYJ Content System is a Codex Skill for product-led whisky content operations across Xiaohongshu, Douyin, and WeChat Channels.** It produces platform-native titles, captions, tags, comments, AIGC prompts, storyboards, QA reports, and traceable content-run directories.
+**WXYJ Content System is a brand-specific Codex Skill for 威熏邑境, currently centered on 马克瑞普之选亚伯乐1996年单桶 across Xiaohongshu, Douyin, and WeChat Channels.** It bundles verified product knowledge, packaging copy, brand-story boundaries, 17 high-resolution AIGC product references, platform-native copy, prompts, storyboards, QA, and traceable content-run directories.
 
-Version: `2.1.1`<br>
+Version: `2.2.0`<br>
 Skill ID: `wxyj-content-system`<br>
 GitHub Repository ID: `wxyj-content-system`
 
@@ -14,6 +14,16 @@ GitHub Repository ID: `wxyj-content-system`
 - product-fact and compliance checks for whisky marketing;
 - non-destructive content folders and deterministic media naming;
 - AIGC disclosure, reference-image roles, negative prompts, and local redraw rules.
+
+## Current product
+
+The default product is 马克瑞普之选亚伯乐1996年单桶: Speyside, distilled
+on 14 February 1996, bottled on 14 February 2026, 30 years old,
+PX Sherry Hogshead, cask 261311, 51% ABV, 70cl, and 184 bottles in total.
+
+The bundled asset library contains 17 original PNG references under
+[`assets/products/mackillops-choice-aberlour-1996/reference-images/`](assets/products/mackillops-choice-aberlour-1996/reference-images/).
+These AIGC references are restricted brand assets and are not covered by Apache-2.0.
 
 ## Quick start
 
@@ -39,6 +49,8 @@ python scripts\create_content_run.py `
 Validate it:
 
 ```powershell
+python scripts\validate_product_assets.py
+
 python scripts\validate_content_run.py `
   outputs\2026\08\2026-08-01-label-reading
 ```

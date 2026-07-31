@@ -16,6 +16,7 @@
 ```powershell
 python -m unittest discover -s tests -v
 python C:\Users\<用户名>\.codex\skills\.system\skill-creator\scripts\quick_validate.py .
+python scripts\validate_product_assets.py
 ```
 
 ## 版本

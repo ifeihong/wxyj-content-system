@@ -8,3 +8,4 @@
 *.csv text eol=lf
 *.cff text eol=lf
 *.txt text eol=lf
+*.png binary

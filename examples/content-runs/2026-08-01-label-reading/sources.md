@@ -12,7 +12,8 @@
 
 ## AIGC参考
 
-- `asset_root`：由使用者在本机配置并验证存在；
+- `asset_root`：`assets/products/mackillops-choice-aberlour-1996/reference-images/`；
+- `asset_manifest`：`assets/products/mackillops-choice-aberlour-1996/asset-manifest.json`；
 - `酒瓶-正面.png`
 - `酒瓶-酒标.png`
 - `酒瓶-右侧45°.png`

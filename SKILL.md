@@ -1,9 +1,18 @@
 ---
 name: wxyj-content-system
-description: Use when creating, repurposing, reviewing, scheduling, storing, or analyzing product-led social content for 威熏邑境, 马克瑞普之选亚伯乐1996年单桶, or future whisky products across 小红书, 抖音, 视频号, private messages, WeCom, platform stores, and tasting events.
+description: Use when creating, repurposing, reviewing, scheduling, storing, or analyzing 威熏邑境 brand content for 马克瑞普之选亚伯乐1996年单桶 across 小红书, 抖音, 视频号, private messages, WeCom, platform stores, and tasting events.
 ---
 
 # 威熏邑境自媒体内容生成系统
+
+## 专属范围
+
+这是威熏邑境品牌专属 Skill，不是通用威士忌内容模板。它服务威熏邑境在中国市场的威士忌销售、运营与宣传；当前默认且主要服务的产品是“马克瑞普之选亚伯乐1996年单桶”，目标是在小红书、抖音和视频号持续生产以该产品为核心的增长型内容。
+
+- 用户没有指定产品时，默认使用“马克瑞普之选亚伯乐1996年单桶”。
+- 每次产品内容创作都读取 `references/product-facts.md`；涉及包装品鉴词、品牌故事或人物信息时，同时读取 `references/product-packaging-copy.md`。
+- 每次图片或视频生产都先读取 `references/visual-asset-library.md` 和 `assets/products/mackillops-choice-aberlour-1996/asset-manifest.json`，从内置17张参考图中按职责选图。
+- 新产品只有在用户明确提供并核验产品卡后才能接入；不得因此稀释当前核心产品定位。
 
 ## 核心原则
 
@@ -20,7 +29,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 | 当前热点、节日、节气 | `references/trend-and-calendar-system.md` | 实时检索、适配评分、采用理由 |
 | 三平台创作 | `references/platform-playbooks.md` | 平台原生发布包 |
 | 小红书套图 | `references/xiaohongshu-carousel-system.md`、`references/text-in-image-system.md`、`references/visual-asset-library.md` | 动态页数、逐页提示词、成图文字、QA |
-| 图片/视频 AIGC | `references/visual-asset-library.md`、`references/text-in-image-system.md` | 参考图编排、提示词、产品锁定、负面词 |
+| 图片/视频 AIGC | `references/visual-asset-library.md`、`references/text-in-image-system.md`、`assets/products/mackillops-choice-aberlour-1996/asset-manifest.json` | 内置参考图编排、提示词、产品锁定、负面词 |
 | 内容目录与命名 | `references/content-run-system.md` | 运行目录、文件名、保存与校验 |
 | 评论、私信、企微、店铺、品鉴会 | `references/conversion-playbook.md` | 分阶段转化话术 |
 | 发布审核与复盘 | `references/review-rubric.md` | 评分、退回项、复盘结论 |
@@ -31,8 +40,8 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 ## 标准工作流
 
 1. **识别任务**：确定是定位、选题、创作、排期、审核、互动、复盘或新品接入。
-2. **锁定事实**：从 `references/product-facts.md` 取值；缺失字段标为“待核验”，不推断。
-3. **盘点素材**：标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
+2. **锁定事实**：默认产品从 `references/product-facts.md` 取值；缺失字段标为“待核验”，不推断。
+3. **验证并盘点素材**：先执行 `python scripts/validate_product_assets.py`；通过后从内置17张产品参考图选择当前页面或镜头需要的2–3张，再标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
 4. **建立母题**：只回答一个具体用户问题，直接关联当前产品。
 5. **判断时效**：涉及当前热点、热梗、节日或假期时实时检索；不相关则采用常青主题。
 6. **创建运行包**：需要交付可发布内容时，先执行：
@@ -102,6 +111,8 @@ python scripts/validate_content_run.py <运行目录>
 
 锁定瓶型、瓶盖、瓶肩、酒标位置和事实字段；软化最外缘像素。白底参考进入深色场景时，重新生成玻璃折射、环境色和接触阴影，禁止白边、灰边、抠图光晕和均匀描边。
 
+内置17张图片均为 AIGC 高清产品参考图，只负责身份、角度、结构、材质与构图一致性。它们不是真实拍摄，也不能替代酒标实拍、报关、溯源或授权文件。酒瓶正面与酒标近景是当前最高优先级身份参考；其他图中可见的细小瓶号、铭牌或物流文字不得直接作为发布事实。
+
 ## 产品与内容比例
 
 - 70% 产品原生：年份、日期、桶号、总装瓶数、酒精度、酒标、风味与购买判断；
@@ -149,6 +160,9 @@ python scripts/validate_content_run.py <运行目录>
 
 - 运行与命名规范：`references/content-run-system.md`
 - 产品事实：`references/product-facts.md`
+- 包装品鉴与故事：`references/product-packaging-copy.md`
+- 内置产品资产清单：`assets/products/mackillops-choice-aberlour-1996/asset-manifest.json`
+- 内置产品参考图：`assets/products/mackillops-choice-aberlour-1996/reference-images/`
 - 平台手册：`references/platform-playbooks.md`
 - 产品卡：`assets/templates/product-card.md`
 - 选题卡：`assets/templates/topic-card.md`
