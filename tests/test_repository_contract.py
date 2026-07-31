@@ -143,7 +143,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "2.2.2")
+        self.assertEqual(identity["version"], "2.3.0")
 
         version = (PROJECT_ROOT / "VERSION").read_text(encoding="utf-8").strip()
         self.assertEqual(identity["version"], version)
