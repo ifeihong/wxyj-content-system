@@ -3,6 +3,8 @@ version: 2.2.2
 date: 2026-08-01
 topic_slug: label-reading
 product: "马克瑞普之选亚伯乐1996年单桶"
-status: approved
+status: qa
 platforms:
   - xiaohongshu
+  - douyin
+  - weixin-channels

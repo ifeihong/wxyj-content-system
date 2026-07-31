@@ -1,0 +1,17 @@
+shot_id: S02
+slug: right-angle-bottle-reveal
+title: "右45度酒瓶揭晓"
+input_mode: first-frame
+aspect_ratio: 9:16
+duration_seconds: 6
+duration_tolerance_seconds: 0.75
+draft_resolution: 720p
+final_resolution: 1080p
+candidate_target: 1
+max_attempts: 2
+output_name: 20260801-wxyj-label-reading-s02-right-angle-bottle-reveal-seedance-v01.mp4
+references:
+  - order: 1
+    file: references/S02-first-frame-9x16.png
+    role: first_frame
+    required: true

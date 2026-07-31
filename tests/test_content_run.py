@@ -396,6 +396,19 @@ class ContentRunContractTests(unittest.TestCase):
 
         self.assertEqual(errors, [])
 
+    def test_public_example_contains_external_seedance_handoff(self):
+        example = (
+            PROJECT_ROOT
+            / "examples"
+            / "content-runs"
+            / "2026-08-01-label-reading"
+        )
+        handoff = example / "video-master" / "external-generation"
+
+        self.assertTrue((handoff / "00-开始前必读.md").exists())
+        self.assertTrue((handoff / "00-镜头状态表.csv").exists())
+        self.assertGreaterEqual(len(list(handoff.glob("S??-*"))), 2)
+
     def test_legacy_pack_validator_supports_help(self):
         output = io.StringIO()
         with redirect_stdout(output):

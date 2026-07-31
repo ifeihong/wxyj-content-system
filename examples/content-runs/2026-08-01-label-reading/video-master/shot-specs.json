@@ -1,0 +1,48 @@
+{
+  "shots": [
+    {
+      "shot_id": "S01",
+      "slug": "date-label-reveal",
+      "title": "日期酒标揭晓",
+      "input_mode": "first-frame",
+      "aspect_ratio": "9:16",
+      "duration_seconds": 5,
+      "draft_resolution": "720p",
+      "final_resolution": "1080p",
+      "candidate_target": 1,
+      "max_attempts": 2,
+      "references": [
+        {
+          "order": 1,
+          "file": "S01-first-frame-9x16.png",
+          "role": "first_frame",
+          "required": true
+        }
+      ],
+      "prompt_positive": "以提供的原生9:16首帧为严格起点。镜头在5秒内做极轻微、平稳的微距推近，暖金色掠光从左向右缓慢扫过酒标和琥珀色酒液，深酒红黑色背景保持安静，只允许玻璃高光、景深和环境微粒轻微变化。瓶身、瓶底、酒标四角、酒液高度和所有酒标文字保持完全稳定；结束时停在1996与14 February日期区域附近，整体克制、高奢、真实产品摄影质感。",
+      "prompt_negative": "禁止改变瓶型、瓶肩、玻璃底、标签位置、酒液高度和品牌标志；禁止重绘、改写、抖动或复制酒标文字；禁止白边、灰边、抠图光晕、均匀描边、黑边、上下留黑、3:4补边；禁止大幅环绕、旋转、瓶身呼吸、液面跳变、额外瓶盖、额外酒瓶、伪文字、手、人物、水印和镜头突变。"
+    },
+    {
+      "shot_id": "S02",
+      "slug": "right-angle-bottle-reveal",
+      "title": "右45度酒瓶揭晓",
+      "input_mode": "first-frame",
+      "aspect_ratio": "9:16",
+      "duration_seconds": 6,
+      "draft_resolution": "720p",
+      "final_resolution": "1080p",
+      "candidate_target": 1,
+      "max_attempts": 2,
+      "references": [
+        {
+          "order": 1,
+          "file": "S02-first-frame-9x16.png",
+          "role": "first_frame",
+          "required": true
+        }
+      ],
+      "prompt_positive": "以提供的原生9:16首帧为严格起点。保持右45度瓶身透视、侧面可见宽度、不对称瓶肩和梯形酒标透视不变。6秒内只做2%以内的平稳向前推镜与极轻微左向视差，暖金轮廓光沿瓶肩和厚玻璃底缓慢移动，石台反射克制变化，左上留白保持干净。产品本体近乎静止，结尾完整露出酒瓶并停稳，呈现深酒红、黑色与暖金的高端苏格兰威士忌广告质感。",
+      "prompt_negative": "禁止变成正面机位，禁止瓶身变瘦、瓶颈变长、瓶肩改变、标签变平或漂移；禁止重新生成细小文字、改变日期、30 YEARS、261311、51.0% Vol.、70cl和180 of 184；禁止白边、灰边、抠图光晕、黑边、补边、3:4画幅；禁止360度旋转、快速摇镜、液面波动、额外酒瓶、手、道具、水印、过曝金边和塑料质感。"
+    }
+  ]
+}

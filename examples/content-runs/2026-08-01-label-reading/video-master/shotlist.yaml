@@ -1,0 +1,32 @@
+version: 1
+aspect_ratio: 9:16
+master_duration_seconds: 38
+shots:
+  - id: S01
+    time: 00:00-00:05
+    mode: external-seedance
+    role: date-label-reveal
+  - id: S02
+    time: 00:05-00:11
+    mode: external-seedance
+    role: bottle-reveal
+  - id: S03
+    time: 00:11-00:16
+    mode: editorial-motion
+    role: date-timeline
+  - id: S04
+    time: 00:16-00:22
+    mode: editorial-motion
+    role: cask-and-strength
+  - id: S05
+    time: 00:22-00:27
+    mode: controlled-still-motion
+    role: flavour-atmosphere
+  - id: S06
+    time: 00:27-00:33
+    mode: controlled-still-motion
+    role: open-box-story
+  - id: S07
+    time: 00:33-00:38
+    mode: editorial-motion
+    role: interaction-close

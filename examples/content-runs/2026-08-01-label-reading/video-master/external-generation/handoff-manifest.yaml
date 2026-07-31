@@ -1,0 +1,5 @@
+version: 1
+workflow: external-seedance
+platform_specific: false
+aspect_ratio: 9:16
+shot_count: 2
