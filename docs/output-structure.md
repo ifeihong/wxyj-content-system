@@ -23,17 +23,27 @@ outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
 │   ├── prompts.md
 │   ├── qa.md
 │   └── media/
+├── video-master/
+│   ├── treatment.md
+│   ├── shotlist.yaml
+│   ├── storyboard.md
+│   ├── edit-plan.md
+│   ├── qa.md
+│   ├── external-generation/
+│   ├── incoming/
+│   ├── accepted/
+│   └── media/
 ├── douyin/
 │   ├── publish.md
-│   ├── storyboard.md
 │   ├── qa.md
 │   └── media/
 └── weixin-channels/
     ├── publish.md
-    ├── storyboard.md
     ├── qa.md
     └── media/
 ```
+
+`video-master/external-generation/` 是平台无关的外部 Seedance 交接区；`video-master/incoming/` 永久保留回传原件；`accepted/` 只保存通过验收的副本。平台目录只保存发布文案、平台 QA 和必要导出，不复制共同分镜。
 
 ## Manifest 字段
 

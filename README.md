@@ -88,6 +88,30 @@ GitHub Repository ID：`wxyj-content-system`
 
 生成30–90秒完整叙事，强调年份、纪念日、礼赠或品鉴判断，并提供适合朋友圈转发的文案。
 
+### 外部 Seedance 协作
+
+抖音与视频号共用一个原生9:16视频母版。默认采用平台无关的外部 Seedance 工作流：系统为每个镜头选择并复制实际参考图，提供上传顺序、单字段/双字段提示词、通用参数和回传命名；你可在任意支持对应输入模式的平台生成。ChatCut 默认承担可编辑剪辑、字幕、声音与导出，只有当前任务明确授权时才使用其付费视频生成功能。
+
+```text
+video-master/
+├── external-generation/  # 逐镜任务卡、提示词、参考图
+├── incoming/             # 用户回传原件，永不覆盖
+├── accepted/             # 验收通过的副本
+├── storyboard.md
+└── edit-plan.md
+```
+
+```powershell
+python scripts\create_external_video_handoff.py `
+  --run-dir <内容运行目录> `
+  --spec <镜头规格.json> `
+  --source-root <参考图目录>
+
+python scripts\validate_external_video_return.py `
+  <video-master\incoming\镜头.mp4> `
+  --shot-dir <video-master\external-generation\SNN-shot-slug>
+```
+
 ### 威士忌 AIGC 内容
 
 使用真实酒瓶、酒标、桶号、包装和文件作为身份或事实参考；AIGC 负责氛围、解释与视觉表达，不冒充真实酒厂、历史现场或顾客反馈。

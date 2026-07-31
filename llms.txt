@@ -25,5 +25,12 @@ Important boundaries:
 - Real product facts must be checked against labels and files.
 - AIGC supports expression and must not impersonate real evidence.
 - Generated media is incomplete without matching publish copy and QA.
+- Video full frames, first frames, last frames, and covers are native 9:16.
+- Douyin and WeChat Channels share one video-master.
+- External Seedance handoff is platform-neutral and lives in video-master/external-generation.
+- Original returns stay in video-master/incoming; validated copies enter accepted.
+- Use scripts/create_external_video_handoff.py to package shots.
+- Use scripts/validate_external_video_return.py to validate returned video.
+- Paid ChatCut generation requires explicit authorization in the current task.
 
 This file is a concise agent-reading aid.

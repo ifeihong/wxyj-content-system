@@ -74,6 +74,20 @@ YYYYMMDD-wxv-topic-slug-sNN-role-vNN.ext
 - `summary`
 - `cta`
 
+## 外部 Seedance 回传
+
+```text
+YYYYMMDD-wxyj-topic-slug-sNN-role-seedance-vNN.mp4
+```
+
+允许候选后缀 `-candidate-a` 或 `-candidate-b`。回传文件先放入 `video-master/incoming/`；随机下载名、录屏名、错误日期、错误主题或错误镜头号不进入验收。
+
+外部任务目录使用：
+
+```text
+video-master/external-generation/SNN-shot-slug/
+```
+
 ## 版本
 
 - 首次生成：`v01`

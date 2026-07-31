@@ -48,7 +48,7 @@
 - CTA；
 - AIGC与事实披露。
 
-### `storyboard.md`
+### `video-master/storyboard.md`
 
 - 时间码；
 - 逐镜画面；
@@ -57,6 +57,16 @@
 - 音效与节奏；
 - 每镜真实/AIGC/待补标记；
 - 参考图与视频生成提示词。
+
+### 外部生成与回传
+
+- 所有全屏镜头、首帧、尾帧和封面均为原生9:16；
+- 抖音与视频号共用 `video-master/storyboard.md` 和成片母版；
+- `video-master/external-generation/` 保存平台无关逐镜任务包；
+- 每镜同时提供 `prompt-all-in-one.txt`、`prompt-positive.txt` 和 `prompt-negative.txt`；
+- 用户回传原件进入 `video-master/incoming/`，不覆盖、不移动；
+- 机器与人工 QA 通过的副本进入 `video-master/accepted/`；
+- ChatCut 付费生成只有在当前任务明确授权后才可使用。
 
 ## 视频号
 
@@ -71,7 +81,7 @@
 - CTA；
 - AIGC与事实披露。
 
-### `storyboard.md`
+### `video-master/storyboard.md`
 
 包含完整叙事、逐镜画面、旁白、字幕、素材属性、封面与生成提示词。
 

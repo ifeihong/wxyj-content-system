@@ -33,11 +33,19 @@
 2. 创建内容运行目录；
 3. 填写 `brief.md` 和 `sources.md`；
 4. 生成平台 `publish.md`；
-5. 生成小红书 `prompts.md` 或视频 `storyboard.md`；
+5. 生成小红书 `prompts.md`；视频使用共享 `video-master/storyboard.md`；
 6. 保存媒体并使用规范文件名；
 7. 完成 `qa.md`；
 8. 运行目录校验器；
 9. 发布后更新状态和数据台账。
+
+抖音或视频号任务还需要：
+
+1. 为需要生成的镜头准备原生9:16首帧或参考图；
+2. 创建平台无关的外部 Seedance 逐镜任务包；
+3. 用户按任务卡生成并将原件回传至 `video-master/incoming/`；
+4. 验证回传；通过的副本进入 `accepted/`；
+5. 用通过镜头完成可编辑剪辑，再分别输出两个平台发布包。
 
 ## 创建运行目录
 
@@ -70,6 +78,19 @@ python scripts\validate_product_assets.py
 
 python scripts\validate_content_run.py `
   outputs\2026\08\2026-08-01-label-reading
+```
+
+创建外部视频任务包并验证回传：
+
+```powershell
+python scripts\create_external_video_handoff.py `
+  --run-dir outputs\2026\08\2026-08-01-label-reading `
+  --spec shots.json `
+  --source-root assets\products\mackillops-choice-aberlour-1996\reference-images
+
+python scripts\validate_external_video_return.py `
+  outputs\2026\08\2026-08-01-label-reading\video-master\incoming\镜头.mp4 `
+  --shot-dir outputs\2026\08\2026-08-01-label-reading\video-master\external-generation\S01-date-reveal
 ```
 
 第一条命令验证17张内置参考图及其 SHA-256，第二条命令验证内容运行包。验证通过后，仍需人工查看最终图片、视频、酒标细节、平台预览和实时商品信息。

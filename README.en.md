@@ -55,6 +55,28 @@ python scripts\validate_content_run.py `
   outputs\2026\08\2026-08-01-label-reading
 ```
 
+## Platform-neutral external Seedance handoff
+
+Douyin and WeChat Channels share one native 9:16 `video-master`. External Seedance generation is platform-neutral: Codex prepares per-shot reference files, upload order, combined and split prompts, common settings, and return names; the user may generate on any compatible provider.
+
+```text
+video-master/
+├── external-generation/
+├── incoming/
+├── accepted/
+├── storyboard.md
+└── edit-plan.md
+```
+
+`video-master/incoming` preserves every original return. Only validated copies enter `accepted`. ChatCut remains an optional editable cutting, subtitle, motion-graphics, audio, and export surface. Paid ChatCut generation requires explicit current-task authorization.
+
+Per-shot task packages live under `video-master/external-generation`; original files are returned to `video-master/incoming`.
+
+```powershell
+python scripts\create_external_video_handoff.py --run-dir <run> --spec <shots.json> --source-root <references>
+python scripts\validate_external_video_return.py <video> --shot-dir <shot-directory>
+```
+
 ## Design principles
 
 - product facts before generic education;

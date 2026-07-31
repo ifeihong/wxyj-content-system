@@ -369,6 +369,40 @@ class RepositoryContractTests(unittest.TestCase):
         ):
             self.assertIn(contract, joined)
 
+    def test_public_docs_explain_external_video_handoff(self):
+        chinese_docs = "\n".join(
+            (PROJECT_ROOT / relative).read_text(encoding="utf-8")
+            for relative in (
+                "README.md",
+                "docs/content-contract.md",
+                "docs/output-structure.md",
+                "docs/naming-convention.md",
+                "docs/getting-started.md",
+                "llms.txt",
+            )
+        )
+        for contract in (
+            "video-master/external-generation",
+            "video-master/incoming",
+            "create_external_video_handoff.py",
+            "validate_external_video_return.py",
+            "平台无关",
+            "原生9:16",
+        ):
+            self.assertIn(contract, chinese_docs)
+        self.assertNotIn("ChatCut 是默认视频生成工具", chinese_docs)
+
+        english = (PROJECT_ROOT / "README.en.md").read_text(
+            encoding="utf-8"
+        )
+        for contract in (
+            "video-master/external-generation",
+            "video-master/incoming",
+            "platform-neutral",
+            "current-task authorization",
+        ):
+            self.assertIn(contract, english)
+
     def test_long_reference_files_have_a_table_of_contents(self):
         references = PROJECT_ROOT / "references"
         missing = []
