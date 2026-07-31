@@ -333,6 +333,42 @@ class RepositoryContractTests(unittest.TestCase):
         ):
             self.assertIn(contract, joined)
 
+    def test_external_seedance_is_default_and_platform_neutral(self):
+        skill = (PROJECT_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        handoff = (
+            PROJECT_ROOT / "references" / "external-seedance-handoff.md"
+        ).read_text(encoding="utf-8")
+        joined = skill + handoff
+        for contract in (
+            "外部 Seedance",
+            "平台无关",
+            "当次明确授权",
+            "prompt-all-in-one.txt",
+            "prompt-positive.txt",
+            "prompt-negative.txt",
+            "video-master/incoming",
+            "max_attempts",
+        ):
+            self.assertIn(contract, joined)
+        self.assertNotIn("必须提供第三方平台名称", joined)
+
+    def test_video_generation_requires_native_nine_sixteen(self):
+        joined = (
+            (PROJECT_ROOT / "SKILL.md").read_text(encoding="utf-8")
+            + (
+                PROJECT_ROOT
+                / "references"
+                / "video-production-system.md"
+            ).read_text(encoding="utf-8")
+        )
+        for contract in (
+            "1080×1920",
+            "原生9:16",
+            "3:4图片不能作为全屏主画面",
+            "禁止黑边",
+        ):
+            self.assertIn(contract, joined)
+
     def test_long_reference_files_have_a_table_of_contents(self):
         references = PROJECT_ROOT / "references"
         missing = []

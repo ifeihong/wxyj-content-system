@@ -29,6 +29,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 | 当前热点、节日、节气 | `references/trend-and-calendar-system.md` | 实时检索、适配评分、采用理由 |
 | 三平台创作 | `references/platform-playbooks.md` | 平台原生发布包 |
 | 小红书套图 | `references/xiaohongshu-carousel-system.md`、`references/text-in-image-system.md`、`references/visual-asset-library.md` | 动态页数、逐页提示词、成图文字、QA |
+| 抖音/视频号短视频 | `references/video-production-system.md`、`references/external-seedance-handoff.md`、`references/visual-asset-library.md` | 共享母版、逐镜任务包、回传验收、双平台发布包 |
 | 图片/视频 AIGC | `references/visual-asset-library.md`、`references/text-in-image-system.md`、`assets/products/mackillops-choice-aberlour-1996/asset-manifest.json` | 内置参考图编排、提示词、产品锁定、负面词 |
 | 内容目录与命名 | `references/content-run-system.md` | 运行目录、文件名、保存与校验 |
 | 评论、私信、企微、店铺、品鉴会 | `references/conversion-playbook.md` | 分阶段转化话术 |
@@ -50,11 +51,11 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 python scripts/create_content_run.py --root <输出根目录> --date YYYY-MM-DD --slug <topic-slug> --product "<正式产品名>" --platforms xiaohongshu douyin weixin-channels
 ```
 
-7. **生成平台版本**：按平台原生结构生成，不机械复制。
+7. **生成平台版本**：按平台原生结构生成，不机械复制。抖音或视频号视频采用一个共享 `video-master/`；默认路径为“生成共享video-master→选择制作模式→为external-seedance镜头创建逐镜任务包→等待用户回传→验收incoming→把accepted素材进入可编辑剪辑”。
 8. **锁定小红书事实、机位与几何**：先建立逐页 `primary_fact_id` 表，同一 `primary_fact_id` 只能出现一次；再填写机位分配表和参考图角色。完整正面酒瓶统一以 `酒瓶-正面.png` 为 `geometry_master`，不得让风格参考覆盖瓶型。
 9. **锁定首轮画幅**：每页首轮原生成文件必须是宽:高 = 3:4，并立即执行 `python scripts/validate_xhs_image.py <image.png>`；不通过就按原提示词重新生成，不允许通过裁切、拉伸或补边把错误比例伪装成合格成图。
 10. **保存发布文案**：把标题、正文/描述、标签、评论、CTA 和披露写入各平台 `publish.md`。
-11. **保存生产资产**：小红书写入 `prompts.md`，视频写入 `storyboard.md`，媒体写入 `media/`。每个媒体版本在 `qa.md` 标记为 `working`、`rejected` 或 `publish`。
+11. **保存生产资产**：小红书写入 `prompts.md`；视频分镜写入共享 `video-master/storyboard.md`，外部 Seedance 任务写入 `video-master/external-generation/`，用户原始回传写入 `video-master/incoming/`，通过验收的副本写入 `video-master/accepted/`。每个媒体版本在 `qa.md` 标记状态。
 12. **执行 QA**：把事实、文字、视觉、AIGC、合规、媒体状态与修改记录写入 `qa.md`；发布总览只能引用 `publish` 文件。
 13. **运行验证**：
 
@@ -114,6 +115,8 @@ python scripts/validate_content_run.py <运行目录>
 
 小红书成品规格固定写入：`3:4 portrait, width:height = 3:4, target 1086x1448 or 1536x2048, full bleed; do not output 2:3, 4:5 or square.` 每次图像生成调用结束后，先对首轮原生成文件执行 `python scripts/validate_xhs_image.py <image.png>`，比例不合格直接重生成；不允许通过裁切、拉伸、扩图或程序改尺寸作为首轮比例修复。
 
+视频全屏画面、运动首帧、尾帧和封面必须原生9:16，成片目标 `1080×1920`。3:4图片不能作为全屏主画面，禁止黑边、上下补边和拉伸。
+
 让多模态生图模型直接生成产品、场景与设计文字的最终图片。不下载字体文件，不用程序贴字，不把无字底图当成静态图文成品。
 
 锁定瓶型、瓶盖、瓶肩、酒标位置和事实字段；软化最外缘像素。白底参考进入深色场景时，重新生成玻璃折射、环境色和接触阴影，禁止白边、灰边、抠图光晕和均匀描边。
@@ -121,6 +124,12 @@ python scripts/validate_content_run.py <运行目录>
 所有参考图必须声明角色；冲突时固定采用 `geometry_master > structure_master > label_detail > style_anchor`。完整正面酒瓶只认 `酒瓶-正面.png` 的几何比例；连续3次仍无法保持瓶型时，减少完整酒瓶露出，不接受明显变形的产品。
 
 内置17张图片均为 AIGC 高清产品参考图，只负责身份、角度、结构、材质与构图一致性。它们不是真实拍摄，也不能替代酒标实拍、报关、溯源或授权文件。酒瓶正面与酒标近景是当前最高优先级身份参考；其他图中可见的细小瓶号、铭牌或物流文字不得直接作为发布事实。
+
+## 外部视频生成授权边界
+
+抖音与视频号默认采用平台无关的外部 Seedance 交接：Codex 提供当前镜头实际参考图、上传顺序、`prompt-all-in-one.txt`、`prompt-positive.txt`、`prompt-negative.txt`、通用参数和回传命名，用户在任意支持相应输入模式的平台生成。
+
+只有用户在当前任务中当次明确授权使用 ChatCut 生成积分，才允许调用 ChatCut 内置 Seedance、Kling 或其他付费视频生成。未授权时，ChatCut只用于素材管理、可编辑剪辑、字幕、动态图形、声音和导出；镜头失败也不得静默消耗积分补生成。
 
 ## 产品与内容比例
 

@@ -40,14 +40,22 @@ outputs/
             │   ├── prompts.md
             │   ├── qa.md
             │   └── media/
+            ├── video-master/
+            │   ├── treatment.md
+            │   ├── shotlist.yaml
+            │   ├── storyboard.md
+            │   ├── edit-plan.md
+            │   ├── qa.md
+            │   ├── external-generation/
+            │   ├── incoming/
+            │   ├── accepted/
+            │   └── media/
             ├── douyin/
             │   ├── publish.md
-            │   ├── storyboard.md
             │   ├── qa.md
             │   └── media/
             └── weixin-channels/
                 ├── publish.md
-                ├── storyboard.md
                 ├── qa.md
                 └── media/
 ```
@@ -63,7 +71,10 @@ outputs/
 | `sources.md` | 实物、文件、AIGC参考和待核验项 |
 | `publish.md` | 可直接复制到平台的标题、正文、标签、评论与 CTA |
 | `prompts.md` | 小红书逐页生成提示词与参考图 |
-| `storyboard.md` | 视频逐镜分镜、旁白、字幕和生成提示词 |
+| `video-master/storyboard.md` | 抖音与视频号共用的逐镜分镜、旁白、字幕和生成提示词 |
+| `video-master/external-generation/` | 外部 Seedance 平台无关逐镜任务包 |
+| `video-master/incoming/` | 用户回传原件，永久保留且不覆盖 |
+| `video-master/accepted/` | 通过机器与人工 QA 的镜头副本 |
 | `qa.md` | 事实、文字、视觉、合规、AIGC和修改记录 |
 | `media/` | 最终媒体和保留的历史版本；每个版本的状态由 `qa.md` 登记 |
 
@@ -125,6 +136,14 @@ YYYYMMDD-dy-topic-slug-sNN-role-vNN.mp4
 YYYYMMDD-wxv-topic-slug-sNN-role-vNN.mp4
 ```
 
+### 外部 Seedance 回传
+
+```text
+YYYYMMDD-wxyj-topic-slug-sNN-role-seedance-vNN.mp4
+```
+
+外部回传先进入共享 `video-master/incoming/`；验证通过后复制到 `accepted/`。平台发布文件名仅在最终导出时使用。
+
 `pNN` 表示页码，`sNN` 表示镜头号，`vNN` 表示资产版本。QA总览使用 `p00`。
 
 ## 发布文案字段
@@ -185,6 +204,14 @@ YYYYMMDD-wxv-topic-slug-sNN-role-vNN.mp4
 
 ```powershell
 python scripts/validate_content_run.py <运行目录>
+```
+
+外部回传另行验证：
+
+```powershell
+python scripts/validate_external_video_return.py `
+  <video-master/incoming/文件.mp4> `
+  --shot-dir <video-master/external-generation/SNN-shot-slug>
 ```
 
 退出码：

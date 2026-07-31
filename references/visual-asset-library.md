@@ -143,6 +143,9 @@ asset_manifest: assets/products/mackillops-choice-aberlour-1996/asset-manifest.j
 
 ## 图生视频约束
 
+- 全屏视频、运动首帧、尾帧和封面必须原生9:16；成片目标 `1080×1920`，禁止黑边、灰边和把3:4图片直接补边。
+- 原始白底产品参考图不直接承担首帧；先制作9:16运动首帧并重建外缘反射、环境色、玻璃折射和接触阴影。
+- 为每张视频参考图声明 `first_frame`、`last_frame`、`geometry_master`、`structure_master`、`label_detail`、`style_anchor` 或 `motion_reference`，冲突时产品几何优先。
 - 优先让镜头、灯光、背景粒子或环境运动，产品本体保持低运动。
 - 不从单一正面图强行生成 360° 旋转。
 - 需要角度变化时，用对应的左右 45°图制作首尾帧并先统一标签。
