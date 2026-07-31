@@ -212,6 +212,7 @@ class RepositoryContractTests(unittest.TestCase):
 
     def test_local_build_artifacts_are_ignored(self):
         gitignore = (PROJECT_ROOT / ".gitignore").read_text(encoding="utf-8")
+        self.assertRegex(gitignore, r"(?m)^\.worktrees/$")
         self.assertRegex(gitignore, r"(?m)^dist/$")
         self.assertRegex(gitignore, r"(?m)^outputs/\*\*$")
         self.assertRegex(

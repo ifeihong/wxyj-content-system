@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 .test-work/
 .write-probe/
+.worktrees/
 dist/
 
 outputs/**
