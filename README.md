@@ -2,7 +2,7 @@
 
 **威熏邑境自媒体内容生成系统（WXYJ Content System）是一套面向小红书、抖音和视频号的产品型威士忌内容运营 Codex Skill。** 它把产品事实、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
 
-当前版本：`2.1.0`<br>
+当前版本：`2.1.1`<br>
 Skill ID：`wxyj-content-system`<br>
 GitHub Repository ID：`wxyj-content-system`
 
@@ -52,36 +52,31 @@ GitHub Repository ID：`wxyj-content-system`
 
 ```text
 wxyj-content-system/
+├── SKILL.md
+├── agents/
+├── assets/
+├── references/
+├── scripts/
+├── examples/
+│   ├── content-runs/
+│   └── strategy/
+├── docs/
+├── tests/
 ├── README.md
 ├── README.en.md
 ├── CHANGELOG.md
 ├── VERSION
 ├── OPEN_SOURCE.md
-├── docs/
-├── skill/
-│   └── wxyj-content-system/
-│       ├── SKILL.md
-│       ├── agents/
-│       ├── references/
-│       ├── assets/
-│       ├── examples/
-│       └── scripts/
-├── tests/
-├── examples/
 └── outputs/
 ```
 
-仓库层面向使用者、贡献者和搜索系统；`skill/wxyj-content-system` 是可以单独安装的 Codex Skill。
+仓库根目录就是 Skill 根目录。`SKILL.md`、运行脚本、参考资料和模板均可从根目录直接访问。
 
 ## 快速开始
 
 ### 1. 安装 Skill
 
-将以下目录复制到 Codex Skills 目录：
-
-```text
-skill/wxyj-content-system
-```
+将克隆后的整个仓库目录复制到 Codex Skills 目录。
 
 Windows 默认安装目标：
 
@@ -99,7 +94,7 @@ C:\Users\<用户名>\.codex\skills\wxyj-content-system
 ### 3. 创建标准内容运行包
 
 ```powershell
-python skill\wxyj-content-system\scripts\create_content_run.py `
+python scripts\create_content_run.py `
   --root outputs `
   --date 2026-08-01 `
   --slug label-reading `
@@ -124,7 +119,7 @@ outputs/2026/08/2026-08-01-label-reading/
 ### 4. 验证
 
 ```powershell
-python skill\wxyj-content-system\scripts\validate_content_run.py `
+python scripts\validate_content_run.py `
   outputs\2026\08\2026-08-01-label-reading
 ```
 
@@ -160,46 +155,6 @@ python skill\wxyj-content-system\scripts\validate_content_run.py `
 ```
 
 不使用“最终版”“最新版”“新图2”等无法追踪的文件名。视觉发生变化时增加 `vNN`，不覆盖已发布版本。
-
-## SEO 与 GEO 说明
-
-本 README 采用以下可验证原则：
-
-- 首屏直接回答项目是什么、适合谁、能做什么；
-- 用清晰标题、自然语言和内部链接组织文本；
-- 同时提供中文实体名、英文名、Skill ID、平台和领域关键词；
-- 保留独特的产品运营方法、输出契约和可运行示例；
-- 不批量堆砌同义关键词，不承诺搜索或生成式回答排名。
-
-Google Search 官方说明，AI搜索仍沿用基础SEO与“有帮助、可靠、以人为本”的内容原则，并不要求特殊的GEO标记或AI专用文件。[官方说明](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide)
-
-仓库保留 `llms.txt` 作为代理快速阅读入口，但不把它视为Google排名信号。
-
-## GitHub 元数据建议
-
-Repository description：
-
-```text
-Codex Skill for product-led whisky content operations across Xiaohongshu, Douyin and WeChat Channels, including AIGC prompts, captions, tags and QA.
-```
-
-Topics：
-
-```text
-codex-skill
-content-marketing
-content-operations
-whisky
-xiaohongshu
-douyin
-wechat-channels
-aigc
-social-media
-chinese-content
-prompt-engineering
-```
-
-GitHub Topics 应使用小写字母、数字和连字符，并保持与项目主题直接相关。[GitHub Topics 文档](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics)
 
 ## 常见问题
 

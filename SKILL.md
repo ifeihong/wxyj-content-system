@@ -156,4 +156,4 @@ python scripts/validate_content_run.py <运行目录>
 - 发布日历：`assets/templates/publishing-calendar.csv`
 - 数据台账：`assets/templates/performance-log.csv`
 - 周复盘：`assets/templates/weekly-review.md`
-- 三平台示例：`examples/three-platform-content-pack.md`
+- 三平台示例：`examples/strategy/three-platform-content-pack.md`

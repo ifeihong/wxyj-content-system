@@ -9,11 +9,8 @@
 
 ## 安装
 
-把以下目录复制到 Codex Skills 目录：
-
-```text
-skill/wxyj-content-system
-```
+本仓库根目录就是 Skill 根目录。把克隆后的整个
+`wxyj-content-system` 目录复制到 Codex Skills 目录。
 
 确认最终路径包含：
 
@@ -44,7 +41,7 @@ skill/wxyj-content-system
 ## 创建运行目录
 
 ```powershell
-python skill\wxyj-content-system\scripts\create_content_run.py `
+python scripts\create_content_run.py `
   --root outputs `
   --date 2026-08-01 `
   --slug label-reading `
@@ -55,7 +52,7 @@ python skill\wxyj-content-system\scripts\create_content_run.py `
 只需要小红书时：
 
 ```powershell
-python skill\wxyj-content-system\scripts\create_content_run.py `
+python scripts\create_content_run.py `
   --root outputs `
   --date 2026-08-01 `
   --slug label-reading `
@@ -68,7 +65,7 @@ python skill\wxyj-content-system\scripts\create_content_run.py `
 ## 验证
 
 ```powershell
-python skill\wxyj-content-system\scripts\validate_content_run.py `
+python scripts\validate_content_run.py `
   outputs\2026\08\2026-08-01-label-reading
 ```
 

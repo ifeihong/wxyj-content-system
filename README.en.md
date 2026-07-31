@@ -2,7 +2,7 @@
 
 **WXYJ Content System is a Codex Skill for product-led whisky content operations across Xiaohongshu, Douyin, and WeChat Channels.** It produces platform-native titles, captions, tags, comments, AIGC prompts, storyboards, QA reports, and traceable content-run directories.
 
-Version: `2.1.0`<br>
+Version: `2.1.1`<br>
 Skill ID: `wxyj-content-system`<br>
 GitHub Repository ID: `wxyj-content-system`
 
@@ -17,7 +17,8 @@ GitHub Repository ID: `wxyj-content-system`
 
 ## Quick start
 
-Copy `skill/wxyj-content-system` into your Codex skills directory, then invoke:
+The repository root is the Skill root. Copy the cloned repository directory into
+your Codex skills directory, then invoke:
 
 ```text
 Use $wxyj-content-system to create a Xiaohongshu content run with
@@ -27,7 +28,7 @@ title options, caption, tags, first comment, page prompts and QA.
 Create a content run:
 
 ```powershell
-python skill\wxyj-content-system\scripts\create_content_run.py `
+python scripts\create_content_run.py `
   --root outputs `
   --date 2026-08-01 `
   --slug label-reading `
@@ -38,7 +39,7 @@ python skill\wxyj-content-system\scripts\create_content_run.py `
 Validate it:
 
 ```powershell
-python skill\wxyj-content-system\scripts\validate_content_run.py `
+python scripts\validate_content_run.py `
   outputs\2026\08\2026-08-01-label-reading
 ```
 

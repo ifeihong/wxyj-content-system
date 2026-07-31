@@ -2,6 +2,19 @@
 
 本项目采用 [Semantic Versioning](https://semver.org/)。
 
+## [2.1.1] - 2026-07-31
+
+### 变更
+
+- 将单 Skill 仓库扁平化，`SKILL.md`、`agents/`、`assets/`、`references/` 和 `scripts/` 直接位于仓库根目录。
+- 将公开内容运行包归入 `examples/content-runs/`，将策略与三平台示例归入 `examples/strategy/`。
+- 更新安装、运行、校验、测试和内部链接，不再依赖 `skill/wxyj-content-system` 双层路径。
+- README 保留自然、清晰、可检索的项目信息，但不展示优化方法说明或仓库元数据操作建议。
+
+### 验证
+
+- 新增单 Skill 根目录结构与 README 文案边界回归测试。
+
 ## [2.1.0] - 2026-07-30
 
 ### 新增

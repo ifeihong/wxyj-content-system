@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SCRIPTS_DIR = PROJECT_ROOT / "skill" / "wxyj-content-system" / "scripts"
+SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 
 
 @contextmanager
@@ -295,7 +295,12 @@ class ContentRunContractTests(unittest.TestCase):
             self.assertIn("xiaohongshu命中高风险表达: 金融或收益承诺", errors)
 
     def test_public_example_is_a_valid_content_run(self):
-        example = PROJECT_ROOT / "examples" / "2026-08-01-label-reading"
+        example = (
+            PROJECT_ROOT
+            / "examples"
+            / "content-runs"
+            / "2026-08-01-label-reading"
+        )
 
         errors = self.validator.validate_run(example)
 

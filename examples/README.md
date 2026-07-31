@@ -2,7 +2,7 @@
 
 ## 2026-08-01：酒标怎么看
 
-目录：[`2026-08-01-label-reading`](2026-08-01-label-reading/)
+目录：[`content-runs/2026-08-01-label-reading`](content-runs/2026-08-01-label-reading/)
 
 示例展示一套4页小红书图文如何拆分为：
 
@@ -14,3 +14,7 @@
 
 生产图片没有提交到公开示例目录。媒体文件的命名和本地运行包参见
 [`docs/naming-convention.md`](../docs/naming-convention.md)。
+
+## 策略示例
+
+[`strategy`](strategy/) 收录首月选题、四周发布日历和三平台内容包示例。

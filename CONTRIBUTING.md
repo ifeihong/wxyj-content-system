@@ -15,7 +15,7 @@
 
 ```powershell
 python -m unittest discover -s tests -v
-python C:\Users\<用户名>\.codex\skills\.system\skill-creator\scripts\quick_validate.py skill\wxyj-content-system
+python C:\Users\<用户名>\.codex\skills\.system\skill-creator\scripts\quick_validate.py .
 ```
 
 ## 版本

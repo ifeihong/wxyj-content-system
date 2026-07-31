@@ -26,19 +26,28 @@ REQUIRED_DOCS = [
     "docs/naming-convention.md",
     "docs/versioning.md",
     "docs/compliance.md",
-    "skill/wxyj-content-system/SKILL.md",
-    "skill/wxyj-content-system/agents/openai.yaml",
+    "SKILL.md",
+    "agents/openai.yaml",
 ]
 
 
 class RepositoryContractTests(unittest.TestCase):
+    def test_single_skill_repository_is_flat(self):
+        self.assertTrue((PROJECT_ROOT / "SKILL.md").is_file())
+        self.assertTrue((PROJECT_ROOT / "agents" / "openai.yaml").is_file())
+        self.assertFalse((PROJECT_ROOT / "skill").exists())
+
+    def test_readme_does_not_expose_optimization_notes(self):
+        readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertNotRegex(readme, r"(?i)\bSEO\b|\bGEO\b")
+
     def test_machine_readable_identity_is_consistent(self):
         self.assertTrue(IDENTITY_PATH.exists(), f"missing {IDENTITY_PATH}")
         identity = json.loads(IDENTITY_PATH.read_text(encoding="utf-8"))
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "2.1.0")
+        self.assertEqual(identity["version"], "2.1.1")
 
         version = (PROJECT_ROOT / "VERSION").read_text(encoding="utf-8").strip()
         self.assertEqual(identity["version"], version)
@@ -91,7 +100,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(missing, [])
 
     def test_installable_skill_routes_only_to_existing_files(self):
-        skill_root = PROJECT_ROOT / "skill" / "wxyj-content-system"
+        skill_root = PROJECT_ROOT
         skill_text = (skill_root / "SKILL.md").read_text(encoding="utf-8")
         referenced = set(re.findall(r"`((?:references|assets|examples)/[^`]+)`", skill_text))
         missing = [
@@ -100,8 +109,6 @@ class RepositoryContractTests(unittest.TestCase):
             if not (skill_root / relative).exists()
         ]
         self.assertEqual(missing, [])
-        self.assertNotIn("README.md", {path.name for path in skill_root.iterdir()})
-
         openai_yaml = (skill_root / "agents" / "openai.yaml").read_text(
             encoding="utf-8"
         )
@@ -113,11 +120,10 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertRegex(gitignore, r"(?m)^outputs/\*\*$")
 
     def test_xiaohongshu_examples_respect_dynamic_page_contract(self):
-        skill_root = PROJECT_ROOT / "skill" / "wxyj-content-system"
         text_files = [
-            *skill_root.glob("references/*.md"),
-            *skill_root.glob("examples/*.md"),
-            *skill_root.glob("examples/*.csv"),
+            *PROJECT_ROOT.glob("references/*.md"),
+            *PROJECT_ROOT.glob("examples/strategy/*.md"),
+            *PROJECT_ROOT.glob("examples/strategy/*.csv"),
         ]
         joined = "\n".join(
             path.read_text(encoding="utf-8-sig") for path in text_files
@@ -128,15 +134,11 @@ class RepositoryContractTests(unittest.TestCase):
     def test_visual_asset_root_is_configurable(self):
         visual_reference = (
             PROJECT_ROOT
-            / "skill"
-            / "wxyj-content-system"
             / "references"
             / "visual-asset-library.md"
         ).read_text(encoding="utf-8")
         content_brief = (
             PROJECT_ROOT
-            / "skill"
-            / "wxyj-content-system"
             / "assets"
             / "templates"
             / "content-brief.md"
@@ -145,9 +147,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertIn("asset_root", content_brief)
 
     def test_long_reference_files_have_a_table_of_contents(self):
-        references = (
-            PROJECT_ROOT / "skill" / "wxyj-content-system" / "references"
-        )
+        references = PROJECT_ROOT / "references"
         missing = []
         for path in references.glob("*.md"):
             text = path.read_text(encoding="utf-8")
