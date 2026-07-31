@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If this content operations skill supports your work, cite it using this metadata."
+title: "威熏邑境自媒体内容生成系统"
+version: 2.1.0
+date-released: 2026-07-30
+authors:
+  - name: "威熏邑境内容团队"
+license: Apache-2.0
+keywords:
+  - Codex Skill
+  - whisky content marketing
+  - Xiaohongshu
+  - Douyin
+  - WeChat Channels
+  - AIGC

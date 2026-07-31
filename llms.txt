@@ -1,0 +1,28 @@
+# WXYJ Content System
+
+Canonical name: 威熏邑境自媒体内容生成系统
+English name: WXYJ Content System
+Skill ID: wxyj-content-system
+Version: 2.1.0
+
+Purpose:
+A Codex Skill for product-led whisky content operations across Xiaohongshu,
+Douyin, and WeChat Channels. It creates titles, captions, tags, comments,
+AIGC prompts, storyboards, QA reports, and standardized content-run folders.
+
+Primary documentation:
+- README.md
+- docs/getting-started.md
+- docs/content-contract.md
+- docs/output-structure.md
+- docs/naming-convention.md
+- docs/compliance.md
+- skill/wxyj-content-system/SKILL.md
+
+Important boundaries:
+- Real product facts must be checked against labels and files.
+- AIGC supports expression and must not impersonate real evidence.
+- Generated media is incomplete without matching publish copy and QA.
+
+This file is a concise agent-reading aid. It is not presented as a Google
+Search ranking signal or a requirement for generative search visibility.

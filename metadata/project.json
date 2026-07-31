@@ -1,0 +1,26 @@
+{
+  "display_name": "威熏邑境自媒体内容生成系统",
+  "english_name": "WXYJ Content System",
+  "skill_id": "wxyj-content-system",
+  "github_repository_id": "wxyj-content-system",
+  "version": "2.1.0",
+  "license": "Apache-2.0",
+  "platforms": [
+    "xiaohongshu",
+    "douyin",
+    "weixin-channels"
+  ],
+  "topics": [
+    "codex-skill",
+    "content-marketing",
+    "content-operations",
+    "whisky",
+    "xiaohongshu",
+    "douyin",
+    "wechat-channels",
+    "aigc",
+    "social-media",
+    "chinese-content",
+    "prompt-engineering"
+  ]
+}

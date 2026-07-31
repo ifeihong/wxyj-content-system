@@ -1,0 +1,4 @@
+interface:
+  display_name: "威熏邑境自媒体内容生成系统"
+  short_description: "生成并管理威士忌三平台内容、AIGC资产与发布文案"
+  default_prompt: "Use $wxyj-content-system to create a product-led content run for 小红书, 抖音, or 视频号."

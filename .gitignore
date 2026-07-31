@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.test-work/
+.write-probe/
+dist/
+
+outputs/**
+!outputs/README.md
+
+.DS_Store
+Thumbs.db

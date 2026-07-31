@@ -1,0 +1,81 @@
+# 开始使用
+
+## 前置条件
+
+- Codex 或兼容 Agent Skills 的运行环境；
+- Python 3.10 或更高版本；
+- 已确认的产品事实与可用素材；
+- 需要生成视觉时，提供真实产品参考图或经过核验的高保真参考图。
+
+## 安装
+
+把以下目录复制到 Codex Skills 目录：
+
+```text
+skill/wxyj-content-system
+```
+
+确认最终路径包含：
+
+```text
+<Codex Skills>/wxyj-content-system/SKILL.md
+```
+
+## 第一次调用
+
+```text
+使用 $wxyj-content-system，
+为马克瑞普之选亚伯乐1996年单桶生成一套小红书内容。
+输出标题A/B、正文、Tag、首评、逐页提示词、参考图和QA。
+```
+
+## 标准生产步骤
+
+1. 明确日期、平台、母题和目标；
+2. 创建内容运行目录；
+3. 填写 `brief.md` 和 `sources.md`；
+4. 生成平台 `publish.md`；
+5. 生成小红书 `prompts.md` 或视频 `storyboard.md`；
+6. 保存媒体并使用规范文件名；
+7. 完成 `qa.md`；
+8. 运行目录校验器；
+9. 发布后更新状态和数据台账。
+
+## 创建运行目录
+
+```powershell
+python skill\wxyj-content-system\scripts\create_content_run.py `
+  --root outputs `
+  --date 2026-08-01 `
+  --slug label-reading `
+  --product "马克瑞普之选亚伯乐1996年单桶" `
+  --platforms xiaohongshu douyin weixin-channels
+```
+
+只需要小红书时：
+
+```powershell
+python skill\wxyj-content-system\scripts\create_content_run.py `
+  --root outputs `
+  --date 2026-08-01 `
+  --slug label-reading `
+  --product "马克瑞普之选亚伯乐1996年单桶" `
+  --platforms xiaohongshu
+```
+
+当前产品可省略 `--product`。创建新品内容运行包时，必须显式传入新品的正式产品名。
+
+## 验证
+
+```powershell
+python skill\wxyj-content-system\scripts\validate_content_run.py `
+  outputs\2026\08\2026-08-01-label-reading
+```
+
+验证通过后，仍需人工查看最终图片、视频、酒标细节、平台预览和实时商品信息。
+
+## 推荐工作频率
+
+- 每日：一个母题、一个主平台成品、其他平台按需转译；
+- 每周：复盘标题、封面、收藏、评论、关注和素材缺口；
+- 每月：更新产品事实、平台规则、栏目表现和新品卡。
