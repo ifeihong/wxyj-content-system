@@ -6,11 +6,11 @@
 
 ## 最终文件
 
-- 路径：`outputs/2026/08/2026-08-01-label-reading-video/final-project/out/20260801-wxyj-label-reading-publish-v02.mp4`
-- SHA-256：`4BBFB8EA33E1F3A4458E2125B2AB8D0C4FB163B13B652A75A2792393FD9A088C`
+- 路径：`outputs/2026/08/2026-08-01-label-reading-video/final-project/out/20260801-wxyj-label-reading-publish-v03.mp4`
+- SHA-256：`C579388EA0CD142909416AD2DBED08D47933D25C1AFCD7495B73A357E76C62C4`
 - 技术规格：1080×1920，30fps，H.264，AAC双声道48kHz，38.10秒
-- 文件大小：23,915,185 bytes
-- 响度：-16.1 LUFS，True Peak -2.6 dBTP
+- 文件大小：23,926,974 bytes
+- 响度：-16.2 LUFS，True Peak -3.0 dBTP
 
 ## 镜头状态
 
@@ -40,7 +40,9 @@
 - 时间线：`137ce63f-be5b-45a6-b95c-4840741ae0f5`
 - 音色：豆包 `ruyayichen`（儒雅逸辰）
 - 音乐资产：`67f5e613-4c7b-47fc-a8c2-4c8f5b5cd811`
-- 音频导出：`20260801-aberlour30-chatcut-audio-master-v03.mp3`
+- 音乐条目：`1e840ad08b`，`decibelAdjustment: -10 dB`；语音轨继续为 anchor、音乐轨继续为 follower。
+- 音频导出：`20260801-aberlour30-chatcut-audio-master-v04.mp3`
+- 音频导出 render：`d8053121-2cf4-450a-b5fe-90d6e70495f5`
 
 ## 原始回传记录
 

@@ -12,6 +12,7 @@
 - 旁白使用 ChatCut 豆包音色 `ruyayichen`（儒雅逸辰），按七个镜头分别生成并依真实时长同步；
 - 背景音乐使用 ChatCut `submit_music` 生成的暗琥珀高奢音乐床；
 - 语音轨设为 anchor、音乐轨设为 follower，自动压低音乐避让人声；
+- 发布试听中若音乐存在感不足，先在 ChatCut 调整音乐条目的 `decibelAdjustment`；本片 v04 从 `-18 dB` 调至 `-10 dB`，保留 follower 自动闪避，不提高旁白轨；
 - 最终响度标准为约 -16 LUFS，旁白清晰优先。
 
 ## 字幕与图形
