@@ -214,6 +214,10 @@ class RepositoryContractTests(unittest.TestCase):
         gitignore = (PROJECT_ROOT / ".gitignore").read_text(encoding="utf-8")
         self.assertRegex(gitignore, r"(?m)^dist/$")
         self.assertRegex(gitignore, r"(?m)^outputs/\*\*$")
+        self.assertRegex(
+            gitignore,
+            r"(?m)^examples/content-runs/\*\*/video-master/incoming/\*\*$",
+        )
 
     def test_xiaohongshu_examples_respect_dynamic_page_contract(self):
         text_files = [

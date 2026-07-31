@@ -1,3 +1,3 @@
 shot_id,title,status,attempts,returned_file,qa_result
-S01,日期酒标揭晓,ready,0,,
-S02,右45度酒瓶揭晓,ready,0,,
+S01,日期酒标揭晓,revision-needed,1,20260801-wxyj-label-reading-s01-date-label-reveal-seedance-v01.mp4,"720x1280；4.06秒；持续AI生成水印"
+S02,右45度酒瓶揭晓,revision-needed,1,20260801-wxyj-label-reading-s02-right-angle-bottle-reveal-seedance-v01.mp4,"720x1280；8.08秒；持续AI生成水印；机位轻度向正面漂移"

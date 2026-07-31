@@ -7,5 +7,7 @@ dist/
 outputs/**
 !outputs/README.md
 
+examples/content-runs/**/video-master/incoming/**
+
 .DS_Store
 Thumbs.db
