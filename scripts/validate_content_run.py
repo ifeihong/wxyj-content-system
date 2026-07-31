@@ -45,7 +45,6 @@ PLATFORM_REQUIREMENTS = {
             "话题标签",
             "首评",
             "CTA",
-            "AIGC与事实披露",
         ),
         "media": re.compile(
             r"^\d{8}-xhs-[a-z0-9-]+-p\d{2}-[a-z0-9-]+-v\d{2}"
@@ -62,7 +61,6 @@ PLATFORM_REQUIREMENTS = {
             "话题标签",
             "置顶评论",
             "CTA",
-            "AIGC与事实披露",
         ),
         "media": re.compile(
             r"^\d{8}-dy-[a-z0-9-]+-s\d{2}-[a-z0-9-]+-v\d{2}"
@@ -80,7 +78,6 @@ PLATFORM_REQUIREMENTS = {
             "首评",
             "朋友圈转发文案",
             "CTA",
-            "AIGC与事实披露",
         ),
         "media": re.compile(
             r"^\d{8}-wxv-[a-z0-9-]+-s\d{2}-[a-z0-9-]+-v\d{2}"
@@ -95,6 +92,12 @@ RISK_PATTERNS = {
     "AIGC冒充真实": re.compile(
         r"AIGC.{0,12}(?:真实酒厂|历史现场|真实人物|真实顾客)"
     ),
+}
+PUBLIC_COPY_FORBIDDEN_PATTERNS = {
+    "AIGC或事实核验": re.compile(
+        r"AIGC|创意演绎|产品信息.{0,12}(?:实物|文件)为准|事实核验"
+    ),
+    "续集预告": re.compile(r"下一条|下期"),
 }
 NEGATION_PATTERN = re.compile(
     r"不承诺|不保证|不作|不做|不涉及|不构成|不宣称|不建议|"
@@ -282,6 +285,10 @@ def validate_run(run_dir: Path) -> list[str]:
         for risk_name, pattern in RISK_PATTERNS.items():
             if _contains_risk_claim(publish, pattern):
                 errors.append(f"{platform}命中高风险表达: {risk_name}")
+
+        for label, pattern in PUBLIC_COPY_FORBIDDEN_PATTERNS.items():
+            if pattern.search(publish):
+                errors.append(f"{platform}公开文案包含内部说明: {label}")
 
         media_dir = platform_dir / "media"
         if media_dir.is_dir():

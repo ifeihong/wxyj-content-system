@@ -49,7 +49,7 @@ outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
 
 ```yaml
 run_id: 2026-08-01-label-reading
-version: 2.2.2
+version: 2.4.0
 date: 2026-08-01
 topic_slug: label-reading
 product: "马克瑞普之选亚伯乐1996年单桶"

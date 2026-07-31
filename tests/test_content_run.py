@@ -362,8 +362,6 @@ class ContentRunContractTests(unittest.TestCase):
 ## CTA
 收藏这份核对清单。
 
-## AIGC与事实披露
-图片为AIGC创意演绎，产品信息以实物与文件为准。
 """,
                 encoding="utf-8",
             )
@@ -383,6 +381,24 @@ class ContentRunContractTests(unittest.TestCase):
             errors = self.validator.validate_run(run_dir)
 
             self.assertIn("xiaohongshu命中高风险表达: 金融或收益承诺", errors)
+
+    def test_validator_rejects_internal_disclosure_in_public_copy(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp), "2026-08-01", "public-copy", ["xiaohongshu"]
+            )
+            publish = run_dir / "xiaohongshu" / "publish.md"
+            publish.write_text(
+                publish.read_text(encoding="utf-8").replace(
+                    "## 发布正文\n",
+                    "## 发布正文\n画面含AIGC创意演绎，产品信息以实物与文件为准。\n",
+                ),
+                encoding="utf-8",
+            )
+
+            errors = self.validator.validate_run(run_dir)
+
+            self.assertIn("xiaohongshu公开文案包含内部说明: AIGC或事实核验", errors)
 
     def test_public_example_is_a_valid_content_run(self):
         example = (

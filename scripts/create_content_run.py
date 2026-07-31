@@ -10,7 +10,7 @@ from pathlib import Path
 ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels")
 VIDEO_PLATFORMS = {"douyin", "weixin-channels"}
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-VERSION = "2.3.1"
+VERSION = "2.4.0"
 DEFAULT_PRODUCT = "马克瑞普之选亚伯乐1996年单桶"
 
 
@@ -30,8 +30,6 @@ PUBLISH_TEMPLATES = {
 ## 首评
 
 ## CTA
-
-## AIGC与事实披露
 """,
     "douyin": """# 抖音发布包
 
@@ -48,8 +46,6 @@ PUBLISH_TEMPLATES = {
 ## 置顶评论
 
 ## CTA
-
-## AIGC与事实披露
 """,
     "weixin-channels": """# 视频号发布包
 
@@ -68,8 +64,6 @@ PUBLISH_TEMPLATES = {
 ## 朋友圈转发文案
 
 ## CTA
-
-## AIGC与事实披露
 """,
 }
 

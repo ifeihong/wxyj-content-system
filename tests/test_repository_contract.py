@@ -143,7 +143,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "2.3.1")
+        self.assertEqual(identity["version"], "2.4.0")
 
         version = (PROJECT_ROOT / "VERSION").read_text(encoding="utf-8").strip()
         self.assertEqual(identity["version"], version)
@@ -410,6 +410,49 @@ class RepositoryContractTests(unittest.TestCase):
             "current-task authorization",
         ):
             self.assertIn(contract, english)
+
+    def test_published_assets_omit_internal_labels_and_account_watermarks(self):
+        skill = (PROJECT_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        video = (
+            PROJECT_ROOT / "references" / "video-production-system.md"
+        ).read_text(encoding="utf-8")
+        text_in_image = (
+            PROJECT_ROOT / "references" / "text-in-image-system.md"
+        ).read_text(encoding="utf-8")
+        joined = skill + video + text_in_image
+        for contract in (
+            "成片画面与图文成图禁止出现账号名“威熏邑境”、缩写“WXYJ”",
+            "禁止出现“下一条”“下期”等续集预告",
+            "禁止把AIGC或事实核验说明写入成片、成图、标题、正文、评论或 CTA",
+            "平台后台要求AI标签时，只使用平台原生开关",
+        ):
+            self.assertIn(contract, joined)
+        self.assertNotIn("CTA、AIGC与事实披露", skill)
+
+    def test_video_audio_defaults_to_chatcut_human_delivery(self):
+        video = (
+            PROJECT_ROOT / "references" / "video-production-system.md"
+        ).read_text(encoding="utf-8")
+        for contract in (
+            "submit_voice",
+            "submit_music",
+            "不得使用 Edge TTS 作为默认发布配音",
+            "自然口语台词",
+            "真实时长",
+        ):
+            self.assertIn(contract, video)
+
+    def test_video_product_framing_keeps_complete_subject_boundaries(self):
+        video = (
+            PROJECT_ROOT / "references" / "video-production-system.md"
+        ).read_text(encoding="utf-8")
+        for contract in (
+            "瓶顶、瓶底和瓶身完整边界",
+            "objectFit: contain",
+            "源图顶部本身已截断",
+            "1996年2月14日，入桶；2026年2月14日，罐瓶。",
+        ):
+            self.assertIn(contract, video)
 
     def test_long_reference_files_have_a_table_of_contents(self):
         references = PROJECT_ROOT / "references"

@@ -157,7 +157,7 @@ YYYYMMDD-wxyj-topic-slug-sNN-role-seedance-vNN.mp4
 5. 话题标签；
 6. 首评；
 7. CTA；
-8. AIGC与事实披露。
+8. 内部素材来源与事实核验状态写入 `sources.md` 和 `qa.md`，不进入公开发布文案。
 
 ### 抖音
 
@@ -168,7 +168,7 @@ YYYYMMDD-wxyj-topic-slug-sNN-role-seedance-vNN.mp4
 5. 话题标签；
 6. 置顶评论；
 7. CTA；
-8. AIGC与事实披露。
+8. 内部素材来源与事实核验状态写入 `sources.md` 和 `qa.md`，不进入公开发布文案。
 
 ### 视频号
 
@@ -180,7 +180,7 @@ YYYYMMDD-wxyj-topic-slug-sNN-role-seedance-vNN.mp4
 6. 首评；
 7. 朋友圈转发文案；
 8. CTA；
-9. AIGC与事实披露。
+9. 内部素材来源与事实核验状态写入 `sources.md` 和 `qa.md`，不进入公开发布文案。
 
 ## 标签组合
 
