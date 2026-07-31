@@ -43,6 +43,10 @@ class ExternalVideoHandoffTests(unittest.TestCase):
             "create_external_video_handoff",
             "create_external_video_handoff.py",
         )
+        cls.return_validator = load_module(
+            "validate_external_video_return",
+            "validate_external_video_return.py",
+        )
 
     @staticmethod
     def valid_spec() -> dict[str, object]:
@@ -164,6 +168,54 @@ class ExternalVideoHandoffTests(unittest.TestCase):
         joined = "\n".join(errors)
         self.assertIn("input_mode", joined)
         self.assertIn("references.order", joined)
+
+    def test_return_validator_accepts_exact_nine_sixteen_metadata(self):
+        metadata = {
+            "width": 1080,
+            "height": 1920,
+            "duration": 5.1,
+            "codec_type": "video",
+        }
+        contract = {
+            "aspect_ratio": "9:16",
+            "duration_seconds": 5,
+            "duration_tolerance_seconds": 0.75,
+            "final_resolution": "1080p",
+        }
+
+        self.assertEqual(
+            self.return_validator.validate_probe(metadata, contract),
+            [],
+        )
+
+    def test_return_validator_rejects_three_four_and_wrong_duration(self):
+        metadata = {
+            "width": 1080,
+            "height": 1440,
+            "duration": 8.0,
+            "codec_type": "video",
+        }
+        contract = {
+            "aspect_ratio": "9:16",
+            "duration_seconds": 5,
+            "duration_tolerance_seconds": 0.75,
+            "final_resolution": "1080p",
+        }
+
+        errors = self.return_validator.validate_probe(metadata, contract)
+
+        self.assertTrue(any("9:16" in error for error in errors))
+        self.assertTrue(any("时长" in error for error in errors))
+
+    def test_return_validator_rejects_random_download_name(self):
+        errors = self.return_validator.validate_filename(
+            Path("seedance_download_123.mp4"),
+            "2026-08-01",
+            "label-reading",
+            "S01",
+        )
+
+        self.assertTrue(errors)
 
 
 if __name__ == "__main__":
