@@ -143,7 +143,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "2.2.1")
+        self.assertEqual(identity["version"], "2.2.2")
 
         version = (PROJECT_ROOT / "VERSION").read_text(encoding="utf-8").strip()
         self.assertEqual(identity["version"], version)
@@ -282,6 +282,54 @@ class RepositoryContractTests(unittest.TestCase):
             "validate_xhs_image.py",
             "不允许通过裁切",
             "宽:高 = 3:4",
+        ):
+            self.assertIn(contract, joined)
+
+    def test_carousel_primary_fact_is_unique(self):
+        skill = (PROJECT_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        carousel = (
+            PROJECT_ROOT / "references" / "xiaohongshu-carousel-system.md"
+        ).read_text(encoding="utf-8")
+        joined = skill + carousel
+        for contract in (
+            "primary_fact_id",
+            "同一 `primary_fact_id` 只能出现一次",
+            "桶号只能有一个主视觉事实页",
+        ):
+            self.assertIn(contract, joined)
+
+    def test_bottle_geometry_master_has_priority_and_tolerance(self):
+        visual_reference = (
+            PROJECT_ROOT / "references" / "visual-asset-library.md"
+        ).read_text(encoding="utf-8")
+        for contract in (
+            "geometry_master",
+            "geometry_master > structure_master > label_detail > style_anchor",
+            "0.33–0.35",
+            "0.30–0.33",
+            "34%–41%",
+            "偏差不得超过 5%",
+        ):
+            self.assertIn(contract, visual_reference)
+
+    def test_five_page_carousel_limits_complete_bottle_exposure(self):
+        carousel = (
+            PROJECT_ROOT / "references" / "xiaohongshu-carousel-system.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("完整酒瓶不超过 2 页", carousel)
+        self.assertIn("酒标近景、礼盒、证据或风味静物", carousel)
+
+    def test_generation_status_separates_rejected_from_publish(self):
+        skill = (PROJECT_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        run_system = (
+            PROJECT_ROOT / "references" / "content-run-system.md"
+        ).read_text(encoding="utf-8")
+        joined = skill + run_system
+        for contract in (
+            "`working`",
+            "`rejected`",
+            "`publish`",
+            "发布总览只能引用 `publish`",
         ):
             self.assertIn(contract, joined)
 

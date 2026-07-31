@@ -9,7 +9,7 @@ from pathlib import Path
 
 ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels")
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-VERSION = "2.2.1"
+VERSION = "2.2.2"
 DEFAULT_PRODUCT = "马克瑞普之选亚伯乐1996年单桶"
 
 

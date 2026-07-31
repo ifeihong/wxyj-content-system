@@ -2,7 +2,7 @@
 
 **WXYJ Content System is a brand-specific Codex Skill for 威熏邑境, currently centered on 马克瑞普之选亚伯乐1996年单桶 across Xiaohongshu, Douyin, and WeChat Channels.** It bundles verified product knowledge, packaging copy, brand-story boundaries, 17 high-resolution AIGC product references, platform-native copy, prompts, storyboards, QA, and traceable content-run directories.
 
-Version: `2.2.1`<br>
+Version: `2.2.2`<br>
 Skill ID: `wxyj-content-system`<br>
 GitHub Repository ID: `wxyj-content-system`
 
@@ -62,7 +62,9 @@ python scripts\validate_content_run.py `
 - growth before aggressive conversion;
 - real labels and documents establish trust; AIGC supports expression;
 - generated images are not complete until matching publish copy exists;
-- every run keeps a manifest, sources, media versions, and QA.
+- every run keeps a manifest, sources, media versions, and QA;
+- complete front-bottle pages share one geometry master and a 5% proportion tolerance;
+- each carousel assigns one primary fact per page, and publish overviews exclude rejected generations.
 
 See the [Chinese README](README.md), [content contract](docs/content-contract.md), [output structure](docs/output-structure.md), and [compliance guide](docs/compliance.md).
 
