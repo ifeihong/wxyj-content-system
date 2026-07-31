@@ -203,6 +203,13 @@ def _task_card(spec: dict[str, object], output_name: str) -> str:
         f" — {reference['role']}"
         for reference in sorted(references, key=lambda item: item["order"])
     )
+    shot_path = (
+        "video-master/external-generation/"
+        f"{spec['shot_id']}-{spec['slug']}"
+    )
+    positive = str(spec["prompt_positive"]).strip()
+    negative = str(spec["prompt_negative"]).strip()
+    all_in_one = positive + "\n\n【负面约束】\n" + negative
     return f"""# {spec['shot_id']} {spec['title']}
 
 ## 生成设置
@@ -221,10 +228,34 @@ def _task_card(spec: dict[str, object], output_name: str) -> str:
 
 {reference_lines}
 
+## 参考图文件位置
+
+- 当前镜头目录：`{shot_path}/`
+- 参考图目录：`{shot_path}/references/`
+- 独立提示词文件：`prompt-all-in-one.txt`、`prompt-positive.txt`、`prompt-negative.txt`
+
+## 可直接复制：一体化提示词
+
+```text
+{all_in_one}
+```
+
+## 可直接复制：正向提示词
+
+```text
+{positive}
+```
+
+## 可直接复制：负向提示词
+
+```text
+{negative}
+```
+
 ## 操作
 
 1. 使用平台中与“模式”对应的通用 Seedance 生成方式。
-2. 复制 `prompt-all-in-one.txt`；若平台分正向与负向字段，则分别复制两个独立提示词文件。
+2. 可直接复制本任务卡中的完整提示词，也可复制同目录的独立提示词文件。
 3. 首次只生成一个候选；同一问题最多尝试两次。
 4. 下载原始视频，不录屏、不二次压缩。
 5. 文件命名为 `{output_name}`，放入 `video-master/incoming/`。

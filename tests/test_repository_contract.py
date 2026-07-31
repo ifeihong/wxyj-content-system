@@ -143,7 +143,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "2.3.0")
+        self.assertEqual(identity["version"], "2.3.1")
 
         version = (PROJECT_ROOT / "VERSION").read_text(encoding="utf-8").strip()
         self.assertEqual(identity["version"], version)
@@ -348,6 +348,9 @@ class RepositoryContractTests(unittest.TestCase):
             "prompt-negative.txt",
             "video-master/incoming",
             "max_attempts",
+            "最终回复必须逐镜显示",
+            "不得只提供目录",
+            "完整一体化提示词",
         ):
             self.assertIn(contract, joined)
         self.assertNotIn("必须提供第三方平台名称", joined)

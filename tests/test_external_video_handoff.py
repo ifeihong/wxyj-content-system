@@ -103,6 +103,16 @@ class ExternalVideoHandoffTests(unittest.TestCase):
             self.assertNotIn("第三方平台名称", task)
             self.assertIn("9:16", task)
             self.assertIn("最大尝试次数：2", task)
+            self.assertIn("参考图文件位置", task)
+            self.assertIn(
+                "references/S01-first-frame-9x16.png",
+                task,
+            )
+            self.assertIn("## 可直接复制：一体化提示词", task)
+            self.assertIn("## 可直接复制：正向提示词", task)
+            self.assertIn("## 可直接复制：负向提示词", task)
+            self.assertIn("暖金色光线缓慢扫过酒标。", task)
+            self.assertIn("瓶型变形，白边，灰边，黑边。", task)
 
     def test_create_handoff_never_overwrites_user_edits(self):
         with workspace_tempdir() as workspace:
