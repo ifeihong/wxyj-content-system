@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import io
+import struct
 import shutil
 import unittest
 import uuid
@@ -43,6 +44,9 @@ class ContentRunContractTests(unittest.TestCase):
     def setUpClass(cls):
         cls.creator = load_module("create_content_run", "create_content_run.py")
         cls.validator = load_module("validate_content_run", "validate_content_run.py")
+        cls.xhs_image_validator = load_module(
+            "validate_xhs_image", "validate_xhs_image.py"
+        )
         cls.pack_validator = load_module(
             "validate_content_pack", "validate_content_pack.py"
         )
@@ -58,6 +62,34 @@ class ContentRunContractTests(unittest.TestCase):
             / "mackillops-choice-aberlour-1996"
         )
         self.assertEqual(self.asset_validator.validate_assets(product_root), [])
+
+    def test_xhs_image_validator_accepts_exact_three_four_png(self):
+        with workspace_tempdir() as tmp:
+            path = Path(tmp) / "page.png"
+            path.write_bytes(
+                b"\x89PNG\r\n\x1a\n"
+                + b"\x00\x00\x00\rIHDR"
+                + struct.pack(">II", 1086, 1448)
+            )
+
+            self.assertEqual(
+                self.xhs_image_validator.validate_xhs_image(path),
+                [],
+            )
+
+    def test_xhs_image_validator_rejects_two_three_png(self):
+        with workspace_tempdir() as tmp:
+            path = Path(tmp) / "page.png"
+            path.write_bytes(
+                b"\x89PNG\r\n\x1a\n"
+                + b"\x00\x00\x00\rIHDR"
+                + struct.pack(">II", 1024, 1536)
+            )
+
+            errors = self.xhs_image_validator.validate_xhs_image(path)
+
+            self.assertTrue(errors)
+            self.assertIn("必须为精确3:4", errors[0])
 
     def test_create_run_builds_platform_native_structure(self):
         with workspace_tempdir() as tmp:

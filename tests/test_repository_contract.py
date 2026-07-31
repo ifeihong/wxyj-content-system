@@ -55,6 +55,7 @@ REQUIRED_DOCS = [
     "SKILL.md",
     "agents/openai.yaml",
     "scripts/validate_product_assets.py",
+    "scripts/validate_xhs_image.py",
 ]
 
 
@@ -142,7 +143,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "2.2.0")
+        self.assertEqual(identity["version"], "2.2.1")
 
         version = (PROJECT_ROOT / "VERSION").read_text(encoding="utf-8").strip()
         self.assertEqual(identity["version"], version)
@@ -240,6 +241,49 @@ class RepositoryContractTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("asset_root", visual_reference)
         self.assertIn("asset_root", content_brief)
+
+    def test_xiaohongshu_angle_plan_is_measurable(self):
+        skill = (PROJECT_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        carousel = (
+            PROJECT_ROOT / "references" / "xiaohongshu-carousel-system.md"
+        ).read_text(encoding="utf-8")
+        joined = skill + carousel
+        for contract in (
+            "机位分配表",
+            "view_id",
+            "相邻页面不得使用相同",
+            "侧面可见宽度",
+            "标签平面呈梯形透视",
+        ):
+            self.assertIn(contract, joined)
+
+    def test_open_box_geometry_and_story_panel_are_hard_locked(self):
+        visual_reference = (
+            PROJECT_ROOT / "references" / "visual-asset-library.md"
+        ).read_text(encoding="utf-8")
+        for contract in (
+            "175°–180°",
+            "不得超过 180°",
+            "左侧白色内皮",
+            "RARE MASTER'S COLLECTION",
+            "多段故事文字",
+            "不得清空",
+        ):
+            self.assertIn(contract, visual_reference)
+
+    def test_xiaohongshu_first_generation_requires_three_four_gate(self):
+        skill = (PROJECT_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        carousel = (
+            PROJECT_ROOT / "references" / "xiaohongshu-carousel-system.md"
+        ).read_text(encoding="utf-8")
+        joined = skill + carousel
+        for contract in (
+            "首轮原生成文件",
+            "validate_xhs_image.py",
+            "不允许通过裁切",
+            "宽:高 = 3:4",
+        ):
+            self.assertIn(contract, joined)
 
     def test_long_reference_files_have_a_table_of_contents(self):
         references = PROJECT_ROOT / "references"

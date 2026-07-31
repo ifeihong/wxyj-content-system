@@ -63,7 +63,21 @@ asset_manifest: assets/products/mackillops-choice-aberlour-1996/asset-manifest.j
 | `木质礼盒-右侧45°.png` | 右侧立体感、木纹与金色字 | 铭牌不放大作为证据 |
 | `木质礼盒-左侧45°.png` | 左侧立体感、合页结构 | 铭牌不放大作为证据 |
 | `木质礼盒-背面.png` | 包装品鉴词版式、木纹 | 中文含义读取 `product-packaging-copy.md`；AIGC 图不充当实拍 |
-| `木质礼盒-内置酒瓶.png` | 开盒、礼赠、收藏展示 | 内页故事读取 `product-packaging-copy.md`；瓶号细节需与 180 of 184 统一 |
+| `木质礼盒-内置酒瓶.png` | 开盒、礼赠、收藏展示 | 开启结构与左侧故事内页为最高优先级结构参考；瓶号细节需与 180 of 184 统一 |
+
+### 开盒结构硬锁
+
+使用 `木质礼盒-内置酒瓶.png` 时必须同时锁定：
+
+- 木盒左门与右侧盒体沿中间竖向合页开启，开启夹角为 **175°–180°**，不得超过 180°，不得向后反折或形成不可能的穿插；
+- 正面观看时左右两块内表面接近共面，中央合页、木框厚度和接触关系必须机械合理；
+- **左侧白色内皮**不是空白装饰面，必须保留参考图中的 `RARE MASTER'S COLLECTION` 标题、多段故事文字、格言/说明与底部署名的版式层级；
+- 左侧故事允许因画面缩放而不承担消费者事实证据，但多段故事文字的可见密度、段落位置与签名区域不得清空、抹除、替换成纯白皮革或随意图案；
+- 右侧瓶仓、米白内衬、酒瓶位置、两枚金色合页和木框比例按参考图保持；不得多出第三块门板、额外合页或悬空酒瓶。
+
+开盒提示词必须写明：
+
+> Open-box geometry hard lock: use the reference as the highest-priority structural and content-layout guide. The left door and right case are opened to 175°–180° only, never beyond 180° and never bent backward. Preserve the left white leather inner panel with the heading “RARE MASTER'S COLLECTION”, visibly dense multi-paragraph story typography, motto/explanatory lines and bottom signature layout; do not blank, erase or replace this panel. Preserve the central gold hinges, wood-frame thickness, right bottle recess and cream lining.
 
 ### 白色外包装
 
@@ -130,9 +144,10 @@ asset_manifest: assets/products/mackillops-choice-aberlour-1996/asset-manifest.j
 4. 透明瓶颈与玻璃底是否自然透出背景，接触阴影是否真实；
 5. 外缘带是否已经按新场景重建，而不是复制参考图轮廓像素；瓶盖宽度、瓶肩拐点、瓶身最大宽度、瓶底高度和酒标四角是否仍与参考图一致；
 6. 木盒细节是否与选定角度一致；
-7. 成图内置传播文字是否与 `Text (verbatim)` 逐字一致，且未出现额外标签、重复品牌或错误小字；
-8. 字体设计是否选定明确模式，是否通过尺度反差、错落层级或纵横组合体现高级感，同时保持字形不扭曲；
-9. AIGC 画面是否在制作清单和必要的消费者界面标明；
-10. 用作事实证据的画面是否已经替换为真实酒标、包装或文件。
+7. 开盒画面的开启角是否为 175°–180°且未超过 180°，左侧白色内皮是否保留 `RARE MASTER'S COLLECTION`、多段故事文字与底部署名版式，未被清空；
+8. 成图内置传播文字是否与 `Text (verbatim)` 逐字一致，且未出现额外标签、重复品牌或错误小字；
+9. 字体设计是否选定明确模式，是否通过尺度反差、错落层级或纵横组合体现高级感，同时保持字形不扭曲；
+10. AIGC 画面是否在制作清单和必要的消费者界面标明；
+11. 用作事实证据的画面是否已经替换为真实酒标、包装或文件。
 
 如果只有产品外缘存在白灰光晕，使用当前成图作为编辑目标，只局部重绘外缘带：保护酒标内部、瓶身主体、瓶盖中心和背景远区不变；删除外缘带中的白灰轮廓信息，按当前背景与主光重新生成折射、反射和接触阴影。修复仍由多模态生图模型完成，不进行程序抠图或像素合成。
