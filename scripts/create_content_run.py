@@ -8,6 +8,7 @@ from pathlib import Path
 
 
 ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels")
+VIDEO_PLATFORMS = {"douyin", "weixin-channels"}
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 VERSION = "2.2.2"
 DEFAULT_PRODUCT = "马克瑞普之选亚伯乐1996年单桶"
@@ -156,6 +157,10 @@ def _check_existing_manifest(
         )
 
 
+def needs_video_master(platforms: list[str]) -> bool:
+    return bool(VIDEO_PLATFORMS.intersection(platforms))
+
+
 def create_run(
     root: Path,
     date: str,
@@ -211,11 +216,36 @@ def create_run(
                 platform_dir / "prompts.md",
                 "# 小红书逐页生产提示词\n\n## 套图视觉母版\n\n## 第1页\n",
             )
-        else:
-            _write_once(
-                platform_dir / "storyboard.md",
-                "# 视频逐镜分镜\n\n## 镜头1\n",
-            )
+
+    if needs_video_master(normalized_platforms):
+        video_master = run_dir / "video-master"
+        for directory in (
+            "external-generation",
+            "incoming",
+            "accepted",
+            "media",
+        ):
+            (video_master / directory).mkdir(parents=True, exist_ok=True)
+        _write_once(
+            video_master / "treatment.md",
+            "# 视频创意方案\n\n## 核心命题\n\n## 视觉方向\n\n## 制作模式\n",
+        )
+        _write_once(
+            video_master / "shotlist.yaml",
+            "version: 1\naspect_ratio: 9:16\nshots: []\n",
+        )
+        _write_once(
+            video_master / "storyboard.md",
+            "# 视频逐镜分镜\n\n## 镜头1\n",
+        )
+        _write_once(
+            video_master / "edit-plan.md",
+            "# 剪辑方案\n\n## 时间线\n\n## 声音\n\n## 字幕与图形\n",
+        )
+        _write_once(
+            video_master / "qa.md",
+            "# 视频母版QA\n\n## 结论\n\n## 镜头状态\n\n## 问题与修正\n",
+        )
 
     return run_dir
 

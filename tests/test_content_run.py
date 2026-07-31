@@ -113,16 +113,62 @@ class ContentRunContractTests(unittest.TestCase):
                 "xiaohongshu/qa.md",
                 "xiaohongshu/media",
                 "douyin/publish.md",
-                "douyin/storyboard.md",
                 "douyin/qa.md",
                 "douyin/media",
                 "weixin-channels/publish.md",
-                "weixin-channels/storyboard.md",
                 "weixin-channels/qa.md",
                 "weixin-channels/media",
+                "video-master/treatment.md",
+                "video-master/shotlist.yaml",
+                "video-master/storyboard.md",
+                "video-master/edit-plan.md",
+                "video-master/qa.md",
+                "video-master/external-generation",
+                "video-master/incoming",
+                "video-master/accepted",
+                "video-master/media",
             ]
             for relative in expected:
                 self.assertTrue((run_dir / relative).exists(), relative)
+
+    def test_video_platforms_share_one_video_master(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp),
+                "2026-08-01",
+                "label-reading",
+                ["douyin", "weixin-channels"],
+            )
+
+            expected = [
+                "video-master/treatment.md",
+                "video-master/shotlist.yaml",
+                "video-master/storyboard.md",
+                "video-master/edit-plan.md",
+                "video-master/qa.md",
+                "video-master/external-generation",
+                "video-master/incoming",
+                "video-master/accepted",
+                "video-master/media",
+            ]
+            for relative in expected:
+                self.assertTrue((run_dir / relative).exists(), relative)
+
+            self.assertFalse((run_dir / "douyin" / "storyboard.md").exists())
+            self.assertFalse(
+                (run_dir / "weixin-channels" / "storyboard.md").exists()
+            )
+
+    def test_xiaohongshu_only_run_has_no_video_master(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp),
+                "2026-08-01",
+                "label-reading",
+                ["xiaohongshu"],
+            )
+
+            self.assertFalse((run_dir / "video-master").exists())
 
     def test_create_run_never_overwrites_existing_copy(self):
         with workspace_tempdir() as tmp:

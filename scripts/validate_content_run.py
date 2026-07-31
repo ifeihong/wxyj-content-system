@@ -13,6 +13,18 @@ RUN_NAME_PATTERN = re.compile(
 )
 VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+$")
 ALLOWED_STATUSES = {"draft", "qa", "approved", "published", "archived"}
+VIDEO_PLATFORMS = {"douyin", "weixin-channels"}
+VIDEO_MASTER_REQUIRED = (
+    "treatment.md",
+    "shotlist.yaml",
+    "storyboard.md",
+    "edit-plan.md",
+    "qa.md",
+    "external-generation",
+    "incoming",
+    "accepted",
+    "media",
+)
 PLATFORM_CODES = {
     "xiaohongshu": "xhs",
     "douyin": "dy",
@@ -41,7 +53,7 @@ PLATFORM_REQUIREMENTS = {
         ),
     },
     "douyin": {
-        "files": ("publish.md", "storyboard.md", "qa.md", "media"),
+        "files": ("publish.md", "qa.md", "media"),
         "headings": (
             "主标题",
             "备选标题",
@@ -58,7 +70,7 @@ PLATFORM_REQUIREMENTS = {
         ),
     },
     "weixin-channels": {
-        "files": ("publish.md", "storyboard.md", "qa.md", "media"),
+        "files": ("publish.md", "qa.md", "media"),
         "headings": (
             "主标题",
             "备选标题",
@@ -231,6 +243,12 @@ def validate_run(run_dir: Path) -> list[str]:
         errors.append("manifest未声明平台")
     if len(platforms) != len(set(platforms)):
         errors.append("manifest平台列表包含重复项")
+
+    if VIDEO_PLATFORMS.intersection(platforms):
+        video_master = run_dir / "video-master"
+        for relative in VIDEO_MASTER_REQUIRED:
+            if not (video_master / relative).exists():
+                errors.append(f"video-master缺少文件或目录: {relative}")
 
     for platform in PLATFORM_REQUIREMENTS:
         if (run_dir / platform).exists() and platform not in platforms:
