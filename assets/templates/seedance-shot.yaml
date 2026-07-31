@@ -1,0 +1,17 @@
+shot_id: S01
+slug: shot-slug
+title: "镜头标题"
+input_mode: first-frame
+aspect_ratio: 9:16
+duration_seconds: 5
+duration_tolerance_seconds: 0.75
+draft_resolution: 720p
+final_resolution: 1080p
+candidate_target: 1
+max_attempts: 2
+output_name: yyyymmdd-wxyj-topic-s01-shot-slug-seedance-v01.mp4
+references:
+  - order: 1
+    file: references/S01-first-frame-9x16.png
+    role: first_frame
+    required: true
