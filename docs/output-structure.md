@@ -16,8 +16,11 @@
 ```text
 outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
 ├── manifest.yaml
+├── release-manifest.json
 ├── brief.md
 ├── sources.md
+├── product-visual-qa.md
+├── deliverables.md
 ├── xiaohongshu/
 │   ├── publish.md
 │   ├── prompts.md
@@ -28,6 +31,7 @@ outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
 │   ├── shotlist.yaml
 │   ├── storyboard.md
 │   ├── edit-plan.md
+│   ├── motion-plan.json
 │   ├── qa.md
 │   ├── external-generation/
 │   ├── incoming/
@@ -49,7 +53,7 @@ outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
 
 ```yaml
 run_id: 2026-08-01-label-reading
-version: 2.4.0
+version: 2.5.0
 date: 2026-08-01
 topic_slug: label-reading
 product: "马克瑞普之选亚伯乐1996年单桶"

@@ -33,8 +33,11 @@ outputs/
     └── 08/
         └── 2026-08-01-label-reading/
             ├── manifest.yaml
+            ├── release-manifest.json
             ├── brief.md
             ├── sources.md
+            ├── product-visual-qa.md
+            ├── deliverables.md
             ├── xiaohongshu/
             │   ├── publish.md
             │   ├── prompts.md
@@ -45,6 +48,7 @@ outputs/
             │   ├── shotlist.yaml
             │   ├── storyboard.md
             │   ├── edit-plan.md
+            │   ├── motion-plan.json
             │   ├── qa.md
             │   ├── external-generation/
             │   ├── incoming/
@@ -67,11 +71,15 @@ outputs/
 | 文件 | 职责 |
 | --- | --- |
 | `manifest.yaml` | 运行ID、系统版本、日期、主题、产品、平台和状态 |
+| `release-manifest.json` | 原生画幅目标、质量门槛、候选/退回/发布资产和最终发布状态 |
 | `brief.md` | 母题、受众、事实、目标和创意边界 |
 | `sources.md` | 实物、文件、AIGC参考和待核验项 |
+| `product-visual-qa.md` | 人工核对瓶型、酒标、液面、边缘、礼盒开合和内页结构 |
+| `deliverables.md` | 最终可发布素材、平台文案和共享母版的唯一交付索引 |
 | `publish.md` | 可直接复制到平台的标题、正文、标签、评论与 CTA |
 | `prompts.md` | 小红书逐页生成提示词与参考图 |
 | `video-master/storyboard.md` | 抖音与视频号共用的逐镜分镜、旁白、字幕和生成提示词 |
+| `video-master/motion-plan.json` | V4单素材连续运动、起止位置、方向、转场与音频状态 |
 | `video-master/external-generation/` | 外部 Seedance 平台无关逐镜任务包 |
 | `video-master/incoming/` | 用户回传原件，永久保留且不覆盖 |
 | `video-master/accepted/` | 通过机器与人工 QA 的镜头副本 |
@@ -204,7 +212,10 @@ YYYYMMDD-wxyj-topic-slug-sNN-role-seedance-vNN.mp4
 
 ```powershell
 python scripts/validate_content_run.py <运行目录>
+python scripts/validate_release_preflight.py <运行目录>
 ```
+
+`validate_content_run.py` 会对2.5.0及之后的运行包自动调用发布预检。人工产品视觉判断仍须填写 `product-visual-qa.md`，再把 `release-manifest.json` 对应质量门槛改为 `pass`；脚本不替代人工确认瓶型和审美。
 
 外部回传另行验证：
 

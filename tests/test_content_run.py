@@ -53,6 +53,9 @@ class ContentRunContractTests(unittest.TestCase):
         cls.asset_validator = load_module(
             "validate_product_assets", "validate_product_assets.py"
         )
+        cls.release_validator = load_module(
+            "validate_release_preflight", "validate_release_preflight.py"
+        )
 
     def test_bundled_product_assets_validate(self):
         product_root = (
@@ -106,8 +109,11 @@ class ContentRunContractTests(unittest.TestCase):
             )
             expected = [
                 "manifest.yaml",
+                "release-manifest.json",
                 "brief.md",
                 "sources.md",
+                "product-visual-qa.md",
+                "deliverables.md",
                 "xiaohongshu/publish.md",
                 "xiaohongshu/prompts.md",
                 "xiaohongshu/qa.md",
@@ -122,6 +128,7 @@ class ContentRunContractTests(unittest.TestCase):
                 "video-master/shotlist.yaml",
                 "video-master/storyboard.md",
                 "video-master/edit-plan.md",
+                "video-master/motion-plan.json",
                 "video-master/qa.md",
                 "video-master/external-generation",
                 "video-master/incoming",
@@ -130,6 +137,71 @@ class ContentRunContractTests(unittest.TestCase):
             ]
             for relative in expected:
                 self.assertTrue((run_dir / relative).exists(), relative)
+
+    def test_release_preflight_rejects_v4_fake_motion_and_unapproved_gates(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp),
+                "2026-08-08",
+                "sensory-journey",
+                ["douyin", "weixin-channels"],
+            )
+            release_path = run_dir / "release-manifest.json"
+            release_path.write_text(
+                """{
+  "schema_version": 1,
+  "run_id": "2026-08-08-sensory-journey",
+  "release_status": "publish",
+  "quality_gates": {
+    "facts": "pass",
+    "product_geometry": "pending",
+    "public_copy": "pass",
+    "media": "pass",
+    "deliverables": "pass"
+  },
+  "assets": []
+}
+""",
+                encoding="utf-8",
+            )
+            motion_path = run_dir / "video-master" / "motion-plan.json"
+            motion_path.write_text(
+                """{
+  "version": 1,
+  "mode": "V4",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "asset_paths": ["a.png", "b.png"],
+      "continuous_motion": false,
+      "direction": "left-to-right",
+      "start_x": -43,
+      "end_x": 0,
+      "transition_out": "soft-light-wipe"
+    }
+  ]
+}
+""",
+                encoding="utf-8",
+            )
+
+            errors = self.release_validator.validate_release(run_dir)
+
+            joined = "\n".join(errors)
+            self.assertIn("product_geometry必须为pass", joined)
+            self.assertIn("每镜只允许一个静帧素材", joined)
+            self.assertIn("必须是连续运动", joined)
+
+    def test_content_run_validator_invokes_release_preflight(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp), "2026-08-08", "release-gate", ["xiaohongshu"]
+            )
+            (run_dir / "release-manifest.json").unlink()
+
+            errors = self.validator.validate_run(run_dir)
+
+            self.assertIn("缺少发布清单: release-manifest.json", errors)
 
     def test_video_platforms_share_one_video_master(self):
         with workspace_tempdir() as tmp:

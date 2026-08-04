@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "run_id": "YYYY-MM-DD-topic-slug",
+  "release_status": "working",
+  "native_targets": {
+    "xiaohongshu": {"aspect_ratio": "3:4", "target": "1086x1448 or 1536x2048"},
+    "video_master": {"aspect_ratio": "9:16", "target": "1080x1920"}
+  },
+  "quality_gates": {
+    "facts": "pending",
+    "product_geometry": "pending",
+    "public_copy": "pending",
+    "media": "pending",
+    "audio": "pending",
+    "deliverables": "pending"
+  },
+  "assets": []
+}

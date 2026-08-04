@@ -3,7 +3,7 @@
 Canonical name: 威熏邑境自媒体内容生成系统
 English name: WXYJ Content System
 Skill ID: wxyj-content-system
-Version: 2.4.0
+Version: 2.5.0
 
 Purpose:
 A brand-specific Codex Skill for 威熏邑境, currently centered on

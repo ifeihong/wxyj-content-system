@@ -32,6 +32,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 | 抖音/视频号短视频 | `references/video-production-system.md`、`references/external-seedance-handoff.md`、`references/visual-asset-library.md` | 共享母版、逐镜任务包、回传验收、双平台发布包 |
 | 图片/视频 AIGC | `references/visual-asset-library.md`、`references/text-in-image-system.md`、`assets/products/mackillops-choice-aberlour-1996/asset-manifest.json` | 内置参考图编排、提示词、产品锁定、负面词 |
 | 内容目录与命名 | `references/content-run-system.md` | 运行目录、文件名、保存与校验 |
+| 发布预检与最终交付 | `references/content-run-system.md`、`references/review-rubric.md` | 发布清单、产品视觉验收卡、最终交付索引 |
 | 评论、私信、企微、店铺、品鉴会 | `references/conversion-playbook.md` | 分阶段转化话术 |
 | 发布审核与复盘 | `references/review-rubric.md` | 评分、退回项、复盘结论 |
 | 新品接入 | `assets/templates/product-card.md` | 新产品事实卡 |
@@ -56,14 +57,17 @@ python scripts/create_content_run.py --root <输出根目录> --date YYYY-MM-DD 
 9. **锁定首轮画幅**：每页首轮原生成文件必须是宽:高 = 3:4，并立即执行 `python scripts/validate_xhs_image.py <image.png>`；不通过就按原提示词重新生成，不允许通过裁切、拉伸或补边把错误比例伪装成合格成图。
 10. **保存发布文案**：把标题、正文/描述、标签、评论和 CTA 写入各平台 `publish.md`；素材来源与事实核验状态只写入内部 `sources.md` 和 `qa.md`。
 11. **保存生产资产**：小红书写入 `prompts.md`；视频分镜写入共享 `video-master/storyboard.md`，外部 Seedance 任务写入 `video-master/external-generation/`，用户原始回传写入 `video-master/incoming/`，通过验收的副本写入 `video-master/accepted/`。每个媒体版本在 `qa.md` 标记状态。
-12. **执行 QA**：把事实、文字、视觉、AIGC、合规、媒体状态与修改记录写入 `qa.md`；发布总览只能引用 `publish` 文件。
-13. **运行验证**：
+12. **执行 QA**：把事实、文字、视觉、AIGC、合规、媒体状态与修改记录写入 `qa.md`；逐项完成人工 `product-visual-qa.md`，发布总览只能引用 `publish` 文件。
+13. **登记发布清单**：把每个候选资产的路径、原生画幅、来源类型、页面/镜头角色、产品参考与状态写入 `release-manifest.json`；只有全部质量门槛为 `pass` 或 `not-applicable` 时才把 `release_status` 标为 `publish`。
+14. **运行验证**：
 
 ```powershell
 python scripts/validate_content_run.py <运行目录>
+python scripts/validate_release_preflight.py <运行目录>
 ```
 
-14. **交付缺口**：列出仍需补拍、文件核验、库存核验或平台实时确认的项目。
+15. **生成交付索引**：在 `deliverables.md` 只列出通过发布预检的素材、最终平台文案和共享视频母版。
+16. **交付缺口**：列出仍需补拍、文件核验、库存核验或平台实时确认的项目。
 
 ## 发布文案输出契约
 
@@ -123,6 +127,8 @@ python scripts/validate_content_run.py <运行目录>
 小红书成品规格固定写入：`3:4 portrait, width:height = 3:4, target 1086x1448 or 1536x2048, full bleed; do not output 2:3, 4:5 or square.` 每次图像生成调用结束后，先对首轮原生成文件执行 `python scripts/validate_xhs_image.py <image.png>`，比例不合格直接重生成；不允许通过裁切、拉伸、扩图或程序改尺寸作为首轮比例修复。
 
 视频全屏画面、运动首帧、尾帧和封面必须原生9:16，成片目标 `1080×1920`。3:4图片不能作为全屏主画面，禁止黑边、上下补边和拉伸。
+
+V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一时间线项目中以一条连续关键帧曲线完成左到右、右到左或克制推拉。不得把同一图片拆成多张不同裁切的静态片段来假装移动；每镜在 `video-master/motion-plan.json` 登记唯一素材、方向、起止位置和转场。
 
 让多模态生图模型直接生成产品、场景与设计文字的最终图片。不下载字体文件，不用程序贴字，不把无字底图当成静态图文成品。
 
@@ -193,6 +199,9 @@ python scripts/validate_content_run.py <运行目录>
 ## 可复用资产
 
 - 运行与命名规范：`references/content-run-system.md`
+- 发布预检脚本：`scripts/validate_release_preflight.py`
+- 发布清单模板：`assets/templates/release-manifest.json`
+- 产品视觉人工验收卡：`assets/templates/product-visual-qa.md`
 - 产品事实：`references/product-facts.md`
 - 包装品鉴与故事：`references/product-packaging-copy.md`
 - 内置产品资产清单：`assets/products/mackillops-choice-aberlour-1996/asset-manifest.json`

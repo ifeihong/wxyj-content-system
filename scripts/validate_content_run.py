@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import re
 from datetime import date as date_type
@@ -105,6 +106,18 @@ NEGATION_PATTERN = re.compile(
     r"无收益承诺"
 )
 CLAUSE_SPLIT_PATTERN = re.compile(r"[。！？；\n]|但是|但|然而|不过|却")
+
+
+def _validate_release_preflight(run_dir: Path) -> list[str]:
+    script = Path(__file__).with_name("validate_release_preflight.py")
+    spec = importlib.util.spec_from_file_location(
+        "wxyj_validate_release_preflight", script
+    )
+    if spec is None or spec.loader is None:
+        return ["无法加载发布预检脚本"]
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.validate_release(run_dir)
 
 
 def _manifest_platforms(text: str) -> list[str]:
@@ -308,6 +321,10 @@ def validate_run(run_dir: Path) -> list[str]:
                             "媒体文件与运行日期或主题不一致: "
                             f"{media.name}"
                         )
+
+    manifest_version = manifest_values.get("version")
+    if manifest_version and tuple(map(int, manifest_version.split("."))) >= (2, 5, 0):
+        errors.extend(_validate_release_preflight(run_dir))
 
     return errors
 

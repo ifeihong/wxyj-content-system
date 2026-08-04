@@ -10,7 +10,7 @@ from pathlib import Path
 ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels")
 VIDEO_PLATFORMS = {"douyin", "weixin-channels"}
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-VERSION = "2.4.0"
+VERSION = "2.5.0"
 DEFAULT_PRODUCT = "马克瑞普之选亚伯乐1996年单桶"
 
 
@@ -191,6 +191,46 @@ def create_run(
         ]
     )
     _write_once(run_dir / "manifest.yaml", manifest)
+    release_manifest = {
+        "schema_version": 1,
+        "run_id": run_id,
+        "release_status": "working",
+        "native_targets": {
+            **(
+                {
+                    "xiaohongshu": {
+                        "aspect_ratio": "3:4",
+                        "target": "1086x1448 or 1536x2048",
+                    }
+                }
+                if "xiaohongshu" in normalized_platforms
+                else {}
+            ),
+            **(
+                {
+                    "video_master": {
+                        "aspect_ratio": "9:16",
+                        "target": "1080x1920",
+                    }
+                }
+                if needs_video_master(normalized_platforms)
+                else {}
+            ),
+        },
+        "quality_gates": {
+            "facts": "pending",
+            "product_geometry": "pending",
+            "public_copy": "pending",
+            "media": "pending",
+            "audio": "pending" if needs_video_master(normalized_platforms) else "not-applicable",
+            "deliverables": "pending",
+        },
+        "assets": [],
+    }
+    _write_once(
+        run_dir / "release-manifest.json",
+        json.dumps(release_manifest, ensure_ascii=False, indent=2) + "\n",
+    )
     _write_once(
         run_dir / "brief.md",
         "# 内容简报\n\n## 母题\n\n## 目标受众\n\n## 核心事实\n\n## 增长目标\n",
@@ -198,6 +238,41 @@ def create_run(
     _write_once(
         run_dir / "sources.md",
         "# 素材与事实来源\n\n## 真实产品\n\n## 文件证据\n\n## AIGC参考\n\n## 待核验项\n",
+    )
+    _write_once(
+        run_dir / "product-visual-qa.md",
+        """# 产品视觉人工验收卡
+
+## 结论
+
+`pending` / `pass` / `fail`
+
+## 每张发布资产
+
+| 文件 | 产品形态 | 几何参考 | 瓶盖与瓶肩 | 酒标与液面 | 边缘融合 | 礼盒结构与内页 | 结论 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+
+完整酒瓶必须核对瓶盖、瓶肩、瓶身宽高、酒标位置、液面和瓶底。开盒画面必须保持175°–180°，保留左侧白色内皮、故事文字、中央合页和右侧瓶槽。脚本只核对登记状态，不能替代人工视觉判断。
+""",
+    )
+    _write_once(
+        run_dir / "deliverables.md",
+        """# 最终交付索引
+
+## 发布状态
+
+`working` / `publish`
+
+## 小红书
+
+## 抖音
+
+## 视频号
+
+## 共享视频母版
+
+只列出 `release-manifest.json` 中状态为 `publish` 的资产及对应平台发布文案。
+""",
     )
 
     for platform in normalized_platforms:
@@ -235,6 +310,24 @@ def create_run(
         _write_once(
             video_master / "edit-plan.md",
             "# 剪辑方案\n\n## 时间线\n\n## 声音\n\n## 字幕与图形\n",
+        )
+        _write_once(
+            video_master / "motion-plan.json",
+            json.dumps(
+                {
+                    "version": 1,
+                    "mode": "unset",
+                    "shots": [],
+                    "audio_mix": {
+                        "voice": "pending",
+                        "music": "pending",
+                        "effects": "pending",
+                    },
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+            + "\n",
         )
         _write_once(
             video_master / "qa.md",

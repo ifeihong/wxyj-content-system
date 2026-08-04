@@ -35,9 +35,10 @@
 4. 生成平台 `publish.md`；
 5. 生成小红书 `prompts.md`；视频使用共享 `video-master/storyboard.md`；
 6. 保存媒体并使用规范文件名；
-7. 完成 `qa.md`；
-8. 运行目录校验器；
-9. 发布后更新状态和数据台账。
+7. 完成 `qa.md` 与 `product-visual-qa.md`；
+8. 在 `release-manifest.json` 登记候选、退回和发布资产；
+9. 运行目录校验器与发布预检；
+10. 在 `deliverables.md` 汇总最终交付，发布后更新状态和数据台账。
 
 抖音或视频号任务还需要：
 
@@ -77,6 +78,9 @@ python scripts\create_content_run.py `
 python scripts\validate_product_assets.py
 
 python scripts\validate_content_run.py `
+  outputs\2026\08\2026-08-01-label-reading
+
+python scripts\validate_release_preflight.py `
   outputs\2026\08\2026-08-01-label-reading
 ```
 
