@@ -26,9 +26,10 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 | 产品文案、事实核验 | `references/product-facts.md`、`references/compliance-and-evidence.md` | 事实白名单、证据缺口、合规口径 |
 | 包装、品鉴词、品牌故事 | `references/product-packaging-copy.md` | 包装口径、传播转述、出处 |
 | 选题、标题、爆款方向 | `references/content-formulas.md` | 评分后的母题卡 |
+| 近期去重与长期日更 | `references/content-diversity-system.md` | 创意记录、30天台账比对、重复修正 |
 | 当前热点、节日、节气 | `references/trend-and-calendar-system.md` | 实时检索、适配评分、采用理由 |
 | 三平台创作 | `references/platform-playbooks.md` | 平台原生发布包 |
-| 小红书套图 | `references/xiaohongshu-carousel-system.md`、`references/text-in-image-system.md`、`references/visual-asset-library.md` | 动态页数、逐页提示词、成图文字、QA |
+| 小红书套图 | `references/xiaohongshu-carousel-system.md`、`references/editorial-art-direction.md`、`references/text-in-image-system.md`、`references/visual-asset-library.md` | 动态页数、艺术方向、逐页提示词、成图文字、QA |
 | 抖音/视频号短视频 | `references/video-production-system.md`、`references/external-seedance-handoff.md`、`references/visual-asset-library.md` | 共享母版、逐镜任务包、回传验收、双平台发布包 |
 | 图片/视频 AIGC | `references/visual-asset-library.md`、`references/text-in-image-system.md`、`assets/products/mackillops-choice-aberlour-1996/asset-manifest.json` | 内置参考图编排、提示词、产品锁定、负面词 |
 | 内容目录与命名 | `references/content-run-system.md` | 运行目录、文件名、保存与校验 |
@@ -44,30 +45,33 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 1. **识别任务**：确定是定位、选题、创作、排期、审核、互动、复盘或新品接入。
 2. **锁定事实**：默认产品从 `references/product-facts.md` 取值；缺失字段标为“待核验”，不推断。
 3. **验证并盘点素材**：先执行 `python scripts/validate_product_assets.py`；通过后从内置17张产品参考图选择当前页面或镜头需要的2–3张，再标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
-4. **建立母题**：只回答一个具体用户问题，直接关联当前产品。
-5. **判断时效**：涉及当前热点、热梗、节日或假期时实时检索；不相关则采用常青主题。
-6. **创建运行包**：需要交付可发布内容时，先执行：
+4. **查询近期创意**：读取最近30天 `creative-ledger.csv`，先排除完整创意指纹、14天视觉配方和连续版式路线重复。
+5. **建立母题**：只回答一个具体用户问题，直接关联当前产品；在 `creative-record.json` 登记主题族、事实、首图机位、钩子结构、CTA和 `typography_mode`。
+6. **判断时效**：涉及当前热点、热梗、节日或假期时实时检索；不相关则采用常青主题。
+7. **创建运行包**：需要交付可发布内容时，先执行：
 
 ```powershell
 python scripts/create_content_run.py --root <输出根目录> --date YYYY-MM-DD --slug <topic-slug> --product "<正式产品名>" --platforms xiaohongshu douyin weixin-channels
 ```
 
-7. **生成平台版本**：按平台原生结构生成，不机械复制。抖音或视频号视频采用一个共享 `video-master/`；默认路径为“生成共享video-master→选择制作模式→为external-seedance镜头创建逐镜任务包→等待用户回传→验收incoming→把accepted素材进入可编辑剪辑”。
-8. **锁定小红书事实、机位与几何**：先建立逐页 `primary_fact_id` 表，同一 `primary_fact_id` 只能出现一次；再填写机位分配表和参考图角色。完整正面酒瓶统一以 `酒瓶-正面.png` 为 `geometry_master`，不得让风格参考覆盖瓶型。
-9. **锁定首轮画幅**：每页首轮原生成文件必须是宽:高 = 3:4，并立即执行 `python scripts/validate_xhs_image.py <image.png>`；不通过就按原提示词重新生成，不允许通过裁切、拉伸或补边把错误比例伪装成合格成图。
-10. **保存发布文案**：把标题、正文/描述、标签、评论和 CTA 写入各平台 `publish.md`；素材来源与事实核验状态只写入内部 `sources.md` 和 `qa.md`。
-11. **保存生产资产**：小红书写入 `prompts.md`；视频分镜写入共享 `video-master/storyboard.md`，外部 Seedance 任务写入 `video-master/external-generation/`，用户原始回传写入 `video-master/incoming/`，通过验收的副本写入 `video-master/accepted/`。每个媒体版本在 `qa.md` 标记状态。
-12. **执行 QA**：把事实、文字、视觉、AIGC、合规、媒体状态与修改记录写入 `qa.md`；逐项完成人工 `product-visual-qa.md`，发布总览只能引用 `publish` 文件。
-13. **登记发布清单**：把每个候选资产的路径、原生画幅、来源类型、页面/镜头角色、产品参考与状态写入 `release-manifest.json`；只有全部质量门槛为 `pass` 或 `not-applicable` 时才把 `release_status` 标为 `publish`。
-14. **运行验证**：
+8. **生成平台版本**：按平台原生结构生成，不机械复制。抖音或视频号视频采用一个共享 `video-master/`；默认路径为“生成共享video-master→选择制作模式→为external-seedance镜头创建逐镜任务包→等待用户回传→验收incoming→把accepted素材进入可编辑剪辑”。
+9. **锁定小红书艺术方向、事实、机位与几何**：整套先选一个 `typography_mode`，各页轮换 `layout_pattern`；再建立逐页 `primary_fact_id` 表和机位分配表。完整正面酒瓶统一以 `酒瓶-正面.png` 为 `geometry_master`，不得让风格参考覆盖瓶型。
+10. **锁定首轮画幅**：每页首轮原生成文件必须是宽:高 = 3:4，并立即执行 `python scripts/validate_xhs_image.py <image.png>`；不通过就按原提示词重新生成，不允许通过裁切、拉伸或补边把错误比例伪装成合格成图。
+11. **保存发布文案**：把采用标题、正文/描述、标签、评论、CTA和最终素材顺序写入各平台 `publish.md`；备选标题只作策划记录。素材来源与事实核验状态只写入内部 `sources.md` 和 `qa.md`。
+12. **保存生产资产**：小红书写入 `prompts.md`；视频分镜写入共享 `video-master/storyboard.md`，外部 Seedance 任务写入 `video-master/external-generation/`，用户原始回传写入 `video-master/incoming/`，通过验收的副本写入 `video-master/accepted/`。每个媒体版本在 `qa.md` 标记状态。
+13. **执行 QA**：把事实、文字、视觉、AIGC、合规、媒体状态与修改记录写入 `qa.md`；逐项完成人工 `product-visual-qa.md`，发布总览只能引用 `publish` 文件。
+14. **登记发布清单**：把每个候选资产的路径、原生画幅、来源类型、页面/镜头角色、产品参考与状态写入 `release-manifest.json`；只有全部质量门槛为 `pass` 或 `not-applicable` 时才把 `release_status` 标为 `publish`。
+15. **运行验证**：
 
 ```powershell
 python scripts/validate_content_run.py <运行目录>
 python scripts/validate_release_preflight.py <运行目录>
+python scripts/validate_content_diversity.py <运行目录>/creative-record.json --ledger <运营内容库>/creative-ledger.csv
 ```
 
-15. **生成交付索引**：在 `deliverables.md` 只列出通过发布预检的素材、最终平台文案和共享视频母版。
-16. **交付缺口**：列出仍需补拍、文件核验、库存核验或平台实时确认的项目。
+16. **生成交付索引**：在 `deliverables.md` 只列出通过发布预检和多样性校验的素材、最终平台文案和共享视频母版。
+17. **发布后登记**：把已发布 `creative-record.json` 追加到创意台账，再把平台效果写入 `performance-log.csv`。
+18. **交付缺口**：列出仍需补拍、文件核验、库存核验或平台实时确认的项目。
 
 ## 发布文案输出契约
 
@@ -75,9 +79,9 @@ python scripts/validate_release_preflight.py <运行目录>
 
 | 平台 | `publish.md` 必填 |
 | --- | --- |
-| 小红书 | 主标题、备选标题、一句话钩子、发布正文、话题标签、首评、CTA |
-| 抖音 | 主标题、备选标题、3秒钩子、视频简介、话题标签、置顶评论、CTA |
-| 视频号 | 主标题、备选标题、5秒观看理由、视频描述、话题标签、首评、朋友圈转发文案、CTA |
+| 小红书 | 采用标题、备选标题、一句话钩子、发布正文、话题标签、首评、CTA、最终素材顺序 |
+| 抖音 | 采用标题、备选标题、3秒钩子、视频简介、话题标签、置顶评论、CTA、最终素材顺序 |
+| 视频号 | 采用标题、备选标题、5秒观看理由、视频描述、话题标签、首评、朋友圈转发文案、CTA、最终素材顺序 |
 
 标题、正文和标签必须共享同一母题与事实锚点。标签采用“品类词 + 细分词 + 内容意图词 + 品牌词”，不要堆砌无关热词。
 
@@ -87,9 +91,10 @@ python scripts/validate_release_preflight.py <运行目录>
 
 每套小红书内容交付：
 
-- 标题 A/B 与一句话钩子；
+- 采用标题、备选标题策划记录与一句话钩子；
 - 页数及选择依据；
 - 套图视觉母版卡；
+- 整套 `typography_mode` 与逐页 `layout_pattern`；
 - 逐页机位分配表：`view_id`、主体、参考图、透视验收特征；
 - 逐页角色、文字密度、精确文案和参考图；
 - 逐页完整提示词、负面提示词、局部重绘规则和 QA；
@@ -200,6 +205,11 @@ V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一
 
 - 运行与命名规范：`references/content-run-system.md`
 - 发布预检脚本：`scripts/validate_release_preflight.py`
+- 内容多样性校验：`scripts/validate_content_diversity.py`
+- 高奢编辑艺术方向：`references/editorial-art-direction.md`
+- 内容多样性系统：`references/content-diversity-system.md`
+- 创意记录模板：`assets/templates/creative-record.json`
+- 创意台账模板：`assets/templates/creative-ledger.csv`
 - 发布清单模板：`assets/templates/release-manifest.json`
 - 产品视觉人工验收卡：`assets/templates/product-visual-qa.md`
 - 产品事实：`references/product-facts.md`

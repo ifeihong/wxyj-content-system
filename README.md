@@ -2,7 +2,7 @@
 
 **威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务“马克瑞普之选亚伯乐1996年单桶”在小红书、抖音和视频号上的持续内容创作。** 它把该产品的事实、包装文案、品牌故事、17张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
 
-当前版本：`2.5.0`<br>
+当前版本：`2.6.0`<br>
 Skill ID：`wxyj-content-system`<br>
 GitHub Repository ID：`wxyj-content-system`
 
@@ -65,20 +65,22 @@ GitHub Repository ID：`wxyj-content-system`
 | 模块 | 输出 |
 | --- | --- |
 | 选题 | 母题、钩子、爆款公式、受众需求、事实锚点、热度与风险 |
-| 小红书 | 标题 A/B、动态页数、逐页提示词、图片内文字、正文、Tag、首评、QA |
+| 小红书 | 采用标题、动态页数、高奢艺术方向、逐页提示词、图片内文字、正文、Tag、首评、QA |
 | 抖音 | 标题、3秒钩子、逐镜分镜、旁白、字幕、简介、Tag、置顶评论 |
 | 视频号 | 标题、5秒观看理由、逐镜分镜、描述、Tag、首评、朋友圈转发文案 |
 | AIGC | 参考图职责、完整提示词、负面提示词、产品锁定、局部重绘与QA |
-| 内容管理 | 标准运行目录、媒体命名、版本保留、发布清单、产品视觉验收和发布前自动校验 |
+| 内容管理 | 标准运行目录、媒体命名、创意台账、近期防重复、发布清单、产品视觉验收和发布前自动校验 |
 | 运营闭环 | 评论、私信、企微、店铺、品鉴会与数据复盘 |
 
-生成图片只是一个环节。系统要求每套内容同时具备可直接发布的标题、正文/描述、平台标签、首评或置顶评论、CTA 与 AIGC 披露。
+生成图片只是一个环节。系统要求每套内容同时具备可直接发布的采用标题、正文/描述、平台标签、首评或置顶评论、CTA、最终素材顺序与内部素材来源记录。
 
 ## 核心场景
 
 ### 小红书图文生成
 
 根据内容信息量选择3–8页，而不是固定生成8页。第1页承担封面职责，后续页按证据、解释、判断、总结和互动分工。生成前先锁定逐页 `view_id`，相邻页面不得使用相同机位；每张首轮原生成文件必须直接通过精确3:4画幅检查，不用裁切或拉伸补救。
+
+每套先选择 `archive-label`、`valentine-time`、`sherry-depth`、`collector-restraint`、`gift-ritual` 或 `quiet-modern` 之一作为整套高奢编辑方向，再在内页轮换不同版式结构。系统用 `creative-record.json` 和近期台账避免主题、事实、首图机位、钩子与版式组合重复。
 
 ### 抖音短视频脚本
 
@@ -166,7 +168,7 @@ C:\Users\<用户名>\.codex\skills\wxyj-content-system
 ```text
 使用 $wxyj-content-system，为马克瑞普之选亚伯乐1996年单桶
 生成一套8月1日小红书图文，
-同时生成标题A/B、发布正文、Tag、首评、逐页提示词和QA。
+同时生成采用标题、备选标题记录、发布正文、Tag、首评、逐页提示词和QA。
 ```
 
 ### 3. 创建标准内容运行包
@@ -185,8 +187,12 @@ python scripts\create_content_run.py `
 ```text
 outputs/2026/08/2026-08-01-label-reading/
 ├── manifest.yaml
+├── release-manifest.json
+├── creative-record.json
 ├── brief.md
 ├── sources.md
+├── product-visual-qa.md
+├── deliverables.md
 └── xiaohongshu/
     ├── publish.md
     ├── prompts.md
@@ -201,22 +207,31 @@ python scripts\validate_product_assets.py
 
 python scripts\validate_content_run.py `
   outputs\2026\08\2026-08-01-label-reading
+
+python scripts\validate_release_preflight.py `
+  outputs\2026\08\2026-08-01-label-reading
+
+python scripts\validate_content_diversity.py `
+  outputs\2026\08\2026-08-01-label-reading\creative-record.json `
+  --ledger <运营内容库>\creative-ledger.csv
 ```
 
-产品资产校验器会检查17张参考图的数量、登记状态与 SHA-256；内容运行校验器会检查目录、文件名、标题、正文、Tag、首评、CTA、AIGC披露和高风险表达。
+产品资产校验器检查17张参考图及 SHA-256；内容运行校验器检查目录和发布字段；发布预检检查原生画幅、产品人工签核、媒体、音频与交付状态；多样性校验检查30天创意指纹、14天视觉配方和版式路线轮换。
 
 ## 小红书发布包标准
 
 每个 `xiaohongshu/publish.md` 必须包含：
 
-1. 主标题；
-2. 备选标题；
+1. 采用标题；
+2. 主标题与备选标题策划记录；
 3. 一句话钩子；
 4. 完整发布正文；
 5. 5–10个聚焦话题标签；
 6. 首评；
 7. CTA；
-8. AIGC与事实披露。
+8. 最终素材顺序。
+
+AIGC来源与事实核验只记录在内部 `sources.md` 和 `qa.md`，不进入公开成图或发布文案。
 
 详细规范参见：
 
@@ -260,7 +275,7 @@ python scripts\validate_content_run.py `
 
 ### 是否会把AIGC图片当成产品证据？
 
-不会。产品事实应由实物酒标、真实产品、进口与溯源材料支撑；AIGC只承担创意表达，并需要披露。
+不会。产品事实应由实物酒标、真实产品、进口与溯源材料支撑；AIGC只承担创意表达。来源记录保存在内部文件，平台要求AI标签时只使用后台原生开关，不把内部说明写入公开内容。
 
 ### 能否用于其他威士忌产品？
 

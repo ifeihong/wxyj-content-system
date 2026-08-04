@@ -3,7 +3,7 @@
 Canonical name: 威熏邑境自媒体内容生成系统
 English name: WXYJ Content System
 Skill ID: wxyj-content-system
-Version: 2.5.0
+Version: 2.6.0
 
 Purpose:
 A brand-specific Codex Skill for 威熏邑境, currently centered on
@@ -18,6 +18,8 @@ Primary documentation:
 - docs/output-structure.md
 - docs/naming-convention.md
 - docs/compliance.md
+- references/editorial-art-direction.md
+- references/content-diversity-system.md
 - SKILL.md
 - assets/products/mackillops-choice-aberlour-1996/asset-manifest.json
 
@@ -31,6 +33,8 @@ Important boundaries:
 - Original returns stay in video-master/incoming; validated copies enter accepted.
 - Use scripts/create_external_video_handoff.py to package shots.
 - Use scripts/validate_external_video_return.py to validate returned video.
+- Use scripts/validate_release_preflight.py before final delivery.
+- Use scripts/validate_content_diversity.py against the recent creative ledger before release.
 - Paid ChatCut generation requires explicit authorization in the current task.
 
 This file is a concise agent-reading aid.

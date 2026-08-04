@@ -108,6 +108,12 @@ NEGATION_PATTERN = re.compile(
 CLAUSE_SPLIT_PATTERN = re.compile(r"[。！？；\n]|但是|但|然而|不过|却")
 
 
+def _version_at_least(value: str | None, target: tuple[int, int, int]) -> bool:
+    if value is None or not VERSION_PATTERN.fullmatch(value):
+        return False
+    return tuple(map(int, value.split("."))) >= target
+
+
 def _validate_release_preflight(run_dir: Path) -> list[str]:
     script = Path(__file__).with_name("validate_release_preflight.py")
     spec = importlib.util.spec_from_file_location(
@@ -118,6 +124,28 @@ def _validate_release_preflight(run_dir: Path) -> list[str]:
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module.validate_release(run_dir)
+
+
+def _validate_creative_record(run_dir: Path) -> list[str]:
+    record_path = run_dir / "creative-record.json"
+    if not record_path.exists():
+        return ["缺少创意记录: creative-record.json"]
+    script = Path(__file__).with_name("validate_content_diversity.py")
+    spec = importlib.util.spec_from_file_location(
+        "wxyj_validate_content_diversity", script
+    )
+    if spec is None or spec.loader is None:
+        return ["无法加载内容多样性校验脚本"]
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    try:
+        record = json.loads(record_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"创意记录不是有效JSON: {exc}"]
+    if not isinstance(record, dict):
+        return ["创意记录顶层必须是对象"]
+    require_complete = record.get("status") in {"publish-candidate", "published"}
+    return module.validate_record(record, require_complete=require_complete)
 
 
 def _manifest_platforms(text: str) -> list[str]:
@@ -286,7 +314,10 @@ def validate_run(run_dir: Path) -> list[str]:
             if publish_path.exists()
             else ""
         )
-        for heading in requirement["headings"]:
+        required_headings = list(requirement["headings"])
+        if _version_at_least(version, (2, 6, 0)):
+            required_headings.extend(("采用标题", "最终素材顺序"))
+        for heading in required_headings:
             if _section_value(publish, heading) is None:
                 errors.append(f"{platform}发布文案缺少内容: {heading}")
 
@@ -323,8 +354,10 @@ def validate_run(run_dir: Path) -> list[str]:
                         )
 
     manifest_version = manifest_values.get("version")
-    if manifest_version and tuple(map(int, manifest_version.split("."))) >= (2, 5, 0):
+    if _version_at_least(manifest_version, (2, 5, 0)):
         errors.extend(_validate_release_preflight(run_dir))
+    if _version_at_least(manifest_version, (2, 6, 0)):
+        errors.extend(_validate_creative_record(run_dir))
 
     return errors
 

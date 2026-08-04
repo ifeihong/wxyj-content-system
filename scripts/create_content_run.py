@@ -10,12 +10,14 @@ from pathlib import Path
 ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels")
 VIDEO_PLATFORMS = {"douyin", "weixin-channels"}
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-VERSION = "2.5.0"
+VERSION = "2.6.0"
 DEFAULT_PRODUCT = "马克瑞普之选亚伯乐1996年单桶"
 
 
 PUBLISH_TEMPLATES = {
     "xiaohongshu": """# 小红书发布包
+
+## 采用标题
 
 ## 主标题
 
@@ -30,8 +32,12 @@ PUBLISH_TEMPLATES = {
 ## 首评
 
 ## CTA
+
+## 最终素材顺序
 """,
     "douyin": """# 抖音发布包
+
+## 采用标题
 
 ## 主标题
 
@@ -46,8 +52,12 @@ PUBLISH_TEMPLATES = {
 ## 置顶评论
 
 ## CTA
+
+## 最终素材顺序
 """,
     "weixin-channels": """# 视频号发布包
+
+## 采用标题
 
 ## 主标题
 
@@ -64,6 +74,8 @@ PUBLISH_TEMPLATES = {
 ## 朋友圈转发文案
 
 ## CTA
+
+## 最终素材顺序
 """,
 }
 
@@ -192,7 +204,7 @@ def create_run(
     )
     _write_once(run_dir / "manifest.yaml", manifest)
     release_manifest = {
-        "schema_version": 1,
+        "schema_version": 2,
         "run_id": run_id,
         "release_status": "working",
         "native_targets": {
@@ -224,12 +236,29 @@ def create_run(
             "media": "pending",
             "audio": "pending" if needs_video_master(normalized_platforms) else "not-applicable",
             "deliverables": "pending",
+            "diversity": "pending",
         },
         "assets": [],
     }
     _write_once(
         run_dir / "release-manifest.json",
         json.dumps(release_manifest, ensure_ascii=False, indent=2) + "\n",
+    )
+    creative_record = {
+        "content_id": run_id,
+        "date": date,
+        "status": "working",
+        "theme_family": "",
+        "primary_fact_ids": [],
+        "hero_view_id": "",
+        "view_ids": [],
+        "typography_mode": "",
+        "hook_pattern": "",
+        "cta_type": "",
+    }
+    _write_once(
+        run_dir / "creative-record.json",
+        json.dumps(creative_record, ensure_ascii=False, indent=2) + "\n",
     )
     _write_once(
         run_dir / "brief.md",

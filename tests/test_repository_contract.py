@@ -57,8 +57,13 @@ REQUIRED_DOCS = [
     "scripts/validate_product_assets.py",
     "scripts/validate_xhs_image.py",
     "scripts/validate_release_preflight.py",
+    "scripts/validate_content_diversity.py",
     "assets/templates/release-manifest.json",
     "assets/templates/product-visual-qa.md",
+    "assets/templates/creative-record.json",
+    "assets/templates/creative-ledger.csv",
+    "references/editorial-art-direction.md",
+    "references/content-diversity-system.md",
 ]
 
 
@@ -146,7 +151,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "2.5.0")
+        self.assertEqual(identity["version"], "2.6.0")
 
         version = (PROJECT_ROOT / "VERSION").read_text(encoding="utf-8").strip()
         self.assertEqual(identity["version"], version)

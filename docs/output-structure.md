@@ -17,6 +17,7 @@
 outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
 ├── manifest.yaml
 ├── release-manifest.json
+├── creative-record.json
 ├── brief.md
 ├── sources.md
 ├── product-visual-qa.md
@@ -49,11 +50,13 @@ outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
 
 `video-master/external-generation/` 是平台无关的外部 Seedance 交接区；`video-master/incoming/` 永久保留回传原件；`accepted/` 只保存通过验收的副本。平台目录只保存发布文案、平台 QA 和必要导出，不复制共同分镜。
 
+`release-manifest.json` 管理候选、退回与发布资产及质量门槛；`creative-record.json` 管理本条内容的主题、事实、首图机位、版式、钩子和CTA。前者回答“能否发布”，后者回答“是否与近期内容重复”。
+
 ## Manifest 字段
 
 ```yaml
 run_id: 2026-08-01-label-reading
-version: 2.5.0
+version: 2.6.0
 date: 2026-08-01
 topic_slug: label-reading
 product: "马克瑞普之选亚伯乐1996年单桶"

@@ -85,6 +85,8 @@ Smiley Sans 只用于 4–10 字的短标题或数字钩子，不用于产品事
 
 ## 高级字体设计模式
 
+先按 `editorial-art-direction.md` 为整套内容选择一个 `typography_mode`。本节A–E不是五套彼此冲突的品牌风格，而是同一艺术方向内部可以轮换的 `layout_pattern`。
+
 同一套达到 5 页时至少轮换 3 种模式；3–4 页轻内容至少轮换 2 种模式。不能每页都是“左对齐大标题 + 小副标题”。
 
 ### A｜数字雕塑
@@ -147,6 +149,8 @@ Subject: <产品、角度、占画面比例>
 Composition/framing: <产品保护区百分比；文字安全区百分比>
 Lighting/mood: <光线、情绪、质感>
 Typography:
+- Typography mode: <整套艺术方向，例如 sherry-depth>
+- Layout pattern: <本页数字雕塑/编辑错落/纵横时间轴/出版物跨栏/诗性留白>
 - Font reference: Noto Serif SC SemiBold for headline; Noto Sans SC Medium for supporting line.
 - Text (verbatim): "<主标题>"
 - Text (verbatim): "<副标题>"
@@ -205,8 +209,9 @@ Avoid: 错字、漏字、多字、乱码、伪文字、多余标点、重复标�
 3. 完整多模态生图提示词；
 4. `Text (verbatim)` 清单；
 5. 字体视觉参照与排版参数；
-6. 产品保护区与文字安全区；
-7. 参考图片及角色；
-8. 负面提示词；
-9. 重生成/局部重绘指令；
-10. QA 清单。
+6. `typography_mode` 与本页 `layout_pattern`；
+7. 产品保护区与文字安全区；
+8. 参考图片及角色；
+9. 负面提示词；
+10. 重生成/局部重绘指令；
+11. QA 清单。

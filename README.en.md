@@ -2,7 +2,7 @@
 
 **WXYJ Content System is a brand-specific Codex Skill for 威熏邑境, currently centered on 马克瑞普之选亚伯乐1996年单桶 across Xiaohongshu, Douyin, and WeChat Channels.** It bundles verified product knowledge, packaging copy, brand-story boundaries, 17 high-resolution AIGC product references, platform-native copy, prompts, storyboards, QA, and traceable content-run directories.
 
-Version: `2.5.0`<br>
+Version: `2.6.0`<br>
 Skill ID: `wxyj-content-system`<br>
 GitHub Repository ID: `wxyj-content-system`
 
@@ -14,7 +14,8 @@ GitHub Repository ID: `wxyj-content-system`
 - product-fact and compliance checks for whisky marketing;
 - non-destructive content folders and deterministic media naming;
 - machine-readable release manifests, human product-geometry sign-off, and a final deliverables index;
-- AIGC disclosure, reference-image roles, negative prompts, and local redraw rules.
+- creative fingerprints, recent-content diversity checks, and six editorial art-direction routes;
+- internal AIGC source records, reference-image roles, negative prompts, and local redraw rules; public copy uses only platform-native AI labels when required.
 
 ## Current product
 
@@ -57,6 +58,10 @@ python scripts\validate_content_run.py `
 
 python scripts\validate_release_preflight.py `
   outputs\2026\08\2026-08-01-label-reading
+
+python scripts\validate_content_diversity.py `
+  outputs\2026\08\2026-08-01-label-reading\creative-record.json `
+  --ledger <content-library>\creative-ledger.csv
 ```
 
 ## Platform-neutral external Seedance handoff

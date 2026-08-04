@@ -56,6 +56,9 @@ class ContentRunContractTests(unittest.TestCase):
         cls.release_validator = load_module(
             "validate_release_preflight", "validate_release_preflight.py"
         )
+        cls.diversity_validator = load_module(
+            "validate_content_diversity", "validate_content_diversity.py"
+        )
 
     def test_bundled_product_assets_validate(self):
         product_root = (
@@ -110,6 +113,7 @@ class ContentRunContractTests(unittest.TestCase):
             expected = [
                 "manifest.yaml",
                 "release-manifest.json",
+                "creative-record.json",
                 "brief.md",
                 "sources.md",
                 "product-visual-qa.md",
@@ -137,6 +141,12 @@ class ContentRunContractTests(unittest.TestCase):
             ]
             for relative in expected:
                 self.assertTrue((run_dir / relative).exists(), relative)
+
+            xhs_publish = (run_dir / "xiaohongshu" / "publish.md").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("## 采用标题", xhs_publish)
+            self.assertIn("## 最终素材顺序", xhs_publish)
 
     def test_release_preflight_rejects_v4_fake_motion_and_unapproved_gates(self):
         with workspace_tempdir() as tmp:
@@ -192,6 +202,26 @@ class ContentRunContractTests(unittest.TestCase):
             self.assertIn("每镜只允许一个静帧素材", joined)
             self.assertIn("必须是连续运动", joined)
 
+    def test_release_preflight_requires_diversity_gate_for_schema_two(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp), "2026-08-08", "diversity-release", ["xiaohongshu"]
+            )
+            release_path = run_dir / "release-manifest.json"
+            release = release_path.read_text(encoding="utf-8")
+            release = release.replace(
+                '"release_status": "working"',
+                '"release_status": "publish"',
+            )
+            release_path.write_text(release, encoding="utf-8")
+
+            errors = self.release_validator.validate_release(run_dir)
+
+            self.assertIn(
+                "发布状态为publish时diversity必须为pass",
+                errors,
+            )
+
     def test_content_run_validator_invokes_release_preflight(self):
         with workspace_tempdir() as tmp:
             run_dir = self.creator.create_run(
@@ -202,6 +232,179 @@ class ContentRunContractTests(unittest.TestCase):
             errors = self.validator.validate_run(run_dir)
 
             self.assertIn("缺少发布清单: release-manifest.json", errors)
+
+    def test_diversity_validator_rejects_recent_creative_fingerprint(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            candidate = root / "creative-record.json"
+            candidate.write_text(
+                """{
+  "content_id": "2026-08-08-sensory-journey",
+  "date": "2026-08-08",
+  "status": "publish-candidate",
+  "theme_family": "sensory-journey",
+  "primary_fact_ids": ["tasting-dried-fruit"],
+  "hero_view_id": "bottle-front",
+  "view_ids": ["bottle-front", "label-macro", "box-open-front-180"],
+  "typography_mode": "sherry-depth",
+  "hook_pattern": "sensory-metaphor",
+  "cta_type": "comment"
+}
+""",
+                encoding="utf-8",
+            )
+            ledger = root / "creative-ledger.csv"
+            ledger.write_text(
+                "content_id,date,theme_family,primary_fact_ids,hero_view_id,view_ids,typography_mode,hook_pattern,cta_type\n"
+                "2026-08-01-label-reading,2026-08-01,sensory-journey,tasting-dried-fruit,bottle-front,bottle-front;label-macro,sherry-depth,sensory-metaphor,save\n",
+                encoding="utf-8",
+            )
+
+            errors = self.diversity_validator.validate_diversity(
+                candidate, ledger
+            )
+
+            self.assertIn("30天内创意指纹重复", "\n".join(errors))
+
+    def test_diversity_validator_allows_same_theme_with_new_execution(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            candidate = root / "creative-record.json"
+            candidate.write_text(
+                """{
+  "content_id": "2026-08-08-gift-ritual",
+  "date": "2026-08-08",
+  "status": "publish-candidate",
+  "theme_family": "sensory-journey",
+  "primary_fact_ids": ["gift-box-story"],
+  "hero_view_id": "box-open-front-180",
+  "view_ids": ["box-open-front-180", "bottle-right-45"],
+  "typography_mode": "gift-ritual",
+  "hook_pattern": "occasion-question",
+  "cta_type": "share"
+}
+""",
+                encoding="utf-8",
+            )
+            ledger = root / "creative-ledger.csv"
+            ledger.write_text(
+                "content_id,date,theme_family,primary_fact_ids,hero_view_id,view_ids,typography_mode,hook_pattern,cta_type\n"
+                "2026-08-01-label-reading,2026-08-01,sensory-journey,tasting-dried-fruit,bottle-front,bottle-front;label-macro,sherry-depth,sensory-metaphor,save\n",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                self.diversity_validator.validate_diversity(candidate, ledger),
+                [],
+            )
+
+    def test_content_run_validator_requires_v26_creative_record(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp), "2026-08-08", "creative-gate", ["xiaohongshu"]
+            )
+            (run_dir / "creative-record.json").unlink()
+
+            errors = self.validator.validate_run(run_dir)
+
+            self.assertIn("缺少创意记录: creative-record.json", errors)
+
+    def test_diversity_validator_rejects_third_consecutive_typography_mode(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            candidate = root / "creative-record.json"
+            candidate.write_text(
+                """{
+  "content_id": "2026-08-08-label-detail",
+  "date": "2026-08-08",
+  "status": "publish-candidate",
+  "theme_family": "label-reading",
+  "primary_fact_ids": ["abv-51"],
+  "hero_view_id": "label-macro",
+  "view_ids": ["label-macro", "bottle-left-45"],
+  "typography_mode": "archive-label",
+  "hook_pattern": "field-decoding",
+  "cta_type": "save"
+}
+""",
+                encoding="utf-8",
+            )
+            ledger = root / "creative-ledger.csv"
+            ledger.write_text(
+                "content_id,date,theme_family,primary_fact_ids,hero_view_id,view_ids,typography_mode,hook_pattern,cta_type\n"
+                "2026-08-07-a,2026-08-07,date-story,date-1996,bottle-front,bottle-front,archive-label,time-contrast,comment\n"
+                "2026-08-06-b,2026-08-06,cask-story,cask-261311,bottle-right-45,bottle-right-45,archive-label,number-proof,save\n",
+                encoding="utf-8",
+            )
+
+            errors = self.diversity_validator.validate_diversity(
+                candidate, ledger
+            )
+
+            self.assertIn("同一typography_mode不得连续使用三次", errors)
+
+    def test_diversity_validator_rejects_recent_visual_recipe(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            candidate = root / "creative-record.json"
+            candidate.write_text(
+                """{
+  "content_id": "2026-08-08-new-copy",
+  "date": "2026-08-08",
+  "status": "publish-candidate",
+  "theme_family": "date-story",
+  "primary_fact_ids": ["date-2026"],
+  "hero_view_id": "bottle-front",
+  "view_ids": ["bottle-front", "box-open-front-180"],
+  "typography_mode": "valentine-time",
+  "hook_pattern": "question",
+  "cta_type": "share"
+}
+""",
+                encoding="utf-8",
+            )
+            ledger = root / "creative-ledger.csv"
+            ledger.write_text(
+                "content_id,date,theme_family,primary_fact_ids,hero_view_id,view_ids,typography_mode,hook_pattern,cta_type\n"
+                "2026-08-01-old,2026-08-01,date-story,date-1996,bottle-front,bottle-front,valentine-time,time-contrast,comment\n",
+                encoding="utf-8",
+            )
+
+            errors = self.diversity_validator.validate_diversity(
+                candidate, ledger
+            )
+
+            self.assertIn(
+                "14天内主题、首图机位与版式路线重复",
+                "\n".join(errors),
+            )
+
+    def test_diversity_validator_requires_ledger_for_publish_candidate(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            candidate = root / "creative-record.json"
+            candidate.write_text(
+                """{
+  "content_id": "2026-08-08-new-topic",
+  "date": "2026-08-08",
+  "status": "publish-candidate",
+  "theme_family": "gift-ritual",
+  "primary_fact_ids": ["gift-box-story"],
+  "hero_view_id": "box-open-front-180",
+  "view_ids": ["box-open-front-180"],
+  "typography_mode": "gift-ritual",
+  "hook_pattern": "occasion-question",
+  "cta_type": "share"
+}
+""",
+                encoding="utf-8",
+            )
+
+            errors = self.diversity_validator.validate_diversity(
+                candidate, root / "missing-ledger.csv"
+            )
+
+            self.assertIn("创意台账不存在", "\n".join(errors))
 
     def test_video_platforms_share_one_video_master(self):
         with workspace_tempdir() as tmp:
@@ -382,6 +585,23 @@ class ContentRunContractTests(unittest.TestCase):
             self.assertIn("manifest的run_id与运行目录不一致", joined)
             self.assertIn("manifest的date与运行目录不一致", joined)
             self.assertIn("manifest的topic_slug与运行目录不一致", joined)
+
+    def test_validator_reports_invalid_version_without_crashing(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp), "2026-08-08", "bad-version", ["xiaohongshu"]
+            )
+            manifest = run_dir / "manifest.yaml"
+            manifest.write_text(
+                manifest.read_text(encoding="utf-8").replace(
+                    "version: 2.6.0", "version: not-semver"
+                ),
+                encoding="utf-8",
+            )
+
+            errors = self.validator.validate_run(run_dir)
+
+            self.assertIn("manifest版本号不合法: not-semver", errors)
 
     def test_validator_rejects_media_from_another_run(self):
         with workspace_tempdir() as tmp:

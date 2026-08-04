@@ -24,14 +24,14 @@
 ```text
 使用 $wxyj-content-system，
 为马克瑞普之选亚伯乐1996年单桶生成一套小红书内容。
-输出标题A/B、正文、Tag、首评、逐页提示词、参考图和QA。
+输出采用标题、备选标题记录、正文、Tag、首评、逐页提示词、参考图和QA。
 ```
 
 ## 标准生产步骤
 
 1. 明确日期、平台、母题和目标；
 2. 创建内容运行目录；
-3. 填写 `brief.md` 和 `sources.md`；
+3. 填写 `brief.md`、`sources.md` 和 `creative-record.json`；
 4. 生成平台 `publish.md`；
 5. 生成小红书 `prompts.md`；视频使用共享 `video-master/storyboard.md`；
 6. 保存媒体并使用规范文件名；
@@ -82,6 +82,10 @@ python scripts\validate_content_run.py `
 
 python scripts\validate_release_preflight.py `
   outputs\2026\08\2026-08-01-label-reading
+
+python scripts\validate_content_diversity.py `
+  outputs\2026\08\2026-08-01-label-reading\creative-record.json `
+  --ledger <运营内容库>\creative-ledger.csv
 ```
 
 创建外部视频任务包并验证回传：

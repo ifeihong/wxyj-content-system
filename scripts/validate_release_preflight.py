@@ -133,7 +133,10 @@ def validate_release(run_dir: Path) -> list[str]:
     if not isinstance(gates, dict):
         errors.append("发布清单缺少quality_gates")
         gates = {}
-    for gate in REQUIRED_GATES:
+    required_gates = list(REQUIRED_GATES)
+    if release.get("schema_version") == 2:
+        required_gates.append("diversity")
+    for gate in required_gates:
         if gate not in gates:
             errors.append(f"发布清单缺少质量门槛: {gate}")
         if release_status == "publish" and gates.get(gate) not in {"pass", "not-applicable"}:

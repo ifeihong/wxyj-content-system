@@ -34,6 +34,7 @@ outputs/
         └── 2026-08-01-label-reading/
             ├── manifest.yaml
             ├── release-manifest.json
+            ├── creative-record.json
             ├── brief.md
             ├── sources.md
             ├── product-visual-qa.md
@@ -72,6 +73,7 @@ outputs/
 | --- | --- |
 | `manifest.yaml` | 运行ID、系统版本、日期、主题、产品、平台和状态 |
 | `release-manifest.json` | 原生画幅目标、质量门槛、候选/退回/发布资产和最终发布状态 |
+| `creative-record.json` | 主题族、主事实、首图机位、全部机位、版式路线、钩子和CTA的创意指纹 |
 | `brief.md` | 母题、受众、事实、目标和创意边界 |
 | `sources.md` | 实物、文件、AIGC参考和待核验项 |
 | `product-visual-qa.md` | 人工核对瓶型、酒标、液面、边缘、礼盒开合和内页结构 |
@@ -158,37 +160,40 @@ YYYYMMDD-wxyj-topic-slug-sNN-role-seedance-vNN.mp4
 
 ### 小红书
 
-1. 主标题；
-2. 备选标题；
+1. 采用标题；
+2. 主标题与备选标题策划记录；
 3. 一句话钩子；
 4. 发布正文；
 5. 话题标签；
 6. 首评；
 7. CTA；
-8. 内部素材来源与事实核验状态写入 `sources.md` 和 `qa.md`，不进入公开发布文案。
+8. 最终素材顺序；
+9. 内部素材来源与事实核验状态写入 `sources.md` 和 `qa.md`，不进入公开发布文案。
 
 ### 抖音
 
-1. 主标题；
-2. 备选标题；
+1. 采用标题；
+2. 主标题与备选标题策划记录；
 3. 3秒钩子；
 4. 视频简介；
 5. 话题标签；
 6. 置顶评论；
 7. CTA；
-8. 内部素材来源与事实核验状态写入 `sources.md` 和 `qa.md`，不进入公开发布文案。
+8. 最终素材顺序；
+9. 内部素材来源与事实核验状态写入 `sources.md` 和 `qa.md`，不进入公开发布文案。
 
 ### 视频号
 
-1. 主标题；
-2. 备选标题；
+1. 采用标题；
+2. 主标题与备选标题策划记录；
 3. 5秒观看理由；
 4. 视频描述；
 5. 话题标签；
 6. 首评；
 7. 朋友圈转发文案；
 8. CTA；
-9. 内部素材来源与事实核验状态写入 `sources.md` 和 `qa.md`，不进入公开发布文案。
+9. 最终素材顺序；
+10. 内部素材来源与事实核验状态写入 `sources.md` 和 `qa.md`，不进入公开发布文案。
 
 ## 标签组合
 
@@ -213,9 +218,12 @@ YYYYMMDD-wxyj-topic-slug-sNN-role-seedance-vNN.mp4
 ```powershell
 python scripts/validate_content_run.py <运行目录>
 python scripts/validate_release_preflight.py <运行目录>
+python scripts/validate_content_diversity.py <运行目录>/creative-record.json --ledger <运营内容库>/creative-ledger.csv
 ```
 
 `validate_content_run.py` 会对2.5.0及之后的运行包自动调用发布预检。人工产品视觉判断仍须填写 `product-visual-qa.md`，再把 `release-manifest.json` 对应质量门槛改为 `pass`；脚本不替代人工确认瓶型和审美。
+
+2.6.0及之后的运行包还会检查 `creative-record.json` 结构。准备发布时把状态改为 `publish-candidate`，再对外部运营台账执行30天多样性校验；发布后追加台账并把状态改为 `published`。
 
 外部回传另行验证：
 
