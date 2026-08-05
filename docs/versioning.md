@@ -2,7 +2,7 @@
 
 ## 当前版本
 
-`2.6.0`
+`2.7.0`
 
 ## Semantic Versioning
 

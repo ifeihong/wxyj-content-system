@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import io
 import struct
 import shutil
@@ -58,6 +59,9 @@ class ContentRunContractTests(unittest.TestCase):
         )
         cls.diversity_validator = load_module(
             "validate_content_diversity", "validate_content_diversity.py"
+        )
+        cls.performance_analyzer = load_module(
+            "analyze_performance", "analyze_performance.py"
         )
 
     def test_bundled_product_assets_validate(self):
@@ -309,6 +313,45 @@ class ContentRunContractTests(unittest.TestCase):
 
             self.assertIn("缺少创意记录: creative-record.json", errors)
 
+    def test_content_run_validator_requires_v27_performance_brief(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp), "2026-08-08", "performance-gate", ["xiaohongshu"]
+            )
+            (run_dir / "performance-brief.json").unlink()
+
+            errors = self.validator.validate_run(run_dir)
+
+            self.assertIn("缺少性能简报: performance-brief.json", errors)
+
+    def test_content_run_validator_requires_v27_experiment_card(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp), "2026-08-08", "experiment-gate", ["xiaohongshu"]
+            )
+            record_path = run_dir / "creative-record.json"
+            record = json.loads(record_path.read_text(encoding="utf-8"))
+            record.update(
+                {
+                    "status": "publish-candidate",
+                    "theme_family": "flavor-journey",
+                    "primary_fact_ids": ["tasting-dried-fruit"],
+                    "hero_view_id": "label-macro",
+                    "view_ids": ["label-macro"],
+                    "typography_mode": "sherry-depth",
+                    "hook_pattern": "sensory-metaphor",
+                    "cta_type": "comment",
+                }
+            )
+            record.pop("experiment")
+            record_path.write_text(
+                json.dumps(record, ensure_ascii=False), encoding="utf-8"
+            )
+
+            errors = self.validator.validate_run(run_dir)
+
+            self.assertIn("发布候选缺少experiment", errors)
+
     def test_diversity_validator_rejects_third_consecutive_typography_mode(self):
         with workspace_tempdir() as tmp:
             root = Path(tmp)
@@ -405,6 +448,81 @@ class ContentRunContractTests(unittest.TestCase):
             )
 
             self.assertIn("创意台账不存在", "\n".join(errors))
+
+    def test_diversity_validator_requires_experiment_when_declared(self):
+        candidate = {
+            "content_id": "2026-08-08-retention-test",
+            "date": "2026-08-08",
+            "status": "publish-candidate",
+            "theme_family": "flavor-journey",
+            "primary_fact_ids": ["tasting-dried-fruit"],
+            "hero_view_id": "label-macro",
+            "view_ids": ["label-macro"],
+            "typography_mode": "sherry-depth",
+            "hook_pattern": "sensory-metaphor",
+            "cta_type": "comment",
+            "experiment": {
+                "variable": "",
+                "hypothesis": "",
+                "success_metric": "",
+                "baseline": "",
+                "result": "pending",
+            },
+        }
+
+        errors = self.diversity_validator.validate_record(candidate)
+
+        self.assertIn("发布候选缺少实验字段: variable", errors)
+        self.assertIn("发布候选缺少实验字段: hypothesis", errors)
+        self.assertIn("发布候选缺少实验字段: success_metric", errors)
+
+    def test_performance_analyzer_ignores_immature_rows_and_warns_theme_cooldown(self):
+        with workspace_tempdir() as tmp:
+            log = Path(tmp) / "performance-log.csv"
+            log.write_text(
+                "content_id,platform,published_at,hours_since_publish,theme_family,content_format,play_or_impressions,average_watch_seconds,two_second_bounce_rate,cover_click_rate\n"
+                "2026-08-01-date-a,douyin,2026-08-01T12:00:00,72,date-story,video,100,4.0,0.60,\n"
+                "2026-08-03-date-b,douyin,2026-08-03T12:00:00,48,date-story,video,120,6.0,0.50,\n"
+                "unknown-age-row,douyin,2026-08-05T09:00:00,,date-story,video,10,20.0,0.01,\n",
+                encoding="utf-8",
+            )
+
+            brief = self.performance_analyzer.analyze_performance(
+                log,
+                candidate_date="2026-08-05",
+                theme_family="date-story",
+            )
+
+            self.assertEqual(brief["mature_rows"], 2)
+            self.assertEqual(brief["observation_rows"], 1)
+            self.assertTrue(brief["theme_cooldown"]["active"])
+            self.assertEqual(
+                brief["theme_cooldown"]["recent_content_ids"],
+                ["2026-08-01-date-a", "2026-08-03-date-b"],
+            )
+            self.assertTrue(
+                any(
+                    "0.0–0.8秒内呈现产品或酒标可见动作" in rule
+                    for rule in brief["platform_prompt_rules"]["douyin"]
+                )
+            )
+
+    def test_create_run_seeds_performance_brief_and_experiment(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp), "2026-08-08", "performance-brief", ["xiaohongshu"]
+            )
+
+            brief = json.loads(
+                (run_dir / "performance-brief.json").read_text(encoding="utf-8")
+            )
+            record = json.loads(
+                (run_dir / "creative-record.json").read_text(encoding="utf-8")
+            )
+
+            self.assertEqual(brief["baseline_status"], "not-analyzed")
+            self.assertEqual(record["experiment"]["result"], "pending")
+            self.assertEqual(record["campaign_override"], "")
 
     def test_video_platforms_share_one_video_master(self):
         with workspace_tempdir() as tmp:
@@ -594,7 +712,7 @@ class ContentRunContractTests(unittest.TestCase):
             manifest = run_dir / "manifest.yaml"
             manifest.write_text(
                 manifest.read_text(encoding="utf-8").replace(
-                    "version: 2.6.0", "version: not-semver"
+                    "version: 2.7.0", "version: not-semver"
                 ),
                 encoding="utf-8",
             )

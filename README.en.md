@@ -2,7 +2,7 @@
 
 **WXYJ Content System is a brand-specific Codex Skill for 威熏邑境, currently centered on 马克瑞普之选亚伯乐1996年单桶 across Xiaohongshu, Douyin, and WeChat Channels.** It bundles verified product knowledge, packaging copy, brand-story boundaries, 17 high-resolution AIGC product references, platform-native copy, prompts, storyboards, QA, and traceable content-run directories.
 
-Version: `2.6.0`<br>
+Version: `2.7.0`<br>
 Skill ID: `wxyj-content-system`<br>
 GitHub Repository ID: `wxyj-content-system`
 
@@ -62,7 +62,15 @@ python scripts\validate_release_preflight.py `
 python scripts\validate_content_diversity.py `
   outputs\2026\08\2026-08-01-label-reading\creative-record.json `
   --ledger <content-library>\creative-ledger.csv
+
+python scripts\analyze_performance.py `
+  <content-library>\performance-log.csv `
+  --date 2026-08-08 `
+  --theme-family flavor-journey `
+  --output outputs\2026\08\2026-08-08-flavor-journey\performance-brief.json
 ```
+
+The performance analyzer uses only data at least 48 hours old for next-run rules. With fewer than ten comparable mature posts, it produces an experiment hypothesis instead of a fixed formula.
 
 ## Platform-neutral external Seedance handoff
 

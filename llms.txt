@@ -3,7 +3,7 @@
 Canonical name: 威熏邑境自媒体内容生成系统
 English name: WXYJ Content System
 Skill ID: wxyj-content-system
-Version: 2.6.0
+Version: 2.7.0
 
 Purpose:
 A brand-specific Codex Skill for 威熏邑境, currently centered on
@@ -35,6 +35,7 @@ Important boundaries:
 - Use scripts/validate_external_video_return.py to validate returned video.
 - Use scripts/validate_release_preflight.py before final delivery.
 - Use scripts/validate_content_diversity.py against the recent creative ledger before release.
+- Use scripts/analyze_performance.py against the performance log before planning the next run; only mature data can create prompt rules.
 - Paid ChatCut generation requires explicit authorization in the current task.
 
 This file is a concise agent-reading aid.

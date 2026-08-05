@@ -36,6 +36,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 | 发布预检与最终交付 | `references/content-run-system.md`、`references/review-rubric.md` | 发布清单、产品视觉验收卡、最终交付索引 |
 | 评论、私信、企微、店铺、品鉴会 | `references/conversion-playbook.md` | 分阶段转化话术 |
 | 发布审核与复盘 | `references/review-rubric.md` | 评分、退回项、复盘结论 |
+| 数据驱动提示与实验 | `references/performance-adaptive-system.md` | 成熟数据简报、主题冷却、单变量实验、平台提示要求 |
 | 新品接入 | `assets/templates/product-card.md` | 新产品事实卡 |
 
 只读取与当前任务相关的 references。需要三平台完整成品时，读取全部 references。
@@ -46,8 +47,9 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 2. **锁定事实**：默认产品从 `references/product-facts.md` 取值；缺失字段标为“待核验”，不推断。
 3. **验证并盘点素材**：先执行 `python scripts/validate_product_assets.py`；通过后从内置17张产品参考图选择当前页面或镜头需要的2–3张，再标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
 4. **查询近期创意**：读取最近30天 `creative-ledger.csv`，先排除完整创意指纹、14天视觉配方和连续版式路线重复。
-5. **建立母题**：只回答一个具体用户问题，直接关联当前产品；在 `creative-record.json` 登记主题族、事实、首图机位、钩子结构、CTA和 `typography_mode`。
-6. **判断时效**：涉及当前热点、热梗、节日或假期时实时检索；不相关则采用常青主题。
+5. **读取成熟效果**：读取近期 `performance-log.csv`；用 `python scripts/analyze_performance.py <台账> --date YYYY-MM-DD --theme-family <主题族> --output <运行目录>/performance-brief.json` 生成简报。发布不足48小时的数据只记录为观察，少于10条可比成熟内容只生成假设。
+6. **建立母题与实验**：只回答一个具体用户问题，直接关联当前产品；在 `creative-record.json` 登记主题族、事实、首图机位、钩子结构、CTA、`typography_mode` 和唯一实验变量。主题冷却提示出现时默认换主主题；如继续使用，填写 `campaign_override` 并改变用户问题、首屏形式和主事实中的至少两项。
+7. **判断时效**：涉及当前热点、热梗、节日或假期时实时检索；不相关则采用常青主题。
 7. **创建运行包**：需要交付可发布内容时，先执行：
 
 ```powershell
@@ -88,6 +90,8 @@ python scripts/validate_content_diversity.py <运行目录>/creative-record.json
 ## 小红书成品契约
 
 默认按信息量使用 3–6 页，只有深度主题使用 7–8 页。只有第1页承担封面职责，后续页使用证据、解释、判断、情绪、总结或互动模块。
+
+读取 `performance-brief.json` 后执行：封面点击高但内页价值弱时保留封面钩子，重写第2页；第2页必须直接给出具体产品判断或可保存信息，且不得重复封面标题。冷启动互动采用感官、礼赠或场景选择，不用技术考试式问题要求评论。
 
 每套小红书内容交付：
 
@@ -132,6 +136,8 @@ python scripts/validate_content_diversity.py <运行目录>/creative-record.json
 小红书成品规格固定写入：`3:4 portrait, width:height = 3:4, target 1086x1448 or 1536x2048, full bleed; do not output 2:3, 4:5 or square.` 每次图像生成调用结束后，先对首轮原生成文件执行 `python scripts/validate_xhs_image.py <image.png>`，比例不合格直接重生成；不允许通过裁切、拉伸、扩图或程序改尺寸作为首轮比例修复。
 
 视频全屏画面、运动首帧、尾帧和封面必须原生9:16，成片目标 `1080×1920`。3:4图片不能作为全屏主画面，禁止黑边、上下补边和拉伸。
+
+当 `performance-brief.json` 提示视频前段跳出偏高，逐镜提示词必须锁定：0.0–0.8秒先出现准确的产品主体、酒标或礼盒，并发生可见动作；2.0–5.0秒兑现标题承诺。禁止纯文字、黑底或静态片头。每条视频只测试一个变量，不同时改动标题、时长、首屏、旁白与 CTA。
 
 V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一时间线项目中以一条连续关键帧曲线完成左到右、右到左或克制推拉。不得把同一图片拆成多张不同裁切的静态片段来假装移动；每镜在 `video-master/motion-plan.json` 登记唯一素材、方向、起止位置和转场。
 
@@ -178,7 +184,12 @@ V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一
 
 ## 数据复盘
 
-优先读取真实平台数据。记录曝光/播放、留存/完成、收藏、评论、分享、主页访问、关注、私信、企微、店铺、品鉴报名和成交。
+优先读取真实平台数据。效果台账必须记录数据导出时间、发布后小时数、内容形式、真实时长/页数、首屏动作和实验字段，并保留封面点击、2秒跳出、5秒完播、平均观看、收藏、评论、分享、主页访问、关注、私信、企微、店铺、品鉴报名和成交。
+
+- 发布不足48小时或缺少发布后小时数：只作观察；
+- 少于10条可比成熟内容：只形成假设，不淘汰栏目或固化公式；
+- 同一主题族7天内已有两条成熟内容：触发主题冷却提示，默认改主主题；
+- 每条发布候选必须在 `creative-record.json` 填一个实验变量、假设和成功指标，成熟后再写结果。
 
 - 高播放低关注：强化账号承诺与关注理由；
 - 高收藏低播放：保留内容价值，重做标题和封面；
@@ -206,6 +217,7 @@ V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一
 - 运行与命名规范：`references/content-run-system.md`
 - 发布预检脚本：`scripts/validate_release_preflight.py`
 - 内容多样性校验：`scripts/validate_content_diversity.py`
+- 效果分析与提示简报：`scripts/analyze_performance.py`
 - 高奢编辑艺术方向：`references/editorial-art-direction.md`
 - 内容多样性系统：`references/content-diversity-system.md`
 - 创意记录模板：`assets/templates/creative-record.json`
@@ -222,5 +234,6 @@ V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一
 - 内容简报：`assets/templates/content-brief.md`
 - 发布日历：`assets/templates/publishing-calendar.csv`
 - 数据台账：`assets/templates/performance-log.csv`
+- 数据驱动提示：`references/performance-adaptive-system.md`
 - 周复盘：`assets/templates/weekly-review.md`
 - 三平台示例：`examples/strategy/three-platform-content-pack.md`

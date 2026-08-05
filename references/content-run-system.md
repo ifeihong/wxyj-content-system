@@ -35,6 +35,7 @@ outputs/
             ├── manifest.yaml
             ├── release-manifest.json
             ├── creative-record.json
+            ├── performance-brief.json
             ├── brief.md
             ├── sources.md
             ├── product-visual-qa.md
@@ -74,6 +75,7 @@ outputs/
 | `manifest.yaml` | 运行ID、系统版本、日期、主题、产品、平台和状态 |
 | `release-manifest.json` | 原生画幅目标、质量门槛、候选/退回/发布资产和最终发布状态 |
 | `creative-record.json` | 主题族、主事实、首图机位、全部机位、版式路线、钩子和CTA的创意指纹 |
+| `performance-brief.json` | 最近成熟数据、主题冷却、单变量实验和平台化提示要求；只用于内部策划 |
 | `brief.md` | 母题、受众、事实、目标和创意边界 |
 | `sources.md` | 实物、文件、AIGC参考和待核验项 |
 | `product-visual-qa.md` | 人工核对瓶型、酒标、液面、边缘、礼盒开合和内页结构 |
@@ -223,7 +225,7 @@ python scripts/validate_content_diversity.py <运行目录>/creative-record.json
 
 `validate_content_run.py` 会对2.5.0及之后的运行包自动调用发布预检。人工产品视觉判断仍须填写 `product-visual-qa.md`，再把 `release-manifest.json` 对应质量门槛改为 `pass`；脚本不替代人工确认瓶型和审美。
 
-2.6.0及之后的运行包还会检查 `creative-record.json` 结构。准备发布时把状态改为 `publish-candidate`，再对外部运营台账执行30天多样性校验；发布后追加台账并把状态改为 `published`。
+2.6.0及之后的运行包还会检查 `creative-record.json` 结构。准备发布时把状态改为 `publish-candidate`，再对外部运营台账执行30天多样性校验；发布后追加台账并把状态改为 `published`。2.7.0及之后的新运行包同时创建 `performance-brief.json`，用 `analyze_performance.py` 从效果台账写入成熟数据、主题冷却和本条实验简报。
 
 外部回传另行验证：
 

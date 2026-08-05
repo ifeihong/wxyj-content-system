@@ -20,6 +20,13 @@ REQUIRED_FIELDS = (
     "cta_type",
 )
 ALLOWED_STATUSES = {"working", "publish-candidate", "published", "archived"}
+EXPERIMENT_FIELDS = (
+    "variable",
+    "hypothesis",
+    "success_metric",
+    "baseline",
+    "result",
+)
 
 
 def _load_candidate(path: Path, errors: list[str]) -> dict | None:
@@ -37,7 +44,12 @@ def _load_candidate(path: Path, errors: list[str]) -> dict | None:
     return value
 
 
-def validate_record(record: dict, *, require_complete: bool = True) -> list[str]:
+def validate_record(
+    record: dict,
+    *,
+    require_complete: bool = True,
+    require_experiment: bool = False,
+) -> list[str]:
     errors: list[str] = []
     for field in REQUIRED_FIELDS:
         if field not in record:
@@ -70,6 +82,28 @@ def validate_record(record: dict, *, require_complete: bool = True) -> list[str]
             errors.append("发布候选至少需要一个primary_fact_id")
         if not record["view_ids"]:
             errors.append("发布候选至少需要一个view_id")
+        experiment = record.get("experiment")
+        if require_experiment and experiment is None:
+            errors.append("发布候选缺少experiment")
+        if experiment is not None:
+            if not isinstance(experiment, dict):
+                errors.append("创意记录experiment必须是对象")
+            else:
+                for field in EXPERIMENT_FIELDS:
+                    if field not in experiment:
+                        errors.append(f"创意记录experiment缺少字段: {field}")
+                for field in ("variable", "hypothesis", "success_metric"):
+                    if not isinstance(experiment.get(field), str) or not experiment[
+                        field
+                    ].strip():
+                        errors.append(f"发布候选缺少实验字段: {field}")
+                for field in ("baseline", "result"):
+                    if not isinstance(experiment.get(field), str):
+                        errors.append(f"创意记录experiment字段必须是字符串: {field}")
+        if "campaign_override" in record and not isinstance(
+            record["campaign_override"], str
+        ):
+            errors.append("创意记录campaign_override必须是字符串")
     return errors
 
 

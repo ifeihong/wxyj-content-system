@@ -126,7 +126,7 @@ def _validate_release_preflight(run_dir: Path) -> list[str]:
     return module.validate_release(run_dir)
 
 
-def _validate_creative_record(run_dir: Path) -> list[str]:
+def _validate_creative_record(run_dir: Path, version: str | None) -> list[str]:
     record_path = run_dir / "creative-record.json"
     if not record_path.exists():
         return ["缺少创意记录: creative-record.json"]
@@ -145,7 +145,35 @@ def _validate_creative_record(run_dir: Path) -> list[str]:
     if not isinstance(record, dict):
         return ["创意记录顶层必须是对象"]
     require_complete = record.get("status") in {"publish-candidate", "published"}
-    return module.validate_record(record, require_complete=require_complete)
+    return module.validate_record(
+        record,
+        require_complete=require_complete,
+        require_experiment=_version_at_least(version, (2, 7, 0)),
+    )
+
+
+def _validate_performance_brief(run_dir: Path) -> list[str]:
+    path = run_dir / "performance-brief.json"
+    if not path.exists():
+        return ["缺少性能简报: performance-brief.json"]
+    try:
+        brief = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"性能简报不是有效JSON: {exc}"]
+    if not isinstance(brief, dict):
+        return ["性能简报顶层必须是对象"]
+    required = (
+        "schema_version",
+        "candidate_date",
+        "maturity_hours",
+        "mature_rows",
+        "observation_rows",
+        "baseline_status",
+        "theme_cooldown",
+        "platform_prompt_rules",
+        "required_planning_fields",
+    )
+    return [f"性能简报缺少字段: {field}" for field in required if field not in brief]
 
 
 def _manifest_platforms(text: str) -> list[str]:
@@ -279,6 +307,9 @@ def validate_run(run_dir: Path) -> list[str]:
     if status is not None and status not in ALLOWED_STATUSES:
         errors.append(f"manifest状态不合法: {status}")
 
+    if _version_at_least(version, (2, 7, 0)):
+        errors.extend(_validate_performance_brief(run_dir))
+
     if "platforms:" not in manifest:
         errors.append("manifest缺少字段: platforms")
 
@@ -357,7 +388,7 @@ def validate_run(run_dir: Path) -> list[str]:
     if _version_at_least(manifest_version, (2, 5, 0)):
         errors.extend(_validate_release_preflight(run_dir))
     if _version_at_least(manifest_version, (2, 6, 0)):
-        errors.extend(_validate_creative_record(run_dir))
+        errors.extend(_validate_creative_record(run_dir, version))
 
     return errors
 

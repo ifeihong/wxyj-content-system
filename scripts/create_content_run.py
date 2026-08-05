@@ -10,7 +10,7 @@ from pathlib import Path
 ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels")
 VIDEO_PLATFORMS = {"douyin", "weixin-channels"}
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-VERSION = "2.6.0"
+VERSION = "2.7.0"
 DEFAULT_PRODUCT = "马克瑞普之选亚伯乐1996年单桶"
 
 
@@ -255,10 +255,49 @@ def create_run(
         "typography_mode": "",
         "hook_pattern": "",
         "cta_type": "",
+        "experiment": {
+            "variable": "",
+            "hypothesis": "",
+            "success_metric": "",
+            "baseline": "",
+            "result": "pending",
+        },
+        "campaign_override": "",
     }
     _write_once(
         run_dir / "creative-record.json",
         json.dumps(creative_record, ensure_ascii=False, indent=2) + "\n",
+    )
+    _write_once(
+        run_dir / "performance-brief.json",
+        json.dumps(
+            {
+                "schema_version": 1,
+                "candidate_date": date,
+                "theme_family": "",
+                "maturity_hours": 48,
+                "mature_rows": 0,
+                "observation_rows": 0,
+                "baseline_status": "not-analyzed",
+                "theme_cooldown": {
+                    "active": False,
+                    "window_days": 7,
+                    "recent_content_ids": [],
+                    "message": "尚未读取效果台账。",
+                },
+                "platform_prompt_rules": {},
+                "required_planning_fields": [
+                    "experiment.variable",
+                    "experiment.hypothesis",
+                    "experiment.success_metric",
+                    "experiment.baseline",
+                    "campaign_override",
+                ],
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
     )
     _write_once(
         run_dir / "brief.md",

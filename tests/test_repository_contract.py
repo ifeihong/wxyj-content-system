@@ -58,12 +58,15 @@ REQUIRED_DOCS = [
     "scripts/validate_xhs_image.py",
     "scripts/validate_release_preflight.py",
     "scripts/validate_content_diversity.py",
+    "scripts/analyze_performance.py",
     "assets/templates/release-manifest.json",
     "assets/templates/product-visual-qa.md",
     "assets/templates/creative-record.json",
     "assets/templates/creative-ledger.csv",
+    "assets/templates/performance-log.csv",
     "references/editorial-art-direction.md",
     "references/content-diversity-system.md",
+    "references/performance-adaptive-system.md",
 ]
 
 
@@ -151,7 +154,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "2.6.0")
+        self.assertEqual(identity["version"], "2.7.0")
 
         version = (PROJECT_ROOT / "VERSION").read_text(encoding="utf-8").strip()
         self.assertEqual(identity["version"], version)
@@ -168,6 +171,20 @@ class RepositoryContractTests(unittest.TestCase):
             if not (PROJECT_ROOT / relative).exists()
         ]
         self.assertEqual(missing, [])
+
+    def test_performance_adaptive_prompt_contract_is_explicit(self):
+        skill = (PROJECT_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        reference = (
+            PROJECT_ROOT / "references" / "performance-adaptive-system.md"
+        ).read_text(encoding="utf-8")
+        template = (
+            PROJECT_ROOT / "assets" / "templates" / "performance-log.csv"
+        ).read_text(encoding="utf-8")
+        self.assertIn("performance-brief.json", skill)
+        self.assertIn("已满 48 小时", reference)
+        self.assertIn("campaign_override", reference)
+        self.assertIn("发布后小时数", template)
+        self.assertIn("实验变量", template)
 
     def test_local_readme_links_resolve(self):
         readme = PROJECT_ROOT / "README.md"

@@ -32,6 +32,7 @@
 1. 明确日期、平台、母题和目标；
 2. 创建内容运行目录；
 3. 填写 `brief.md`、`sources.md` 和 `creative-record.json`；
+4. 用近期 `performance-log.csv` 生成 `performance-brief.json`，填写唯一实验变量；
 4. 生成平台 `publish.md`；
 5. 生成小红书 `prompts.md`；视频使用共享 `video-master/storyboard.md`；
 6. 保存媒体并使用规范文件名；
@@ -86,6 +87,12 @@ python scripts\validate_release_preflight.py `
 python scripts\validate_content_diversity.py `
   outputs\2026\08\2026-08-01-label-reading\creative-record.json `
   --ledger <运营内容库>\creative-ledger.csv
+
+python scripts\analyze_performance.py `
+  <运营内容库>\performance-log.csv `
+  --date 2026-08-08 `
+  --theme-family flavor-journey `
+  --output outputs\2026\08\2026-08-08-flavor-journey\performance-brief.json
 ```
 
 创建外部视频任务包并验证回传：

@@ -8,5 +8,13 @@
   "view_ids": [],
   "typography_mode": "",
   "hook_pattern": "",
-  "cta_type": ""
+  "cta_type": "",
+  "experiment": {
+    "variable": "",
+    "hypothesis": "",
+    "success_metric": "",
+    "baseline": "",
+    "result": "pending"
+  },
+  "campaign_override": ""
 }
