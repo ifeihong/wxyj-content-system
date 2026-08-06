@@ -65,7 +65,7 @@
       "category": "木质礼盒",
       "view": "开盒正面",
       "primary_uses": ["开盒画面", "礼赠", "内页故事"],
-      "sha256": "D316180801C1F455E3ABAC5ADD4293F611566C978AAE0A682AD9D7BD29C3FEED"
+      "sha256": "9136C98797B435DA56719C7ABDDBD2D1211E0E51DA35CFA9B1FF3F89EBA4CF03"
     },
     {
       "id": "wood-box-right-45",
@@ -73,7 +73,7 @@
       "category": "木质礼盒",
       "view": "右侧45度",
       "primary_uses": ["礼盒立体感", "木纹", "金色字"],
-      "sha256": "91C32F75E2AFF022857FAE823103B555F4ADCE3DCCDC504A2B5EC5630330E394"
+      "sha256": "39CD7F8A62F02781A0123C8C1A0EC5BD2C0F2EFC430676B1EFE048FCF72B0904"
     },
     {
       "id": "wood-box-front",
@@ -81,7 +81,7 @@
       "category": "木质礼盒",
       "view": "正面",
       "primary_uses": ["礼赠主视觉", "包装正面", "产品档案页"],
-      "sha256": "830451A475BFBF60C16E0C3D3DF6E9E0066F5BAC78FF3C428F9601593A20B12A"
+      "sha256": "CA8041790526F5E0AC06402DF75486AA3A8DDE623ACC66555A58DF03238996B3"
     },
     {
       "id": "wood-box-left-45",
@@ -89,7 +89,7 @@
       "category": "木质礼盒",
       "view": "左侧45度",
       "primary_uses": ["礼盒立体感", "合页结构", "套图角度变化"],
-      "sha256": "DE820BD9A8F0269CB9C498A6FA204EC0C4DAE064C2264AEF6437D9A4E6845099"
+      "sha256": "139CC0093987349301619367ADB2615353FE345C85C32A2A126C7A4D0B9B8DAF"
     },
     {
       "id": "outer-carton-right-45",
