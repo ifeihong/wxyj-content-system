@@ -712,7 +712,7 @@ class ContentRunContractTests(unittest.TestCase):
             manifest = run_dir / "manifest.yaml"
             manifest.write_text(
                 manifest.read_text(encoding="utf-8").replace(
-                    "version: 2.7.0", "version: not-semver"
+                    "version: 2.7.2", "version: not-semver"
                 ),
                 encoding="utf-8",
             )

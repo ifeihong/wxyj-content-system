@@ -1,4 +1,4 @@
 interface:
   display_name: "威熏邑境自媒体内容生成系统"
   short_description: "生成并校验威熏邑境亚伯乐1996三平台内容"
-  default_prompt: "Use $wxyj-content-system to create a non-repetitive 威熏邑境 content run for 马克瑞普之选亚伯乐1996年单桶 on 小红书, 抖音, or 视频号, including final publish copy and QA."
+  default_prompt: "Use $wxyj-content-system to create a non-repetitive 威熏邑境 content run for 马克瑞普之选 单桶苏格兰威士忌 on 小红书, 抖音, or 视频号, including final publish copy and QA."

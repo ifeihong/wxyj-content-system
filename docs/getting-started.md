@@ -4,7 +4,7 @@
 
 - Codex 或兼容 Agent Skills 的运行环境；
 - Python 3.10 或更高版本；
-- Skill 已内置马克瑞普之选亚伯乐1996年单桶的产品知识与17张 AIGC 高清参考图；
+- Skill 已内置马克瑞普之选 单桶苏格兰威士忌的产品知识与17张 AIGC 高清参考图；
 - 发布前仍需使用真实酒标、实物照片及运营方文件核对消费者事实。
 
 ## 安装
@@ -23,7 +23,7 @@
 
 ```text
 使用 $wxyj-content-system，
-为马克瑞普之选亚伯乐1996年单桶生成一套小红书内容。
+为马克瑞普之选 单桶苏格兰威士忌生成一套小红书内容。
 输出采用标题、备选标题记录、正文、Tag、首评、逐页提示词、参考图和QA。
 ```
 
@@ -56,7 +56,7 @@ python scripts\create_content_run.py `
   --root outputs `
   --date 2026-08-01 `
   --slug label-reading `
-  --product "马克瑞普之选亚伯乐1996年单桶" `
+  --product "马克瑞普之选 单桶苏格兰威士忌" `
   --platforms xiaohongshu douyin weixin-channels
 ```
 
@@ -67,7 +67,7 @@ python scripts\create_content_run.py `
   --root outputs `
   --date 2026-08-01 `
   --slug label-reading `
-  --product "马克瑞普之选亚伯乐1996年单桶" `
+  --product "马克瑞普之选 单桶苏格兰威士忌" `
   --platforms xiaohongshu
 ```
 

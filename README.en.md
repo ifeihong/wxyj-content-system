@@ -1,8 +1,8 @@
 # WXYJ Content System
 
-**WXYJ Content System is a brand-specific Codex Skill for 威熏邑境, currently centered on 马克瑞普之选亚伯乐1996年单桶 across Xiaohongshu, Douyin, and WeChat Channels.** It bundles verified product knowledge, packaging copy, brand-story boundaries, 17 high-resolution AIGC product references, platform-native copy, prompts, storyboards, QA, and traceable content-run directories.
+**WXYJ Content System is a brand-specific Codex Skill for 威熏邑境, currently centered on Mackillop's Choice Single Cask Scotch Whisky across Xiaohongshu, Douyin, and WeChat Channels.** Its supporting information is Aberlour 1996 Single Malt Scotch Whisky. It bundles verified product knowledge, packaging copy, brand-story boundaries, 17 high-resolution AIGC product references, platform-native copy, prompts, storyboards, QA, and traceable content-run directories.
 
-Version: `2.7.0`<br>
+Version: `2.7.2`<br>
 Skill ID: `wxyj-content-system`<br>
 GitHub Repository ID: `wxyj-content-system`
 
@@ -19,7 +19,9 @@ GitHub Repository ID: `wxyj-content-system`
 
 ## Current product
 
-The default product is 马克瑞普之选亚伯乐1996年单桶: Speyside, distilled
+The default product is Mackillop's Choice Single Cask Scotch Whisky. Supporting
+information: Aberlour 1996 Single Malt Scotch Whisky. Brand: Mackillop's Choice;
+distillery: ABERLOUR; age statement: 30 years. It is Speyside, distilled
 on 14 February 1996, bottled on 14 February 2026, 30 years old,
 PX Sherry Hogshead, cask 261311, 51% ABV, 70cl, and 184 bottles in total.
 
@@ -44,7 +46,7 @@ python scripts\create_content_run.py `
   --root outputs `
   --date 2026-08-01 `
   --slug label-reading `
-  --product "马克瑞普之选亚伯乐1996年单桶" `
+  --product "马克瑞普之选 单桶苏格兰威士忌" `
   --platforms xiaohongshu
 ```
 

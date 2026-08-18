@@ -22,10 +22,10 @@ EXPECTED_PRODUCT_ASSETS = {
     "酒瓶-正面.png": "8BEEBB208F197F0A7A5E43059CC4312A223B1C7CA8E8E6B71CF8427E036DD76F",
     "酒瓶-左侧45°.png": "C0B87B9AA91B45A9B012E88428401026EB01134681E7C455B95B0C75F2725299",
     "木质礼盒-背面.png": "427163C22475DAC551280B90C3BFE81E2F182A6145CFAB3EAED2E2F0CB36AA89",
-    "木质礼盒-内置酒瓶.png": "D316180801C1F455E3ABAC5ADD4293F611566C978AAE0A682AD9D7BD29C3FEED",
-    "木质礼盒-右侧45°.png": "91C32F75E2AFF022857FAE823103B555F4ADCE3DCCDC504A2B5EC5630330E394",
-    "木质礼盒-正面.png": "830451A475BFBF60C16E0C3D3DF6E9E0066F5BAC78FF3C428F9601593A20B12A",
-    "木质礼盒-左侧45°.png": "DE820BD9A8F0269CB9C498A6FA204EC0C4DAE064C2264AEF6437D9A4E6845099",
+    "木质礼盒-内置酒瓶.png": "9136C98797B435DA56719C7ABDDBD2D1211E0E51DA35CFA9B1FF3F89EBA4CF03",
+    "木质礼盒-右侧45°.png": "39CD7F8A62F02781A0123C8C1A0EC5BD2C0F2EFC430676B1EFE048FCF72B0904",
+    "木质礼盒-正面.png": "CA8041790526F5E0AC06402DF75486AA3A8DDE623ACC66555A58DF03238996B3",
+    "木质礼盒-左侧45°.png": "139CC0093987349301619367ADB2615353FE345C85C32A2A126C7A4D0B9B8DAF",
     "外包装-右侧45°.png": "AE3D6F63377475E1A0DEDBD1F66C91E80C74959C4539B8CBE74085A651E15E96",
     "外包装-右侧45°俯视.png": "A6BCF0435E7E0015F6FCE84FC8C2DF6562D196354F8480CCC8961EFE87DBE6BB",
     "外包装-右侧面.png": "189B07ED57ECF59A795C24218CB823E45F2E1FA25A064A15254B7694A1735E38",
@@ -75,7 +75,7 @@ class RepositoryContractTests(unittest.TestCase):
         for relative in ("SKILL.md", "README.md"):
             text = (PROJECT_ROOT / relative).read_text(encoding="utf-8")
             self.assertIn("威熏邑境品牌专属", text, relative)
-            self.assertIn("马克瑞普之选亚伯乐1996年单桶", text, relative)
+            self.assertIn("马克瑞普之选 单桶苏格兰威士忌", text, relative)
             for platform in ("小红书", "抖音", "视频号"):
                 self.assertIn(platform, text, relative)
 
@@ -108,6 +108,18 @@ class RepositoryContractTests(unittest.TestCase):
         ):
             self.assertIn(knowledge, facts + packaging)
 
+    def test_product_identity_keeps_brand_distillery_and_age_distinct(self):
+        facts = (PROJECT_ROOT / "references" / "product-facts.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("| 正式产品名 | 马克瑞普之选 单桶苏格兰威士忌 |", facts)
+        self.assertIn("| 辅助信息 | 亚伯乐 1996年 单一麦芽苏格兰威士忌 |", facts)
+        self.assertIn("| 品牌 | 马克瑞普之选（Mackillop's Choice） |", facts)
+        self.assertIn("| 酒厂 | 亚伯乐（ABERLOUR） |", facts)
+        self.assertIn("| 酒龄 | 30年 |", facts)
+        self.assertIn("不得把“亚伯乐”写成品牌", facts)
+        self.assertIn("不得把“30年”写成品牌或酒厂", facts)
+
     def test_product_reference_assets_are_complete_and_unchanged(self):
         image_root = PRODUCT_ASSET_ROOT / "reference-images"
         actual = {path.name for path in image_root.glob("*.png")}
@@ -118,8 +130,16 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(manifest["brand"], "威熏邑境")
         self.assertEqual(
             manifest["product_name"],
-            "马克瑞普之选亚伯乐1996年单桶",
+            "马克瑞普之选 单桶苏格兰威士忌",
         )
+        self.assertEqual(
+            manifest["supporting_information"], "亚伯乐 1996年 单一麦芽苏格兰威士忌"
+        )
+        self.assertEqual(
+            manifest["product_brand"], "马克瑞普之选（Mackillop's Choice）"
+        )
+        self.assertEqual(manifest["distillery"], "亚伯乐（ABERLOUR）")
+        self.assertEqual(manifest["age_statement"], "30年")
         self.assertEqual(manifest["asset_count"], 17)
         self.assertEqual(manifest["license"], "All rights reserved")
 
@@ -154,7 +174,23 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "2.7.0")
+        self.assertEqual(identity["version"], "2.7.2")
+        self.assertEqual(
+            identity["product_identity"]["brand"],
+            "马克瑞普之选（Mackillop's Choice）",
+        )
+        self.assertEqual(
+            identity["product_identity"]["distillery"], "亚伯乐（ABERLOUR）"
+        )
+        self.assertEqual(
+            identity["product_identity"]["official_product_name"],
+            "马克瑞普之选 单桶苏格兰威士忌",
+        )
+        self.assertEqual(
+            identity["product_identity"]["supporting_information"],
+            "亚伯乐 1996年 单一麦芽苏格兰威士忌",
+        )
+        self.assertEqual(identity["product_identity"]["age_statement"], "30年")
 
         version = (PROJECT_ROOT / "VERSION").read_text(encoding="utf-8").strip()
         self.assertEqual(identity["version"], version)

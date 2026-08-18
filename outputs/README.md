@@ -15,6 +15,6 @@ python ..\skill\wxyj-content-system\scripts\create_content_run.py `
   --root . `
   --date 2026-08-01 `
   --slug label-reading `
-  --product "马克瑞普之选亚伯乐1996年单桶" `
+  --product "马克瑞普之选 单桶苏格兰威士忌" `
   --platforms xiaohongshu
 ```

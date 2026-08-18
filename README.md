@@ -1,8 +1,8 @@
 # 威熏邑境自媒体内容生成系统
 
-**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务“马克瑞普之选亚伯乐1996年单桶”在小红书、抖音和视频号上的持续内容创作。** 它把该产品的事实、包装文案、品牌故事、17张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
+**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务“马克瑞普之选 单桶苏格兰威士忌”在小红书、抖音和视频号上的持续内容创作。** 辅助信息为“亚伯乐 1996年 单一麦芽苏格兰威士忌”。它把该产品的事实、包装文案、品牌故事、17张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
 
-当前版本：`2.7.0`<br>
+当前版本：`2.7.2`<br>
 Skill ID：`wxyj-content-system`<br>
 GitHub Repository ID：`wxyj-content-system`
 
@@ -10,7 +10,7 @@ GitHub Repository ID：`wxyj-content-system`
 
 - 品牌：威熏邑境。
 - 业务范围：威士忌品牌在中国市场的销售、运营与宣传。
-- 当前核心产品：马克瑞普之选亚伯乐1996年单桶。
+- 当前核心产品：马克瑞普之选 单桶苏格兰威士忌；辅助信息：亚伯乐 1996年 单一麦芽苏格兰威士忌。
 - 当前核心平台：小红书、抖音、视频号。
 - 当前目标：先建立账号影响力、专业认知与粉丝规模，再承接私信、企微、店铺和线下品鉴。
 - 内容原则：所有威士忌知识、节日表达和热点切入都必须回到当前产品，不经营脱离产品的泛知识账号。
@@ -18,7 +18,7 @@ GitHub Repository ID：`wxyj-content-system`
 ## 适合谁
 
 - 威熏邑境自营内容、品牌、销售与品鉴活动团队；
-- 负责马克瑞普之选亚伯乐1996年单桶中国市场传播的运营人员；
+- 负责马克瑞普之选 单桶苏格兰威士忌中国市场传播的运营人员；
 - 需要持续生成小红书图文、抖音脚本和视频号内容的 AIGC 创作者；
 - 需要统一产品事实、参考图、标题、正文、标签、首评、提示词和媒体归档的协作人员。
 
@@ -26,7 +26,10 @@ GitHub Repository ID：`wxyj-content-system`
 
 | 字段 | 已确认信息 |
 | --- | --- |
-| 产品 | 马克瑞普之选亚伯乐1996年单桶 |
+| 正式产品名 | 马克瑞普之选 单桶苏格兰威士忌 |
+| 辅助信息 | 亚伯乐 1996年 单一麦芽苏格兰威士忌 |
+| 品牌 | 马克瑞普之选（Mackillop's Choice） |
+| 酒厂 | 亚伯乐（ABERLOUR） |
 | 产区 | 苏格兰斯佩塞 |
 | 入桶 / 装瓶 | 1996年2月14日 / 2026年2月14日 |
 | 酒龄 | 30年 |
@@ -50,9 +53,9 @@ GitHub Repository ID：`wxyj-content-system`
 仓库内置酒瓶5张、木质礼盒5张、白色外包装7张，共17张 AIGC 高清产品参考图。原始 PNG、中文角度文件名和 SHA-256 均被保留，可直接用于小红书逐页生图以及抖音、视频号逐镜生产。
 
 <p>
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-正面.png" alt="马克瑞普之选亚伯乐1996年单桶酒瓶正面参考图" width="220">
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-酒标.png" alt="马克瑞普之选亚伯乐1996年单桶酒标参考图" width="220">
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-内置酒瓶.png" alt="马克瑞普之选亚伯乐1996年单桶木质礼盒内置酒瓶参考图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-正面.png" alt="马克瑞普之选 单桶苏格兰威士忌酒瓶正面参考图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-酒标.png" alt="马克瑞普之选 单桶苏格兰威士忌酒标参考图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-内置酒瓶.png" alt="马克瑞普之选 单桶苏格兰威士忌木质礼盒内置酒瓶参考图" width="220">
 </p>
 
 - [查看17张参考图](assets/products/mackillops-choice-aberlour-1996/reference-images/)
@@ -166,7 +169,7 @@ C:\Users\<用户名>\.codex\skills\wxyj-content-system
 ### 2. 调用
 
 ```text
-使用 $wxyj-content-system，为马克瑞普之选亚伯乐1996年单桶
+使用 $wxyj-content-system，为马克瑞普之选 单桶苏格兰威士忌
 生成一套8月1日小红书图文，
 同时生成采用标题、备选标题记录、发布正文、Tag、首评、逐页提示词和QA。
 ```
@@ -178,7 +181,7 @@ python scripts\create_content_run.py `
   --root outputs `
   --date 2026-08-01 `
   --slug label-reading `
-  --product "马克瑞普之选亚伯乐1996年单桶" `
+  --product "马克瑞普之选 单桶苏格兰威士忌" `
   --platforms xiaohongshu
 ```
 
@@ -285,7 +288,7 @@ AIGC来源与事实核验只记录在内部 `sources.md` 和 `qa.md`，不进入
 
 ### 能否用于其他威士忌产品？
 
-当前 Skill 默认且主要服务马克瑞普之选亚伯乐1996年单桶。未来产品只有在威熏邑境明确提供并核验产品卡、素材和传播边界后才接入，不会自动把通用威士忌内容替代当前产品。
+当前 Skill 默认且主要服务马克瑞普之选 单桶苏格兰威士忌（辅助信息：亚伯乐 1996年 单一麦芽苏格兰威士忌）。未来产品只有在威熏邑境明确提供并核验产品卡、素材和传播边界后才接入，不会自动把通用威士忌内容替代当前产品。
 
 ## 文档与维护
 

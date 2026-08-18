@@ -3,13 +3,18 @@
 Canonical name: 威熏邑境自媒体内容生成系统
 English name: WXYJ Content System
 Skill ID: wxyj-content-system
-Version: 2.7.0
+Version: 2.7.2
 
 Purpose:
 A brand-specific Codex Skill for 威熏邑境, currently centered on
-马克瑞普之选亚伯乐1996年单桶 across Xiaohongshu, Douyin, and WeChat
+马克瑞普之选 单桶苏格兰威士忌 across Xiaohongshu, Douyin, and WeChat
 Channels. It bundles product knowledge, 17 AIGC product references, titles,
 captions, tags, comments, prompts, storyboards, QA, and content-run folders.
+
+Product identity: 马克瑞普之选 (Mackillop's Choice) is the brand; 亚伯乐
+(ABERLOUR) is the distillery where the spirit was produced; 30年 is the age
+statement. Official product name: 马克瑞普之选 单桶苏格兰威士忌. Supporting
+information: 亚伯乐 1996年 单一麦芽苏格兰威士忌.
 
 Primary documentation:
 - README.md
