@@ -99,7 +99,8 @@ def main() -> int:
             print(f"错误：{error}")
         return 1
 
-    print("产品参考图验证通过：17张文件与资产清单一致")
+    image_count = len(list((args.product_root / "reference-images").glob("*.png")))
+    print(f"产品参考图验证通过：{image_count}张文件与资产清单一致")
     return 0
 
 

@@ -1,8 +1,8 @@
 # WXYJ Content System
 
-**WXYJ Content System is a brand-specific Codex Skill for 威熏邑境, currently centered on Mackillop's Choice Single Cask Scotch Whisky across Xiaohongshu, Douyin, and WeChat Channels.** Its supporting information is Aberlour 1996 Single Malt Scotch Whisky. It bundles verified product knowledge, packaging copy, brand-story boundaries, 17 high-resolution AIGC product references, platform-native copy, prompts, storyboards, QA, and traceable content-run directories.
+**WXYJ Content System is a brand-specific Codex Skill for 威熏邑境, currently centered on Mackillop's Choice Single Cask Scotch Whisky across Xiaohongshu, Douyin, and WeChat Channels.** Its supporting information is Aberlour 1996 Single Malt Scotch Whisky. It bundles verified product knowledge, packaging copy, brand-story boundaries, 20 high-resolution AIGC product references, platform-native copy, prompts, storyboards, QA, and traceable content-run directories.
 
-Version: `2.7.2`<br>
+Version: `2.7.3`<br>
 Skill ID: `wxyj-content-system`<br>
 GitHub Repository ID: `wxyj-content-system`
 
@@ -25,7 +25,7 @@ distillery: ABERLOUR; age statement: 30 years. It is Speyside, distilled
 on 14 February 1996, bottled on 14 February 2026, 30 years old,
 PX Sherry Hogshead, cask 261311, 51% ABV, 70cl, and 184 bottles in total.
 
-The bundled asset library contains 17 original PNG references under
+The bundled asset library contains 20 original PNG references under
 [`assets/products/mackillops-choice-aberlour-1996/reference-images/`](assets/products/mackillops-choice-aberlour-1996/reference-images/).
 These AIGC references are restricted brand assets and are not covered by Apache-2.0.
 

@@ -8,11 +8,11 @@
   "distillery": "亚伯乐（ABERLOUR）",
   "age_statement": "30年",
   "asset_type": "AIGC高清产品参考图",
-  "asset_count": 17,
+  "asset_count": 20,
   "license": "All rights reserved",
   "apache_2_0_covered": false,
   "consumer_evidence": false,
-  "reference_rule": "每次按页面或镜头职责选择2至3张，不要一次输入全部17张；酒瓶正面与酒标图为当前最高优先级身份参考。",
+  "reference_rule": "每次按页面或镜头职责选择2至3张，不要一次输入全部20张；酒瓶正面与酒标图为当前最高优先级身份参考。",
   "fact_rule": "这些图片用于产品身份、角度、材质和构图控制，不替代真实酒标、实物照片、报关或溯源文件。",
   "assets": [
     {
@@ -62,6 +62,30 @@
       "view": "背面",
       "primary_uses": ["包装品鉴词版式", "木纹", "知识页背景参考"],
       "sha256": "427163C22475DAC551280B90C3BFE81E2F182A6145CFAB3EAED2E2F0CB36AA89"
+    },
+    {
+      "id": "wood-box-back-right-45",
+      "file": "木质礼盒-背面右侧45°.png",
+      "category": "木质礼盒",
+      "view": "背面右侧45度",
+      "primary_uses": ["背面立体构图", "右侧合页结构", "木纹与背面品鉴牌位置"],
+      "sha256": "5D4AD1214CEFC93B6FAF2C3D727D2B82D3D11359460F195021DA56A6D541DA6B"
+    },
+    {
+      "id": "wood-box-back-left-45",
+      "file": "木质礼盒-背面左侧45°.png",
+      "category": "木质礼盒",
+      "view": "背面左侧45度",
+      "primary_uses": ["背面立体构图", "左侧门缝结构", "背面木纹与礼盒厚度"],
+      "sha256": "1426FC484789BA87D606D3CC4671047B3AE753E8D06A020D862A2C384BD2E156"
+    },
+    {
+      "id": "wood-box-back-tasting-label",
+      "file": "木质礼盒-背面品鉴标签.png",
+      "category": "木质礼盒",
+      "view": "背面品鉴标签近景",
+      "primary_uses": ["品鉴标签版式", "酒厂年份桶号定位", "知识页局部特写"],
+      "sha256": "47906AB8A57F42B0AAE5BE5BE81F4C205EEEE9F47E4FF647B28D46A9C018F63C"
     },
     {
       "id": "wood-box-open-with-bottle",

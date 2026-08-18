@@ -11,7 +11,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 
 - 用户没有指定产品时，默认使用“马克瑞普之选 单桶苏格兰威士忌”。
 - 每次产品内容创作都读取 `references/product-facts.md`；涉及包装品鉴词、品牌故事或人物信息时，同时读取 `references/product-packaging-copy.md`。
-- 每次图片或视频生产都先读取 `references/visual-asset-library.md` 和 `assets/products/mackillops-choice-aberlour-1996/asset-manifest.json`，从内置17张参考图中按职责选图。
+- 每次图片或视频生产都先读取 `references/visual-asset-library.md` 和 `assets/products/mackillops-choice-aberlour-1996/asset-manifest.json`，从内置20张参考图中按职责选图。
 - 新产品只有在用户明确提供并核验产品卡后才能接入；不得因此稀释当前核心产品定位。
 
 ## 核心原则
@@ -45,7 +45,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 
 1. **识别任务**：确定是定位、选题、创作、排期、审核、互动、复盘或新品接入。
 2. **锁定事实**：默认产品从 `references/product-facts.md` 取值；先分清“马克瑞普之选＝品牌、亚伯乐＝酒厂、亚伯乐 1996年 单一麦芽苏格兰威士忌＝辅助信息、30年＝酒龄”，缺失字段标为“待核验”，不推断。
-3. **验证并盘点素材**：先执行 `python scripts/validate_product_assets.py`；通过后从内置17张产品参考图选择当前页面或镜头需要的2–3张，再标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
+3. **验证并盘点素材**：先执行 `python scripts/validate_product_assets.py`；通过后从内置20张产品参考图选择当前页面或镜头需要的2–3张，再标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
 4. **查询近期创意**：读取最近30天 `creative-ledger.csv`，先排除完整创意指纹、14天视觉配方和连续版式路线重复。
 5. **读取成熟效果**：读取近期 `performance-log.csv`；用 `python scripts/analyze_performance.py <台账> --date YYYY-MM-DD --theme-family <主题族> --output <运行目录>/performance-brief.json` 生成简报。发布不足48小时的数据只记录为观察，少于10条可比成熟内容只生成假设。
 6. **建立母题与实验**：只回答一个具体用户问题，直接关联当前产品；在 `creative-record.json` 登记主题族、事实、首图机位、钩子结构、CTA、`typography_mode` 和唯一实验变量。主题冷却提示出现时默认换主主题；如继续使用，填写 `campaign_override` 并改变用户问题、首屏形式和主事实中的至少两项。
@@ -147,7 +147,7 @@ V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一
 
 所有参考图必须声明角色；冲突时固定采用 `geometry_master > structure_master > label_detail > style_anchor`。完整正面酒瓶只认 `酒瓶-正面.png` 的几何比例；连续3次仍无法保持瓶型时，减少完整酒瓶露出，不接受明显变形的产品。
 
-内置17张图片均为 AIGC 高清产品参考图，只负责身份、角度、结构、材质与构图一致性。它们不是真实拍摄，也不能替代酒标实拍、报关、溯源或授权文件。酒瓶正面与酒标近景是当前最高优先级身份参考；其他图中可见的细小瓶号、铭牌或物流文字不得直接作为发布事实。
+内置20张图片均为 AIGC 高清产品参考图，只负责身份、角度、结构、材质与构图一致性。它们不是真实拍摄，也不能替代酒标实拍、报关、溯源或授权文件。酒瓶正面与酒标近景是当前最高优先级身份参考；其他图中可见的细小瓶号、铭牌或物流文字不得直接作为发布事实。
 
 ## 外部视频生成授权边界
 

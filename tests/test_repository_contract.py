@@ -22,6 +22,9 @@ EXPECTED_PRODUCT_ASSETS = {
     "酒瓶-正面.png": "8BEEBB208F197F0A7A5E43059CC4312A223B1C7CA8E8E6B71CF8427E036DD76F",
     "酒瓶-左侧45°.png": "C0B87B9AA91B45A9B012E88428401026EB01134681E7C455B95B0C75F2725299",
     "木质礼盒-背面.png": "427163C22475DAC551280B90C3BFE81E2F182A6145CFAB3EAED2E2F0CB36AA89",
+    "木质礼盒-背面右侧45°.png": "5D4AD1214CEFC93B6FAF2C3D727D2B82D3D11359460F195021DA56A6D541DA6B",
+    "木质礼盒-背面左侧45°.png": "1426FC484789BA87D606D3CC4671047B3AE753E8D06A020D862A2C384BD2E156",
+    "木质礼盒-背面品鉴标签.png": "47906AB8A57F42B0AAE5BE5BE81F4C205EEEE9F47E4FF647B28D46A9C018F63C",
     "木质礼盒-内置酒瓶.png": "9136C98797B435DA56719C7ABDDBD2D1211E0E51DA35CFA9B1FF3F89EBA4CF03",
     "木质礼盒-右侧45°.png": "39CD7F8A62F02781A0123C8C1A0EC5BD2C0F2EFC430676B1EFE048FCF72B0904",
     "木质礼盒-正面.png": "CA8041790526F5E0AC06402DF75486AA3A8DDE623ACC66555A58DF03238996B3",
@@ -140,7 +143,7 @@ class RepositoryContractTests(unittest.TestCase):
         )
         self.assertEqual(manifest["distillery"], "亚伯乐（ABERLOUR）")
         self.assertEqual(manifest["age_statement"], "30年")
-        self.assertEqual(manifest["asset_count"], 17)
+        self.assertEqual(manifest["asset_count"], 20)
         self.assertEqual(manifest["license"], "All rights reserved")
 
         by_file = {entry["file"]: entry for entry in manifest["assets"]}
@@ -174,7 +177,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "2.7.2")
+        self.assertEqual(identity["version"], "2.7.3")
         self.assertEqual(
             identity["product_identity"]["brand"],
             "马克瑞普之选（Mackillop's Choice）",

@@ -75,7 +75,7 @@ output_name: 20260801-wxyj-label-reading-s01-date-reveal-seedance-v01.mp4
 - `style_anchor`：只提供色彩、光线、材质和设计语法。
 - `motion_reference`：只提供运动方式，不覆盖产品身份。
 
-任务包必须复制当前镜头实际需要的参考文件，并在 `references.order` 中给出上传顺序。不得只写17张图库的原始路径，不能要求用户自行找图。
+任务包必须复制当前镜头实际需要的参考文件，并在 `references.order` 中给出上传顺序。不得只写20张图库的原始路径，不能要求用户自行找图。
 
 ## 提示词交付
 

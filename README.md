@@ -1,8 +1,8 @@
 # 威熏邑境自媒体内容生成系统
 
-**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务“马克瑞普之选 单桶苏格兰威士忌”在小红书、抖音和视频号上的持续内容创作。** 辅助信息为“亚伯乐 1996年 单一麦芽苏格兰威士忌”。它把该产品的事实、包装文案、品牌故事、17张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
+**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务“马克瑞普之选 单桶苏格兰威士忌”在小红书、抖音和视频号上的持续内容创作。** 辅助信息为“亚伯乐 1996年 单一麦芽苏格兰威士忌”。它把该产品的事实、包装文案、品牌故事、20张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
 
-当前版本：`2.7.2`<br>
+当前版本：`2.7.3`<br>
 Skill ID：`wxyj-content-system`<br>
 GitHub Repository ID：`wxyj-content-system`
 
@@ -48,17 +48,19 @@ GitHub Repository ID：`wxyj-content-system`
 - [品牌定位、受众、栏目与内容比例](references/brand-positioning.md)
 - [产品参考图选择和生成约束](references/visual-asset-library.md)
 
-## 内置17张产品参考图
+## 内置20张产品参考图
 
-仓库内置酒瓶5张、木质礼盒5张、白色外包装7张，共17张 AIGC 高清产品参考图。原始 PNG、中文角度文件名和 SHA-256 均被保留，可直接用于小红书逐页生图以及抖音、视频号逐镜生产。
+仓库内置酒瓶5张、木质礼盒8张、白色外包装7张，共20张 AIGC 高清产品参考图。新增木质礼盒背面右侧45°、背面左侧45°与背面品鉴标签近景，用于背面透视、合页/门缝、木纹、品鉴牌位置及标签微距的结构锁定。原始 PNG、中文角度文件名和 SHA-256 均被保留，可直接用于小红书逐页生图以及抖音、视频号逐镜生产。
 
 <p>
   <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-正面.png" alt="马克瑞普之选 单桶苏格兰威士忌酒瓶正面参考图" width="220">
   <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-酒标.png" alt="马克瑞普之选 单桶苏格兰威士忌酒标参考图" width="220">
   <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-内置酒瓶.png" alt="马克瑞普之选 单桶苏格兰威士忌木质礼盒内置酒瓶参考图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-背面右侧45°.png" alt="马克瑞普之选 单桶苏格兰威士忌木质礼盒背面右侧45度参考图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-背面品鉴标签.png" alt="马克瑞普之选 单桶苏格兰威士忌木质礼盒背面品鉴标签参考图" width="220">
 </p>
 
-- [查看17张参考图](assets/products/mackillops-choice-aberlour-1996/reference-images/)
+- [查看20张参考图](assets/products/mackillops-choice-aberlour-1996/reference-images/)
 - [查看资产清单、用途与文件哈希](assets/products/mackillops-choice-aberlour-1996/asset-manifest.json)
 
 这些图片属于威熏邑境受限品牌资产，不适用 Apache-2.0。它们是 AIGC 高清参考图，不是消费者事实证据；发布事实仍应以真实酒标、实物照片、报关和溯源文件为准。
@@ -135,7 +137,7 @@ wxyj-content-system/
 │   ├── products/
 │   │   └── mackillops-choice-aberlour-1996/
 │   │       ├── asset-manifest.json
-│   │       └── reference-images/  # 17张产品参考图
+│   │       └── reference-images/  # 20张产品参考图
 │   └── templates/
 ├── references/
 ├── scripts/
@@ -225,7 +227,7 @@ python scripts\analyze_performance.py `
   --output outputs\2026\08\2026-08-08-flavor-journey\performance-brief.json
 ```
 
-产品资产校验器检查17张参考图及 SHA-256；内容运行校验器检查目录和发布字段；发布预检检查原生画幅、产品人工签核、媒体、音频与交付状态；多样性校验检查30天创意指纹、14天视觉配方和版式路线轮换。效果分析器只把发布满48小时的数据用于下次提示，少于10条可比成熟内容只输出实验假设。
+产品资产校验器检查20张参考图及 SHA-256；内容运行校验器检查目录和发布字段；发布预检检查原生画幅、产品人工签核、媒体、音频与交付状态；多样性校验检查30天创意指纹、14天视觉配方和版式路线轮换。效果分析器只把发布满48小时的数据用于下次提示，少于10条可比成熟内容只输出实验假设。
 
 ## 小红书发布包标准
 

@@ -23,7 +23,7 @@ Apache-2.0 许可适用于：
 
 特别说明：
 
-`assets/products/mackillops-choice-aberlour-1996/reference-images/` 中的17张产品参考图属于威熏邑境受限品牌资产，采用 **All rights reserved**，不适用 Apache-2.0。公开仓库允许查看和在威熏邑境授权运营中使用，不代表允许第三方复制品牌、包装、商品视觉或用于其他商业主体。
+`assets/products/mackillops-choice-aberlour-1996/reference-images/` 中的20张产品参考图属于威熏邑境受限品牌资产，采用 **All rights reserved**，不适用 Apache-2.0。公开仓库允许查看和在威熏邑境授权运营中使用，不代表允许第三方复制品牌、包装、商品视觉或用于其他商业主体。
 
 使用者必须自行确认其产品销售、广告、平台发布和素材授权是否合法。
 
