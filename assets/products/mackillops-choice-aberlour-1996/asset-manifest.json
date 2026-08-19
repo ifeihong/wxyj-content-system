@@ -12,11 +12,11 @@
   "cask_number": "261311",
   "alcohol": "51%",
   "asset_type": "AIGC高清产品参考图",
-  "asset_count": 20,
+  "asset_count": 22,
   "license": "All rights reserved",
   "apache_2_0_covered": false,
   "consumer_evidence": false,
-  "reference_rule": "每次按页面或镜头职责选择2至3张，不要一次输入全部20张；酒瓶正面与酒标图为当前最高优先级身份参考。",
+  "reference_rule": "每次按页面或镜头职责选择2至3张，不要一次输入全部22张；酒瓶正面与酒标图为当前最高优先级身份参考。半打开礼盒图用于45度或半开角度，开盒正面图仍用于175至180度正面结构锁定。",
   "fact_rule": "这些图片用于产品身份、角度、材质和构图控制，不替代真实酒标、实物照片、报关或溯源文件。",
   "assets": [
     {
@@ -98,6 +98,22 @@
       "view": "开盒正面",
       "primary_uses": ["开盒画面", "礼赠", "内页故事"],
       "sha256": "9136C98797B435DA56719C7ABDDBD2D1211E0E51DA35CFA9B1FF3F89EBA4CF03"
+    },
+    {
+      "id": "wood-box-half-open-with-bottle-45",
+      "file": "木质礼盒-45度°半打开内置酒瓶.png",
+      "category": "木质礼盒",
+      "view": "45度半打开并内置酒瓶",
+      "primary_uses": ["半开礼盒构图", "45度产品展示", "图生视频首帧"],
+      "sha256": "EC66E93ED8628E978A45FE21CFC1DC89FB962FFE5E90FEA32B6CC72EF21187F8"
+    },
+    {
+      "id": "wood-box-half-open-with-bottle",
+      "file": "木质礼盒-半打开内置酒瓶.png",
+      "category": "木质礼盒",
+      "view": "半打开并内置酒瓶",
+      "primary_uses": ["半开礼盒正面构图", "礼赠展示", "开盒动态过渡"],
+      "sha256": "E53870A622AD168648C7DF7372E0DDE7B20B6F20820264C569C5AD48FF880EDF"
     },
     {
       "id": "wood-box-right-45",

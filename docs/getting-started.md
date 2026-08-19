@@ -4,7 +4,7 @@
 
 - Codex 或兼容 Agent Skills 的运行环境；
 - Python 3.10 或更高版本；
-- Skill 已内置马克瑞普之选 单桶苏格兰威士忌的产品知识与20张 AIGC 高清参考图；
+- Skill 已内置马克瑞普之选 单桶苏格兰威士忌的产品知识与22张 AIGC 高清参考图；
 - 发布前仍需使用真实酒标、实物照片及运营方文件核对消费者事实。
 
 ## 安装
@@ -108,7 +108,7 @@ python scripts\validate_external_video_return.py `
   --shot-dir outputs\2026\08\2026-08-01-label-reading\video-master\external-generation\S01-date-reveal
 ```
 
-第一条命令验证20张内置参考图及其 SHA-256，第二条命令验证内容运行包。验证通过后，仍需人工查看最终图片、视频、酒标细节、平台预览和实时商品信息。
+第一条命令验证22张内置参考图及其 SHA-256，第二条命令验证内容运行包。验证通过后，仍需人工查看最终图片、视频、酒标细节、平台预览和实时商品信息。
 
 ## 推荐工作频率
 
