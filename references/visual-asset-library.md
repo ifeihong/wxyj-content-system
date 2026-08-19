@@ -30,8 +30,8 @@ asset_manifest: assets/products/mackillops-choice-aberlour-1996/asset-manifest.j
 | --- | --- |
 | 正式产品名 | 马克瑞普之选 单桶苏格兰威士忌 |
 | 辅助信息 | 亚伯乐 1996年 单一麦芽苏格兰威士忌 |
-| 品牌 | 马克瑞普之选（Mackillop's Choice） |
-| 酒厂 | 亚伯乐（ABERLOUR） |
+| 品牌 | Mackillop's Choice（马克瑞普之选） |
+| 酒厂 | ABERLOUR（亚伯乐） |
 | 年份 | 1996 |
 | 蒸馏厂标示 | ABERLOUR |
 | 入桶日期 | 14 February 1996 |

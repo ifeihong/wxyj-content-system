@@ -116,8 +116,8 @@ class RepositoryContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn("| 商品名称 | “马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996 |", facts)
-        self.assertIn("| 品牌 | 马克瑞普之选（Mackillop's Choice） |", facts)
-        self.assertIn("| 酒厂 | 亚伯乐（ABERLOUR） |", facts)
+        self.assertIn("| 品牌 | Mackillop's Choice（马克瑞普之选） |", facts)
+        self.assertIn("| 酒厂 | ABERLOUR（亚伯乐） |", facts)
         self.assertIn("| 酒龄 | 30年 |", facts)
         self.assertIn("不得把“亚伯乐”写成品牌", facts)
         self.assertIn("不得把“30年”写成品牌或酒厂", facts)
@@ -135,9 +135,9 @@ class RepositoryContractTests(unittest.TestCase):
             "“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996",
         )
         self.assertEqual(
-            manifest["product_brand"], "马克瑞普之选（Mackillop's Choice）"
+            manifest["product_brand"], "Mackillop's Choice（马克瑞普之选）"
         )
-        self.assertEqual(manifest["distillery"], "亚伯乐（ABERLOUR）")
+        self.assertEqual(manifest["distillery"], "ABERLOUR（亚伯乐）")
         self.assertEqual(manifest["age_statement"], "30年")
         self.assertEqual(manifest["asset_count"], 20)
         self.assertEqual(manifest["license"], "All rights reserved")
@@ -176,10 +176,10 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["version"], "2.7.3")
         self.assertEqual(
             identity["product_identity"]["brand"],
-            "马克瑞普之选（Mackillop's Choice）",
+            "Mackillop's Choice（马克瑞普之选）",
         )
         self.assertEqual(
-            identity["product_identity"]["distillery"], "亚伯乐（ABERLOUR）"
+            identity["product_identity"]["distillery"], "ABERLOUR（亚伯乐）"
         )
         self.assertEqual(
             identity["product_identity"]["official_product_name"],

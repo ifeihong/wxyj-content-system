@@ -27,8 +27,8 @@ GitHub Repository ID：`wxyj-content-system`
 | 字段 | 已确认信息 |
 | --- | --- |
 | 商品名称 | “马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996 |
-| 品牌 | 马克瑞普之选（Mackillop's Choice） |
-| 酒厂 | 亚伯乐（ABERLOUR） |
+| 品牌 | Mackillop's Choice（马克瑞普之选） |
+| 酒厂 | ABERLOUR（亚伯乐） |
 | 产区 | 苏格兰斯佩塞 |
 | 入桶 / 装瓶 | 1996年2月14日 / 2026年2月14日 |
 | 酒龄 | 30年 |
