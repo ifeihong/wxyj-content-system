@@ -78,7 +78,7 @@ class RepositoryContractTests(unittest.TestCase):
         for relative in ("SKILL.md", "README.md"):
             text = (PROJECT_ROOT / relative).read_text(encoding="utf-8")
             self.assertIn("威熏邑境品牌专属", text, relative)
-            self.assertIn("马克瑞普之选 单桶苏格兰威士忌", text, relative)
+            self.assertIn("马克瑞普之选", text, relative)
             for platform in ("小红书", "抖音", "视频号"):
                 self.assertIn(platform, text, relative)
 
@@ -91,9 +91,9 @@ class RepositoryContractTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         for fact in (
             "261311",
-            "51% ABV",
+            "51%",
             "PX Sherry Hogshead",
-            "70 cl（700 ml）",
+            "700毫升/瓶",
             "184 瓶",
             "1996-02-14",
             "2026-02-14",
@@ -115,8 +115,7 @@ class RepositoryContractTests(unittest.TestCase):
         facts = (PROJECT_ROOT / "references" / "product-facts.md").read_text(
             encoding="utf-8"
         )
-        self.assertIn("| 正式产品名 | 马克瑞普之选 单桶苏格兰威士忌 |", facts)
-        self.assertIn("| 辅助信息 | 亚伯乐 1996年 单一麦芽苏格兰威士忌 |", facts)
+        self.assertIn("| 商品名称 | “马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996 |", facts)
         self.assertIn("| 品牌 | 马克瑞普之选（Mackillop's Choice） |", facts)
         self.assertIn("| 酒厂 | 亚伯乐（ABERLOUR） |", facts)
         self.assertIn("| 酒龄 | 30年 |", facts)
@@ -133,10 +132,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(manifest["brand"], "威熏邑境")
         self.assertEqual(
             manifest["product_name"],
-            "马克瑞普之选 单桶苏格兰威士忌",
-        )
-        self.assertEqual(
-            manifest["supporting_information"], "亚伯乐 1996年 单一麦芽苏格兰威士忌"
+            "“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996",
         )
         self.assertEqual(
             manifest["product_brand"], "马克瑞普之选（Mackillop's Choice）"
@@ -187,11 +183,7 @@ class RepositoryContractTests(unittest.TestCase):
         )
         self.assertEqual(
             identity["product_identity"]["official_product_name"],
-            "马克瑞普之选 单桶苏格兰威士忌",
-        )
-        self.assertEqual(
-            identity["product_identity"]["supporting_information"],
-            "亚伯乐 1996年 单一麦芽苏格兰威士忌",
+            "“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996",
         )
         self.assertEqual(identity["product_identity"]["age_statement"], "30年")
 
