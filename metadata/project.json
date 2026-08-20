@@ -3,7 +3,7 @@
   "english_name": "WXYJ Content System",
   "skill_id": "wxyj-content-system",
   "github_repository_id": "wxyj-content-system",
-  "version": "2.7.4",
+  "version": "2.9.0",
   "license": "Apache-2.0",
   "brand_scope": "威熏邑境品牌专属",
   "primary_product": "“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996",
@@ -22,7 +22,8 @@
   "platforms": [
     "xiaohongshu",
     "douyin",
-    "weixin-channels"
+    "weixin-channels",
+    "ecommerce"
   ],
   "topics": [
     "codex-skill",

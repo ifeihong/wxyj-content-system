@@ -7,10 +7,10 @@ from datetime import date as date_type
 from pathlib import Path
 
 
-ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels")
+ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels", "ecommerce")
 VIDEO_PLATFORMS = {"douyin", "weixin-channels"}
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-VERSION = "2.7.3"
+VERSION = "2.9.0"
 DEFAULT_PRODUCT = "马克瑞普之选 单桶苏格兰威士忌"
 
 
@@ -74,6 +74,22 @@ PUBLISH_TEMPLATES = {
 ## 朋友圈转发文案
 
 ## CTA
+
+## 最终素材顺序
+""",
+    "ecommerce": """# 电商发布包
+
+## 采用标题
+
+## 商品标题
+
+## 主视觉卖点
+
+## 详情页信息架构
+
+## 商品详情文案
+
+## 规格与事实核对
 
 ## 最终素材顺序
 """,
@@ -204,7 +220,7 @@ def create_run(
     )
     _write_once(run_dir / "manifest.yaml", manifest)
     release_manifest = {
-        "schema_version": 2,
+        "schema_version": 3,
         "run_id": run_id,
         "release_status": "working",
         "native_targets": {
@@ -228,10 +244,23 @@ def create_run(
                 if needs_video_master(normalized_platforms)
                 else {}
             ),
+            **(
+                {
+                    "ecommerce": {
+                        "aspect_ratio": "1:1",
+                        "target": "2000x2000 or larger square",
+                        "detail_page": "vertical long image; no forced ratio",
+                    }
+                }
+                if "ecommerce" in normalized_platforms
+                else {}
+            ),
         },
         "quality_gates": {
             "facts": "pending",
+            "evidence": "pending",
             "product_geometry": "pending",
+            "typography": "pending",
             "public_copy": "pending",
             "media": "pending",
             "audio": "pending" if needs_video_master(normalized_platforms) else "not-applicable",
@@ -245,6 +274,7 @@ def create_run(
         json.dumps(release_manifest, ensure_ascii=False, indent=2) + "\n",
     )
     creative_record = {
+        "schema_version": 2,
         "content_id": run_id,
         "date": date,
         "status": "working",
@@ -255,6 +285,11 @@ def create_run(
         "typography_mode": "",
         "hook_pattern": "",
         "cta_type": "",
+        "audience_question": "",
+        "emotion_axis": "",
+        "hero_visual_motif": "",
+        "product_form": "",
+        "interaction_type": "",
         "experiment": {
             "variable": "",
             "hypothesis": "",
@@ -317,12 +352,36 @@ def create_run(
 
 ## 每张发布资产
 
-| 文件 | 产品形态 | 几何参考 | 瓶盖与瓶肩 | 酒标与液面 | 边缘融合 | 礼盒结构与内页 | 结论 |
-| --- | --- | --- | --- | --- | --- | --- | --- |
+| 文件 | 产品形态 | 几何参考 | 瓶盖与瓶肩 | 酒标与液面 | 边缘融合 | 礼盒结构与内页 | 文字洁净度 | 结论 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
-完整酒瓶必须核对瓶盖、瓶肩、瓶身宽高、酒标位置、液面和瓶底。开盒画面必须保持175°–180°，保留左侧白色内皮、故事文字、中央合页和右侧瓶槽。脚本只核对登记状态，不能替代人工视觉判断。
+完整酒瓶必须核对瓶盖、瓶肩、瓶身宽高、酒标位置、液面和瓶底。开盒画面必须保持175°–180°，保留左侧白色内皮、故事文字、中央合页和右侧瓶槽。文字洁净度必须核对逐字准确、无波纹/摩尔纹/颗粒干扰、无字体变形，且360px手机预览可读。脚本只核对登记状态，不能替代人工视觉判断。
 """,
     )
+    if "ecommerce" in normalized_platforms:
+        _write_once(
+            run_dir / "ecommerce-asset-qa.md",
+            """# 电商资产人工验收卡
+
+## 结论
+
+`pending` / `pass` / `fail`
+
+## 1:1 商品缩略图
+
+| 文件 | 主体占比 | 瓶型与礼盒比例 | 标题洁净度 | 裁切安全区 | 结论 |
+| --- | --- | --- | --- | --- | --- |
+
+缩略图以商品为第一识别对象，禁止产品被压扁、白边抠图感、文字波纹或主标题遮挡产品。
+
+## 详情长图
+
+| 文件 | 信息顺序 | 事实核对 | 产品比例 | 阅读节奏 | 结论 |
+| --- | --- | --- | --- | --- | --- |
+
+详情长图按品牌、商品、参数、包装、风味和购买判断组织，不把小红书封面版式直接复用为电商详情页。
+""",
+        )
     _write_once(
         run_dir / "deliverables.md",
         """# 最终交付索引
@@ -352,6 +411,11 @@ def create_run(
             _write_once(
                 platform_dir / "prompts.md",
                 "# 小红书逐页生产提示词\n\n## 套图视觉母版\n\n## 第1页\n",
+            )
+        if platform == "ecommerce":
+            _write_once(
+                platform_dir / "prompts.md",
+                "# 电商逐图生产提示词\n\n## 1:1商品缩略图\n\n## 详情长图\n",
             )
 
     if needs_video_master(normalized_platforms):

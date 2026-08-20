@@ -152,6 +152,44 @@ class ContentRunContractTests(unittest.TestCase):
             self.assertIn("## 采用标题", xhs_publish)
             self.assertIn("## 最终素材顺序", xhs_publish)
 
+    def test_create_ecommerce_run_has_native_square_assets_and_qa(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp), "2026-08-20", "valentine-thumbnail", ["ecommerce"]
+            )
+
+            self.assertTrue((run_dir / "ecommerce" / "publish.md").exists())
+            self.assertTrue((run_dir / "ecommerce" / "media").is_dir())
+            self.assertTrue((run_dir / "ecommerce-asset-qa.md").is_file())
+            release = json.loads(
+                (run_dir / "release-manifest.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(release["native_targets"]["ecommerce"]["aspect_ratio"], "1:1")
+            self.assertIn("typography", release["quality_gates"])
+            self.assertIn("evidence", release["quality_gates"])
+
+    def test_release_preflight_requires_typography_and_evidence_for_schema_three(self):
+        with workspace_tempdir() as tmp:
+            run_dir = self.creator.create_run(
+                Path(tmp), "2026-08-20", "valentine-thumbnail", ["ecommerce"]
+            )
+            release_path = run_dir / "release-manifest.json"
+            release = json.loads(release_path.read_text(encoding="utf-8"))
+            release["release_status"] = "publish"
+            release["quality_gates"] = {
+                key: "pass" for key in release["quality_gates"]
+            }
+            release["quality_gates"].pop("typography")
+            release["quality_gates"].pop("evidence")
+            release_path.write_text(
+                json.dumps(release, ensure_ascii=False), encoding="utf-8"
+            )
+
+            errors = self.release_validator.validate_release(run_dir)
+
+            self.assertIn("发布清单缺少质量门槛: typography", errors)
+            self.assertIn("发布清单缺少质量门槛: evidence", errors)
+
     def test_release_preflight_rejects_v4_fake_motion_and_unapproved_gates(self):
         with workspace_tempdir() as tmp:
             run_dir = self.creator.create_run(
@@ -834,6 +872,36 @@ class ContentRunContractTests(unittest.TestCase):
         self.assertTrue((handoff / "00-开始前必读.md").exists())
         self.assertTrue((handoff / "00-镜头状态表.csv").exists())
         self.assertGreaterEqual(len(list(handoff.glob("S??-*"))), 2)
+
+    def test_diversity_validator_requires_audience_novelty_fields_for_v2_records(self):
+        candidate = {
+            "schema_version": 2,
+            "content_id": "2026-08-20-valentine-thumbnail",
+            "date": "2026-08-20",
+            "status": "publish-candidate",
+            "theme_family": "gift-ritual",
+            "primary_fact_ids": ["date-2026"],
+            "hero_view_id": "box-half-open-front",
+            "view_ids": ["box-half-open-front"],
+            "typography_mode": "valentine-time",
+            "hook_pattern": "memorial-line",
+            "cta_type": "comment",
+            "experiment": {
+                "variable": "hero-product-scale",
+                "hypothesis": "更突出的产品主体提升主页访问。",
+                "success_metric": "profile_visits",
+                "baseline": "not-established",
+                "result": "pending",
+            },
+        }
+
+        errors = self.diversity_validator.validate_record(candidate)
+
+        self.assertIn("发布候选缺少创意字段: audience_question", errors)
+        self.assertIn("发布候选缺少创意字段: emotion_axis", errors)
+        self.assertIn("发布候选缺少创意字段: hero_visual_motif", errors)
+        self.assertIn("发布候选缺少创意字段: product_form", errors)
+        self.assertIn("发布候选缺少创意字段: interaction_type", errors)
 
     def test_legacy_pack_validator_supports_help(self):
         output = io.StringIO()

@@ -1,2 +1,2 @@
-content_id,date,theme_family,primary_fact_ids,hero_view_id,view_ids,typography_mode,hook_pattern,cta_type
-,,,,,,,,
+content_id,date,theme_family,primary_fact_ids,hero_view_id,view_ids,typography_mode,hook_pattern,cta_type,audience_question,emotion_axis,hero_visual_motif,product_form,interaction_type
+,,,,,,,,,,,,,,

@@ -30,6 +30,7 @@ PLATFORM_CODES = {
     "xiaohongshu": "xhs",
     "douyin": "dy",
     "weixin-channels": "wxv",
+    "ecommerce": "ec",
 }
 BASE_DOCUMENT_REQUIREMENTS = {
     "brief.md": ("母题", "目标受众", "核心事实", "增长目标"),
@@ -83,6 +84,21 @@ PLATFORM_REQUIREMENTS = {
         "media": re.compile(
             r"^\d{8}-wxv-[a-z0-9-]+-s\d{2}-[a-z0-9-]+-v\d{2}"
             r"\.(?:png|jpe?g|webp|mp4|mov)$"
+        ),
+    },
+    "ecommerce": {
+        "files": ("publish.md", "prompts.md", "qa.md", "media"),
+        "headings": (
+            "商品标题",
+            "主视觉卖点",
+            "详情页信息架构",
+            "商品详情文案",
+            "规格与事实核对",
+            "最终素材顺序",
+        ),
+        "media": re.compile(
+            r"^\d{8}-ec-[a-z0-9-]+-i\d{2}-[a-z0-9-]+-v\d{2}"
+            r"\.(?:png|jpe?g|webp)$"
         ),
     },
 }
@@ -324,6 +340,9 @@ def validate_run(run_dir: Path) -> list[str]:
         for relative in VIDEO_MASTER_REQUIRED:
             if not (video_master / relative).exists():
                 errors.append(f"video-master缺少文件或目录: {relative}")
+
+    if "ecommerce" in platforms and not (run_dir / "ecommerce-asset-qa.md").exists():
+        errors.append("缺少电商资产人工验收卡")
 
     for platform in PLATFORM_REQUIREMENTS:
         if (run_dir / platform).exists() and platform not in platforms:

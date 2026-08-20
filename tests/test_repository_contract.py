@@ -72,6 +72,10 @@ REQUIRED_DOCS = [
     "references/editorial-art-direction.md",
     "references/content-diversity-system.md",
     "references/performance-adaptive-system.md",
+    "references/product-visual-consistency-system.md",
+    "references/ecommerce-production-system.md",
+    "references/video-direction-and-audio-system.md",
+    "references/evidence-asset-system.md",
 ]
 
 
@@ -175,7 +179,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "2.7.4")
+        self.assertEqual(identity["version"], "2.9.0")
         self.assertEqual(
             identity["product_identity"]["brand"],
             "Mackillop's Choice（马克瑞普之选）",
@@ -499,6 +503,31 @@ class RepositoryContractTests(unittest.TestCase):
             "真实时长",
         ):
             self.assertIn(contract, video)
+
+    def test_v29_routes_ecommerce_visual_quality_and_evidence(self):
+        skill = (PROJECT_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        ecommerce = (
+            PROJECT_ROOT / "references" / "ecommerce-production-system.md"
+        ).read_text(encoding="utf-8")
+        visual = (
+            PROJECT_ROOT / "references" / "product-visual-consistency-system.md"
+        ).read_text(encoding="utf-8")
+        evidence = (
+            PROJECT_ROOT / "references" / "evidence-asset-system.md"
+        ).read_text(encoding="utf-8")
+        director = (
+            PROJECT_ROOT / "references" / "video-direction-and-audio-system.md"
+        ).read_text(encoding="utf-8")
+        joined = skill + ecommerce + visual + evidence + director
+        for contract in (
+            "电商主缩略图必须原生1:1",
+            "文字洁净度",
+            "无波纹、摩尔纹",
+            "geometry_master > structure_master > label_detail > style_anchor",
+            "真实证据资产",
+            "镜头—旁白—声音卡",
+        ):
+            self.assertIn(contract, joined)
 
     def test_video_product_framing_keeps_complete_subject_boundaries(self):
         video = (

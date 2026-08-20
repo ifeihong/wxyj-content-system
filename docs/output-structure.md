@@ -22,8 +22,14 @@ outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
 ├── brief.md
 ├── sources.md
 ├── product-visual-qa.md
+├── ecommerce-asset-qa.md       # 仅电商运行包
 ├── deliverables.md
 ├── xiaohongshu/
+│   ├── publish.md
+│   ├── prompts.md
+│   ├── qa.md
+│   └── media/
+├── ecommerce/                  # 仅电商运行包
 │   ├── publish.md
 │   ├── prompts.md
 │   ├── qa.md
@@ -51,19 +57,20 @@ outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
 
 `video-master/external-generation/` 是平台无关的外部 Seedance 交接区；`video-master/incoming/` 永久保留回传原件；`accepted/` 只保存通过验收的副本。平台目录只保存发布文案、平台 QA 和必要导出，不复制共同分镜。
 
-`release-manifest.json` 管理候选、退回与发布资产及质量门槛；`creative-record.json` 管理本条内容的主题、事实、首图机位、版式、钩子、CTA和单变量实验；`performance-brief.json` 记录成熟数据、主题冷却和平台提示。前者回答“能否发布”，创意记录回答“是否与近期内容重复”，效果简报回答“下一条该测试什么”。
+`release-manifest.json` 管理候选、退回与发布资产及事实、证据、产品几何、文字洁净度等质量门槛；`creative-record.json` 管理本条内容的主题、事实、首图机位、版式、钩子、CTA、受众问题、情绪主轴、首屏母题和单变量实验；`performance-brief.json` 记录成熟数据、主题冷却和平台提示。前者回答“能否发布”，创意记录回答“是否与近期内容重复”，效果简报回答“下一条该测试什么”。
 
 ## Manifest 字段
 
 ```yaml
 run_id: 2026-08-01-label-reading
-version: 2.7.3
+version: 2.9.0
 date: 2026-08-01
 topic_slug: label-reading
 product: "马克瑞普之选 单桶苏格兰威士忌"
 status: draft
 platforms:
   - xiaohongshu
+  - ecommerce
 ```
 
 状态建议：

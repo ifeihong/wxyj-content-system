@@ -2,7 +2,7 @@
 
 **WXYJ Content System is a brand-specific Codex Skill for 威熏邑境, currently centered on Mackillop's Choice Single Cask Scotch Whisky across Xiaohongshu, Douyin, and WeChat Channels.** Its supporting information is Aberlour 1996 Single Malt Scotch Whisky. It bundles verified product knowledge, packaging copy, brand-story boundaries, 22 high-resolution AIGC product references, platform-native copy, prompts, storyboards, QA, and traceable content-run directories.
 
-Version: `2.7.4`<br>
+Version: `2.9.0`<br>
 Skill ID: `wxyj-content-system`<br>
 GitHub Repository ID: `wxyj-content-system`
 
@@ -16,6 +16,7 @@ GitHub Repository ID: `wxyj-content-system`
 - machine-readable release manifests, human product-geometry sign-off, and a final deliverables index;
 - creative fingerprints, recent-content diversity checks, and six editorial art-direction routes;
 - internal AIGC source records, reference-image roles, negative prompts, and local redraw rules; public copy uses only platform-native AI labels when required.
+- native 1:1 ecommerce thumbnails, long-detail image plans, typography-cleanliness QA, and evidence-asset boundaries.
 
 ## Current product
 
@@ -73,6 +74,14 @@ python scripts\analyze_performance.py `
 ```
 
 The performance analyzer uses only data at least 48 hours old for next-run rules. With fewer than ten comparable mature posts, it produces an experiment hypothesis instead of a fixed formula.
+
+## Ecommerce assets
+
+Use the `ecommerce` run target for square product thumbnails and vertical long-detail images. Square assets are natively 1:1, product-first, and require manual checks for bottle and wooden-box proportions, edge integration, clean readable typography, and crop safety.
+
+```powershell
+python scripts\create_content_run.py --root outputs --date 2026-08-20 --slug valentine-thumbnail --platforms ecommerce
+```
 
 ## Platform-neutral external Seedance handoff
 

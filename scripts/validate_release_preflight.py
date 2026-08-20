@@ -11,7 +11,9 @@ ALLOWED_RELEASE_STATUSES = {"working", "publish", "archived"}
 ALLOWED_ASSET_STATUSES = {"working", "rejected", "publish"}
 REQUIRED_GATES = (
     "facts",
+    "evidence",
     "product_geometry",
+    "typography",
     "public_copy",
     "media",
     "audio",
@@ -134,7 +136,7 @@ def validate_release(run_dir: Path) -> list[str]:
         errors.append("发布清单缺少quality_gates")
         gates = {}
     required_gates = list(REQUIRED_GATES)
-    if release.get("schema_version") == 2:
+    if isinstance(release.get("schema_version"), int) and release.get("schema_version") >= 2:
         required_gates.append("diversity")
     for gate in required_gates:
         if gate not in gates:
@@ -171,12 +173,16 @@ def validate_release(run_dir: Path) -> list[str]:
             continue
         expected_ratio = asset.get("native_ratio")
         dimensions = _dimensions(path)
-        if expected_ratio in {"3:4", "9:16"}:
+        if expected_ratio in {"1:1", "3:4", "9:16"}:
             if dimensions is None:
                 errors.append(f"无法读取发布资产画幅: {relative}")
             else:
                 width, height = dimensions
-                left, right = (3, 4) if expected_ratio == "3:4" else (9, 16)
+                left, right = {
+                    "1:1": (1, 1),
+                    "3:4": (3, 4),
+                    "9:16": (9, 16),
+                }[expected_ratio]
                 if width * right != height * left:
                     errors.append(f"发布资产不是原生{expected_ratio}: {relative}")
 
@@ -186,6 +192,10 @@ def validate_release(run_dir: Path) -> list[str]:
         errors.append("缺少产品视觉人工验收卡")
     if not (run_dir / "deliverables.md").exists():
         errors.append("缺少最终交付索引")
+    native_targets = release.get("native_targets")
+    if isinstance(native_targets, dict) and "ecommerce" in native_targets:
+        if not (run_dir / "ecommerce-asset-qa.md").exists():
+            errors.append("缺少电商资产人工验收卡")
     return errors
 
 

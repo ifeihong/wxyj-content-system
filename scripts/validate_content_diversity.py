@@ -27,6 +27,13 @@ EXPERIMENT_FIELDS = (
     "baseline",
     "result",
 )
+NARRATIVE_FIELDS = (
+    "audience_question",
+    "emotion_axis",
+    "hero_visual_motif",
+    "product_form",
+    "interaction_type",
+)
 
 
 def _load_candidate(path: Path, errors: list[str]) -> dict | None:
@@ -104,6 +111,10 @@ def validate_record(
             record["campaign_override"], str
         ):
             errors.append("创意记录campaign_override必须是字符串")
+        if record.get("schema_version", 1) >= 2:
+            for field in NARRATIVE_FIELDS:
+                if not isinstance(record.get(field), str) or not record[field].strip():
+                    errors.append(f"发布候选缺少创意字段: {field}")
     return errors
 
 
@@ -177,6 +188,21 @@ def validate_diversity(candidate_path: Path, ledger_path: Path) -> list[str]:
                 + row.get("content_id", "unknown-content")
             )
             break
+
+    if record.get("schema_version", 1) >= 2:
+        candidate_narrative = tuple(
+            str(record[field]).strip() for field in NARRATIVE_FIELDS[:-1]
+        )
+        for days, row in recent_rows:
+            if days > 14 or not all(row.get(field, "").strip() for field in NARRATIVE_FIELDS[:-1]):
+                continue
+            row_narrative = tuple(row.get(field, "").strip() for field in NARRATIVE_FIELDS[:-1])
+            if row_narrative == candidate_narrative:
+                errors.append(
+                    "14天内受众问题、情绪、首屏母题与产品形态重复: "
+                    + row.get("content_id", "unknown-content")
+                )
+                break
 
     last_two_modes = [
         row.get("typography_mode", "").strip()

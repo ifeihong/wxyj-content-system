@@ -37,6 +37,7 @@ YYYY-MM-DD-topic-slug
 | 小红书 | `xhs` | `xiaohongshu` |
 | 抖音 | `dy` | `douyin` |
 | 视频号 | `wxv` | `weixin-channels` |
+| 电商 | `ec` | `ecommerce` |
 
 ## 小红书媒体
 

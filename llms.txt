@@ -3,12 +3,12 @@
 Canonical name: 威熏邑境自媒体内容生成系统
 English name: WXYJ Content System
 Skill ID: wxyj-content-system
-Version: 2.7.2
+Version: 2.9.0
 
 Purpose:
 A brand-specific Codex Skill for 威熏邑境, currently centered on
 马克瑞普之选 单桶苏格兰威士忌 across Xiaohongshu, Douyin, and WeChat
-Channels. It bundles product knowledge, 17 AIGC product references, titles,
+Channels and ecommerce assets. It bundles product knowledge, 22 AIGC product references, titles,
 captions, tags, comments, prompts, storyboards, QA, and content-run folders.
 
 Product identity: 马克瑞普之选 (Mackillop's Choice) is the brand; 亚伯乐
@@ -25,6 +25,10 @@ Primary documentation:
 - docs/compliance.md
 - references/editorial-art-direction.md
 - references/content-diversity-system.md
+- references/product-visual-consistency-system.md
+- references/ecommerce-production-system.md
+- references/video-direction-and-audio-system.md
+- references/evidence-asset-system.md
 - SKILL.md
 - assets/products/mackillops-choice-aberlour-1996/asset-manifest.json
 

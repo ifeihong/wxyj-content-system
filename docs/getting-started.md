@@ -36,7 +36,7 @@
 4. 生成平台 `publish.md`；
 5. 生成小红书 `prompts.md`；视频使用共享 `video-master/storyboard.md`；
 6. 保存媒体并使用规范文件名；
-7. 完成 `qa.md` 与 `product-visual-qa.md`；
+7. 完成 `qa.md` 与 `product-visual-qa.md`；电商资产同时完成 `ecommerce-asset-qa.md`；
 8. 在 `release-manifest.json` 登记候选、退回和发布资产；
 9. 运行目录校验器与发布预检；
 10. 在 `deliverables.md` 汇总最终交付，发布后更新状态和数据台账。
@@ -59,6 +59,8 @@ python scripts\create_content_run.py `
   --product "马克瑞普之选 单桶苏格兰威士忌" `
   --platforms xiaohongshu douyin weixin-channels
 ```
+
+电商缩略图或详情长图使用 `--platforms ecommerce`；缩略图必须原生1:1，文字区需要单独检查波纹、摩尔纹与手机可读性。
 
 只需要小红书时：
 

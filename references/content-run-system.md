@@ -10,7 +10,7 @@
 
 ## 适用范围
 
-需要交付可发布的小红书、抖音或视频号内容时使用。本规范管理一次内容生产从简报、文案、提示词、媒体到 QA 的完整文件链。
+需要交付可发布的小红书、抖音、视频号或电商资产时使用。本规范管理一次内容生产从简报、文案、提示词、媒体到 QA 的完整文件链。
 
 ## 创建运行包
 
@@ -39,8 +39,14 @@ outputs/
             ├── brief.md
             ├── sources.md
             ├── product-visual-qa.md
+            ├── ecommerce-asset-qa.md  # 仅电商运行包
             ├── deliverables.md
             ├── xiaohongshu/
+            │   ├── publish.md
+            │   ├── prompts.md
+            │   ├── qa.md
+            │   └── media/
+            ├── ecommerce/             # 仅电商运行包
             │   ├── publish.md
             │   ├── prompts.md
             │   ├── qa.md
@@ -74,7 +80,7 @@ outputs/
 | --- | --- |
 | `manifest.yaml` | 运行ID、系统版本、日期、主题、产品、平台和状态 |
 | `release-manifest.json` | 原生画幅目标、质量门槛、候选/退回/发布资产和最终发布状态 |
-| `creative-record.json` | 主题族、主事实、首图机位、全部机位、版式路线、钩子和CTA的创意指纹 |
+| `creative-record.json` | 主题族、主事实、首图机位、版式路线、钩子、CTA、受众问题、情绪主轴、首屏母题和产品形态的创意指纹 |
 | `performance-brief.json` | 最近成熟数据、主题冷却、单变量实验和平台化提示要求；只用于内部策划 |
 | `brief.md` | 母题、受众、事实、目标和创意边界 |
 | `sources.md` | 实物、文件、AIGC参考和待核验项 |

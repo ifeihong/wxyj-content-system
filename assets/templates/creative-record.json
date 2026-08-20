@@ -1,4 +1,5 @@
 {
+  "schema_version": 2,
   "content_id": "YYYY-MM-DD-topic-slug",
   "date": "YYYY-MM-DD",
   "status": "working",
@@ -9,6 +10,11 @@
   "typography_mode": "",
   "hook_pattern": "",
   "cta_type": "",
+  "audience_question": "",
+  "emotion_axis": "",
+  "hero_visual_motif": "",
+  "product_form": "",
+  "interaction_type": "",
   "experiment": {
     "variable": "",
     "hypothesis": "",

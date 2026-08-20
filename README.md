@@ -2,7 +2,7 @@
 
 **威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务““马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996”在小红书、抖音和视频号上的持续内容创作。** 它把该商品的事实、包装文案、品牌故事、22张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
 
-当前版本：`2.7.4`<br>
+当前版本：`2.9.0`<br>
 Skill ID：`wxyj-content-system`<br>
 GitHub Repository ID：`wxyj-content-system`
 
@@ -78,6 +78,7 @@ GitHub Repository ID：`wxyj-content-system`
 | AIGC | 参考图职责、完整提示词、负面提示词、产品锁定、局部重绘与QA |
 | 内容管理 | 标准运行目录、媒体命名、创意台账、近期防重复、发布清单、产品视觉验收和发布前自动校验 |
 | 运营闭环 | 评论、私信、企微、店铺、品鉴会、成熟数据复盘和单变量内容实验 |
+| 电商资产 | 原生1:1商品缩略图、详情长图信息架构、商品文案与独立验收卡 |
 
 生成图片只是一个环节。系统要求每套内容同时具备可直接发布的采用标题、正文/描述、平台标签、首评或置顶评论、CTA、最终素材顺序与内部素材来源记录。
 
@@ -103,7 +104,20 @@ GitHub Repository ID：`wxyj-content-system`
 
 V4静帧视频要求“一张图对应一个连续运动镜头”。同一图片不得拆成多张静态裁切图模拟移动；运动方向、起止位置、转场和声音状态统一登记在 `video-master/motion-plan.json`。
 
-每个运行包同时生成 `release-manifest.json`、`product-visual-qa.md` 和 `deliverables.md`。发布前运行 `python scripts/validate_release_preflight.py <运行目录>`，只有通过原生画幅、人工产品几何、公开文案、媒体、音频与交付门槛的资产才能进入最终索引。
+每个运行包同时生成 `release-manifest.json`、`product-visual-qa.md` 和 `deliverables.md`。发布前运行 `python scripts/validate_release_preflight.py <运行目录>`，只有通过事实、证据、产品几何、文字洁净度、原生画幅、公开文案、媒体、音频、交付与多样性门槛的资产才能进入最终索引。
+
+### 电商商品资产
+
+电商素材使用独立 `ecommerce` 运行包：1:1 缩略图与详情长图不再套用小红书或视频画幅逻辑。缩略图优先保证酒瓶、木质礼盒与酒标的结构一致性；每张图同时验收产品比例、边缘融合、文字洁净度（无波纹、摩尔纹或变形）和裁切安全区。
+
+```powershell
+python scripts\create_content_run.py `
+  --root outputs `
+  --date 2026-08-20 `
+  --slug valentine-thumbnail `
+  --product "“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996" `
+  --platforms ecommerce
+```
 
 ```text
 video-master/
@@ -142,6 +156,10 @@ wxyj-content-system/
 │   │       └── reference-images/  # 22张产品参考图
 │   └── templates/
 ├── references/
+│   ├── product-visual-consistency-system.md
+│   ├── ecommerce-production-system.md
+│   ├── video-direction-and-audio-system.md
+│   └── evidence-asset-system.md
 ├── scripts/
 ├── examples/
 │   ├── content-runs/

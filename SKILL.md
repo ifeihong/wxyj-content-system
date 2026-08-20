@@ -32,11 +32,15 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 | 小红书套图 | `references/xiaohongshu-carousel-system.md`、`references/editorial-art-direction.md`、`references/text-in-image-system.md`、`references/visual-asset-library.md` | 动态页数、艺术方向、逐页提示词、成图文字、QA |
 | 抖音/视频号短视频 | `references/video-production-system.md`、`references/external-seedance-handoff.md`、`references/visual-asset-library.md` | 共享母版、逐镜任务包、回传验收、双平台发布包 |
 | 图片/视频 AIGC | `references/visual-asset-library.md`、`references/text-in-image-system.md`、`assets/products/mackillops-choice-aberlour-1996/asset-manifest.json` | 内置参考图编排、提示词、产品锁定、负面词 |
+| 产品比例、边缘、礼盒和文字洁净度 | `references/product-visual-consistency-system.md` | 参考图角色、人工验收卡、局部重绘规则 |
+| 电商缩略图与详情长图 | `references/ecommerce-production-system.md`、`references/product-visual-consistency-system.md` | 1:1主图、详情长图、商品文案与验收 |
 | 内容目录与命名 | `references/content-run-system.md` | 运行目录、文件名、保存与校验 |
 | 发布预检与最终交付 | `references/content-run-system.md`、`references/review-rubric.md` | 发布清单、产品视觉验收卡、最终交付索引 |
 | 评论、私信、企微、店铺、品鉴会 | `references/conversion-playbook.md` | 分阶段转化话术 |
 | 发布审核与复盘 | `references/review-rubric.md` | 评分、退回项、复盘结论 |
 | 数据驱动提示与实验 | `references/performance-adaptive-system.md` | 成熟数据简报、主题冷却、单变量实验、平台提示要求 |
+| 视频镜头、旁白、音乐与音效 | `references/video-direction-and-audio-system.md` | 制作模式、镜头声音卡、混音验收 |
+| 真实产品、文件与活动证据 | `references/evidence-asset-system.md` | 证据资产选择、公开边界与内部登记 |
 | 新品接入 | `assets/templates/product-card.md` | 新产品事实卡 |
 
 只读取与当前任务相关的 references。需要三平台完整成品时，读取全部 references。
@@ -45,10 +49,10 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 
 1. **识别任务**：确定是定位、选题、创作、排期、审核、互动、复盘或新品接入。
 2. **锁定事实**：默认商品从 `references/product-facts.md` 取值；先分清“马克瑞普之选＝品牌、亚伯乐＝酒厂、30年＝酒龄”，商品名称固定为““马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996”，规格为700毫升/瓶，蒸馏日期为1996年2月14日，桶型为PX Sherry Hogshead，桶号261311，酒精度51%；缺失字段标为“待核验”，不推断。
-3. **验证并盘点素材**：先执行 `python scripts/validate_product_assets.py`；通过后从内置22张产品参考图选择当前页面或镜头需要的2–3张，再标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
+3. **验证并盘点素材**：先执行 `python scripts/validate_product_assets.py`；通过后从内置22张产品参考图选择当前页面或镜头需要的2–3张，并按 `geometry_master > structure_master > label_detail > style_anchor` 登记职责；同时标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
 4. **查询近期创意**：读取最近30天 `creative-ledger.csv`，先排除完整创意指纹、14天视觉配方和连续版式路线重复。
 5. **读取成熟效果**：读取近期 `performance-log.csv`；用 `python scripts/analyze_performance.py <台账> --date YYYY-MM-DD --theme-family <主题族> --output <运行目录>/performance-brief.json` 生成简报。发布不足48小时的数据只记录为观察，少于10条可比成熟内容只生成假设。
-6. **建立母题与实验**：只回答一个具体用户问题，直接关联当前产品；在 `creative-record.json` 登记主题族、事实、首图机位、钩子结构、CTA、`typography_mode` 和唯一实验变量。主题冷却提示出现时默认换主主题；如继续使用，填写 `campaign_override` 并改变用户问题、首屏形式和主事实中的至少两项。
+6. **建立母题与实验**：只回答一个具体用户问题，直接关联当前产品；在 `creative-record.json` 登记主题族、事实、首图机位、钩子结构、CTA、`typography_mode`、受众问题、情绪主轴、首屏视觉母题、产品形态、互动方式和唯一实验变量。主题冷却提示出现时默认换主主题；如继续使用，填写 `campaign_override` 并改变用户问题、首屏形式和主事实中的至少两项。
 7. **判断时效**：涉及当前热点、热梗、节日或假期时实时检索；不相关则采用常青主题。
 7. **创建运行包**：需要交付可发布内容时，先执行：
 
@@ -61,8 +65,8 @@ python scripts/create_content_run.py --root <输出根目录> --date YYYY-MM-DD 
 10. **锁定首轮画幅**：每页首轮原生成文件必须是宽:高 = 3:4，并立即执行 `python scripts/validate_xhs_image.py <image.png>`；不通过就按原提示词重新生成，不允许通过裁切、拉伸或补边把错误比例伪装成合格成图。
 11. **保存发布文案**：把采用标题、正文/描述、标签、评论、CTA和最终素材顺序写入各平台 `publish.md`；备选标题只作策划记录。素材来源与事实核验状态只写入内部 `sources.md` 和 `qa.md`。
 12. **保存生产资产**：小红书写入 `prompts.md`；视频分镜写入共享 `video-master/storyboard.md`，外部 Seedance 任务写入 `video-master/external-generation/`，用户原始回传写入 `video-master/incoming/`，通过验收的副本写入 `video-master/accepted/`。每个媒体版本在 `qa.md` 标记状态。
-13. **执行 QA**：把事实、文字、视觉、AIGC、合规、媒体状态与修改记录写入 `qa.md`；逐项完成人工 `product-visual-qa.md`，发布总览只能引用 `publish` 文件。
-14. **登记发布清单**：把每个候选资产的路径、原生画幅、来源类型、页面/镜头角色、产品参考与状态写入 `release-manifest.json`；只有全部质量门槛为 `pass` 或 `not-applicable` 时才把 `release_status` 标为 `publish`。
+13. **执行 QA**：把事实、文字、视觉、AIGC、合规、媒体状态与修改记录写入 `qa.md`；逐项完成人工 `product-visual-qa.md`，并对文字区单独核对逐字准确、波纹/摩尔纹和手机可读性；电商运行包还要填写 `ecommerce-asset-qa.md`。发布总览只能引用 `publish` 文件。
+14. **登记发布清单**：把每个候选资产的路径、原生画幅、来源类型、页面/镜头角色、产品参考与状态写入 `release-manifest.json`；只有事实、证据、产品几何、文字洁净度、公开文案、媒体、音频、交付和多样性门槛全部为 `pass` 或 `not-applicable` 时才把 `release_status` 标为 `publish`。
 15. **运行验证**：
 
 ```powershell
@@ -137,11 +141,15 @@ python scripts/validate_content_diversity.py <运行目录>/creative-record.json
 
 视频全屏画面、运动首帧、尾帧和封面必须原生9:16，成片目标 `1080×1920`。3:4图片不能作为全屏主画面，禁止黑边、上下补边和拉伸。
 
+电商主缩略图必须原生1:1；商品主体优先于装饰文案，缩略图与详情长图不得机械复用小红书图文页。电商资产读取 `references/ecommerce-production-system.md` 与 `references/product-visual-consistency-system.md`。
+
 当 `performance-brief.json` 提示视频前段跳出偏高，逐镜提示词必须锁定：0.0–0.8秒先出现准确的产品主体、酒标或礼盒，并发生可见动作；2.0–5.0秒兑现标题承诺。禁止纯文字、黑底或静态片头。每条视频只测试一个变量，不同时改动标题、时长、首屏、旁白与 CTA。
 
 V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一时间线项目中以一条连续关键帧曲线完成左到右、右到左或克制推拉。不得把同一图片拆成多张不同裁切的静态片段来假装移动；每镜在 `video-master/motion-plan.json` 登记唯一素材、方向、起止位置和转场。
 
 让多模态生图模型直接生成产品、场景与设计文字的最终图片。不下载字体文件，不用程序贴字，不把无字底图当成静态图文成品。
+
+文字区必须独立执行洁净度验收：逐字准确、无波纹、摩尔纹、颗粒、木纹、液化与不均匀金属反光。产品正确而文字失败时，只局部重绘文字安全区，禁止为修字而重绘产品。
 
 锁定瓶型、瓶盖、瓶肩、酒标位置和事实字段；软化最外缘像素。白底参考进入深色场景时，重新生成玻璃折射、环境色和接触阴影，禁止白边、灰边、抠图光晕和均匀描边。
 
@@ -228,6 +236,10 @@ V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一
 - 包装品鉴与故事：`references/product-packaging-copy.md`
 - 内置产品资产清单：`assets/products/mackillops-choice-aberlour-1996/asset-manifest.json`
 - 内置产品参考图：`assets/products/mackillops-choice-aberlour-1996/reference-images/`
+- 产品视觉一致性：`references/product-visual-consistency-system.md`
+- 电商资产生产：`references/ecommerce-production-system.md`
+- 视频导演与声音：`references/video-direction-and-audio-system.md`
+- 真实证据资产：`references/evidence-asset-system.md`
 - 平台手册：`references/platform-playbooks.md`
 - 产品卡：`assets/templates/product-card.md`
 - 选题卡：`assets/templates/topic-card.md`
