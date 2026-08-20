@@ -42,7 +42,6 @@ EXPECTED_PRODUCT_ASSETS = {
 REQUIRED_DOCS = [
     ".gitattributes",
     "README.md",
-    "README.en.md",
     "CHANGELOG.md",
     "VERSION",
     "LICENSE",
@@ -196,7 +195,7 @@ class RepositoryContractTests(unittest.TestCase):
         version = (PROJECT_ROOT / "VERSION").read_text(encoding="utf-8").strip()
         self.assertEqual(identity["version"], version)
 
-        for relative in ("README.md", "README.en.md", "CHANGELOG.md"):
+        for relative in ("README.md", "CHANGELOG.md"):
             text = (PROJECT_ROOT / relative).read_text(encoding="utf-8")
             self.assertIn(identity["skill_id"], text, relative)
             self.assertIn(identity["version"], text, relative)
@@ -462,16 +461,7 @@ class RepositoryContractTests(unittest.TestCase):
             self.assertIn(contract, chinese_docs)
         self.assertNotIn("ChatCut 是默认视频生成工具", chinese_docs)
 
-        english = (PROJECT_ROOT / "README.en.md").read_text(
-            encoding="utf-8"
-        )
-        for contract in (
-            "video-master/external-generation",
-            "video-master/incoming",
-            "platform-neutral",
-            "current-task authorization",
-        ):
-            self.assertIn(contract, english)
+        self.assertFalse((PROJECT_ROOT / "README.en.md").exists())
 
     def test_published_assets_omit_internal_labels_and_account_watermarks(self):
         skill = (PROJECT_ROOT / "SKILL.md").read_text(encoding="utf-8")

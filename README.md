@@ -1,8 +1,8 @@
 # 威熏邑境自媒体内容生成系统
 
-**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务““马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996”在小红书、抖音和视频号上的持续内容创作。** 它把该商品的事实、包装文案、品牌故事、22张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
+**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996在小红书、抖音和视频号上的持续内容创作。** 它把该商品的事实、包装文案、品牌故事、22张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
 
-当前版本：`2.9.0`<br>
+当前版本：`2.9.0`（中文维护入口）<br>
 Skill ID：`wxyj-content-system`<br>
 GitHub Repository ID：`wxyj-content-system`
 
@@ -166,15 +166,14 @@ wxyj-content-system/
 │   └── strategy/
 ├── docs/
 ├── tests/
-├── README.md
-├── README.en.md
+├── README.md                 # 唯一项目说明入口（中文）
 ├── CHANGELOG.md
 ├── VERSION
 ├── OPEN_SOURCE.md
 └── outputs/
 ```
 
-仓库根目录就是 Skill 根目录。`SKILL.md`、运行脚本、参考资料和模板均可从根目录直接访问。
+仓库根目录就是 Skill 根目录。`SKILL.md`、运行脚本、参考资料和模板均可从根目录直接访问。由于本 Skill 面向中文运营团队和中文平台内容生产，仓库只维护中文 `README.md`，不再维护容易与产品事实漂移的英文副本。
 
 ## 快速开始
 
@@ -320,6 +319,8 @@ AIGC来源与事实核验只记录在内部 `sources.md` 和 `qa.md`，不进入
 - [更新记录](CHANGELOG.md)
 - [开放范围](OPEN_SOURCE.md)
 - [参与贡献](CONTRIBUTING.md)
+
+README 是项目对外唯一的快速入口；版本、产品事实和工作流发生变化时，应同步更新 `CHANGELOG.md`、`VERSION`、`metadata/project.json` 与相关参考文档，并运行仓库测试和 Skill 校验。
 
 ## 许可
 
