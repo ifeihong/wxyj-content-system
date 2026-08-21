@@ -20,6 +20,7 @@ EXPECTED_PRODUCT_ASSETS = {
     "酒瓶-酒标.png": "7539AD71D76835D07F2406A284E66E248F03DE1A67B389F51C324E2E3234C7B7",
     "酒瓶-右侧45°.png": "EB2AB39813567434ED1B7E61C1AAA6AE3C753F0A427A2E662BD7DB86A369D197",
     "酒瓶-正面.png": "8BEEBB208F197F0A7A5E43059CC4312A223B1C7CA8E8E6B71CF8427E036DD76F",
+    "尺寸示意图.png": "7F820063E9908834DC794AB08C12AAD67424E09CF5CF63BB403F6E20B7F47568",
     "酒瓶-左侧45°.png": "C0B87B9AA91B45A9B012E88428401026EB01134681E7C455B95B0C75F2725299",
     "木质礼盒-背面.png": "427163C22475DAC551280B90C3BFE81E2F182A6145CFAB3EAED2E2F0CB36AA89",
     "木质礼盒-背面右侧45°.png": "5D4AD1214CEFC93B6FAF2C3D727D2B82D3D11359460F195021DA56A6D541DA6B",
@@ -144,7 +145,7 @@ class RepositoryContractTests(unittest.TestCase):
         )
         self.assertEqual(manifest["distillery"], "ABERLOUR（亚伯乐）")
         self.assertEqual(manifest["age_statement"], "30年")
-        self.assertEqual(manifest["asset_count"], 22)
+        self.assertEqual(manifest["asset_count"], 23)
         self.assertEqual(manifest["license"], "All rights reserved")
 
         by_file = {entry["file"]: entry for entry in manifest["assets"]}

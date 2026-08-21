@@ -11,7 +11,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 
 - 用户没有指定产品时，默认使用““马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996”。
 - 每次产品内容创作都读取 `references/product-facts.md`；涉及包装品鉴词、品牌故事或人物信息时，同时读取 `references/product-packaging-copy.md`。
-- 每次图片或视频生产都先读取 `references/visual-asset-library.md` 和 `assets/products/mackillops-choice-aberlour-1996/asset-manifest.json`，从内置22张参考图中按职责选图。
+- 每次图片或视频生产都先读取 `references/visual-asset-library.md` 和 `assets/products/mackillops-choice-aberlour-1996/asset-manifest.json`，从内置23张参考图中按职责选图；凡完整酒瓶、瓶盒同框或产品局部重绘，均将 `尺寸示意图.png` 作为几何校准依据。
 - 新产品只有在用户明确提供并核验产品卡后才能接入；不得因此稀释当前核心产品定位。
 
 ## 核心原则
@@ -49,7 +49,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 
 1. **识别任务**：确定是定位、选题、创作、排期、审核、互动、复盘或新品接入。
 2. **锁定事实**：默认商品从 `references/product-facts.md` 取值；先分清“马克瑞普之选＝品牌、亚伯乐＝酒厂、30年＝酒龄”，商品名称固定为““马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996”，规格为700毫升/瓶，蒸馏日期为1996年2月14日，桶型为PX Sherry Hogshead，桶号261311，酒精度51%；缺失字段标为“待核验”，不推断。
-3. **验证并盘点素材**：先执行 `python scripts/validate_product_assets.py`；通过后从内置22张产品参考图选择当前页面或镜头需要的2–3张，并按 `geometry_master > structure_master > label_detail > style_anchor` 登记职责；同时标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
+3. **验证并盘点素材**：先执行 `python scripts/validate_product_assets.py`；通过后从内置23张产品参考图选择当前页面或镜头需要的2–3张，并按 `geometry_master > structure_master > label_detail > style_anchor` 登记职责。凡出现完整酒瓶、瓶盒同框或产品局部重绘，再加入 `尺寸示意图.png` 作 `dimension_check`，复核瓶盖、瓶颈、瓶肩、瓶腹、瓶底的各高度投影宽度与曲线；同时标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
 4. **查询近期创意**：读取最近30天 `creative-ledger.csv`，先排除完整创意指纹、14天视觉配方和连续版式路线重复。
 5. **读取成熟效果**：读取近期 `performance-log.csv`；用 `python scripts/analyze_performance.py <台账> --date YYYY-MM-DD --theme-family <主题族> --output <运行目录>/performance-brief.json` 生成简报。发布不足48小时的数据只记录为观察，少于10条可比成熟内容只生成假设。
 6. **建立母题与实验**：只回答一个具体用户问题，直接关联当前产品；在 `creative-record.json` 登记主题族、事实、首图机位、钩子结构、CTA、`typography_mode`、受众问题、情绪主轴、首屏视觉母题、产品形态、互动方式和唯一实验变量。主题冷却提示出现时默认换主主题；如继续使用，填写 `campaign_override` 并改变用户问题、首屏形式和主事实中的至少两项。
@@ -61,7 +61,7 @@ python scripts/create_content_run.py --root <输出根目录> --date YYYY-MM-DD 
 ```
 
 8. **生成平台版本**：按平台原生结构生成，不机械复制。抖音或视频号视频采用一个共享 `video-master/`；默认路径为“生成共享video-master→选择制作模式→为external-seedance镜头创建逐镜任务包→等待用户回传→验收incoming→把accepted素材进入可编辑剪辑”。
-9. **锁定小红书艺术方向、事实、机位与几何**：整套先选一个 `typography_mode`，各页轮换 `layout_pattern`；再建立逐页 `primary_fact_id` 表和机位分配表。完整正面酒瓶统一以 `酒瓶-正面.png` 为 `geometry_master`，不得让风格参考覆盖瓶型。
+9. **锁定小红书艺术方向、事实、机位与几何**：整套先选一个 `typography_mode`，各页轮换 `layout_pattern`；再建立逐页 `primary_fact_id` 表和机位分配表。完整正面酒瓶统一以 `酒瓶-正面.png` 为 `geometry_master`，并以 `尺寸示意图.png` 复核关键宽度与曲线；不得让风格参考覆盖瓶型。
 10. **锁定首轮画幅**：每页首轮原生成文件必须是宽:高 = 3:4，并立即执行 `python scripts/validate_xhs_image.py <image.png>`；不通过就按原提示词重新生成，不允许通过裁切、拉伸或补边把错误比例伪装成合格成图。
 11. **保存发布文案**：把采用标题、正文/描述、标签、评论、CTA和最终素材顺序写入各平台 `publish.md`；备选标题只作策划记录。素材来源与事实核验状态只写入内部 `sources.md` 和 `qa.md`。
 12. **保存生产资产**：小红书写入 `prompts.md`；视频分镜写入共享 `video-master/storyboard.md`，外部 Seedance 任务写入 `video-master/external-generation/`，用户原始回传写入 `video-master/incoming/`，通过验收的副本写入 `video-master/accepted/`。每个媒体版本在 `qa.md` 标记状态。
@@ -153,9 +153,9 @@ V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一
 
 锁定瓶型、瓶盖、瓶肩、酒标位置和事实字段；软化最外缘像素。白底参考进入深色场景时，重新生成玻璃折射、环境色和接触阴影，禁止白边、灰边、抠图光晕和均匀描边。
 
-所有参考图必须声明角色；冲突时固定采用 `geometry_master > structure_master > label_detail > style_anchor`。完整正面酒瓶只认 `酒瓶-正面.png` 的几何比例；连续3次仍无法保持瓶型时，减少完整酒瓶露出，不接受明显变形的产品。
+所有参考图必须声明角色；冲突时固定采用 `geometry_master > structure_master > label_detail > style_anchor`。完整正面酒瓶只认 `酒瓶-正面.png` 的几何比例，并用 `尺寸示意图.png` 作为不改变身份的 `dimension_check`：复核瓶盖、瓶颈、肩部过渡、最大肩宽、标签区、底部过渡和瓶底宽度。连续3次仍无法保持瓶型时，减少完整酒瓶露出，不接受明显变形的产品。
 
-内置22张图片均为 AIGC 高清产品参考图，只负责身份、角度、结构、材质与构图一致性。它们不是真实拍摄，也不能替代酒标实拍、报关、溯源或授权文件。酒瓶正面与酒标近景是当前最高优先级身份参考；其他图中可见的细小瓶号、铭牌或物流文字不得直接作为发布事实。新增两张半开礼盒图只用于45度或半开状态的结构与透视参考，不能替代正面175°–180°开盒母版。
+内置23张图片均为 AIGC 高清产品参考图，只负责身份、角度、结构、材质与构图一致性。它们不是真实拍摄，也不能替代酒标实拍、报关、溯源或授权文件。酒瓶正面与酒标近景是当前最高优先级身份参考；`尺寸示意图.png` 是按实物照片比例推算的几何校准图，只用于复核酒瓶各维度尺寸、投影宽度与轮廓曲线，不用作酒标或包装事实证据。其他图中可见的细小瓶号、铭牌或物流文字不得直接作为发布事实。新增两张半开礼盒图只用于45度或半开状态的结构与透视参考，不能替代正面175°–180°开盒母版。
 
 ## 外部视频生成授权边界
 

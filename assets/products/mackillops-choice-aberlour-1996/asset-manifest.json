@@ -12,11 +12,11 @@
   "cask_number": "261311",
   "alcohol": "51%",
   "asset_type": "AIGC高清产品参考图",
-  "asset_count": 22,
+  "asset_count": 23,
   "license": "All rights reserved",
   "apache_2_0_covered": false,
   "consumer_evidence": false,
-  "reference_rule": "每次按页面或镜头职责选择2至3张，不要一次输入全部22张；酒瓶正面与酒标图为当前最高优先级身份参考。半打开礼盒图用于45度或半开角度，开盒正面图仍用于175至180度正面结构锁定。",
+  "reference_rule": "每次按页面或镜头职责选择2至3张；完整酒瓶、瓶盒同框或产品局部重绘时，可额外加入尺寸示意图作为几何校准，不要一次输入全部23张。酒瓶正面与酒标图为当前最高优先级身份参考；尺寸示意图只校准各高度的投影宽度、曲线与比例。半打开礼盒图用于45度或半开角度，开盒正面图仍用于175至180度正面结构锁定。",
   "fact_rule": "这些图片用于产品身份、角度、材质和构图控制，不替代真实酒标、实物照片、报关或溯源文件。",
   "assets": [
     {
@@ -50,6 +50,14 @@
       "view": "正面",
       "primary_uses": ["标准瓶型", "封面主视觉", "产品身份锁定"],
       "sha256": "8BEEBB208F197F0A7A5E43059CC4312A223B1C7CA8E8E6B71CF8427E036DD76F"
+    },
+    {
+      "id": "bottle-dimension-guide",
+      "file": "尺寸示意图.png",
+      "category": "酒瓶",
+      "view": "正面尺寸与曲线示意",
+      "primary_uses": ["瓶型尺寸校准", "各高度投影宽度复核", "瓶肩瓶腹瓶底曲线验收"],
+      "sha256": "7F820063E9908834DC794AB08C12AAD67424E09CF5CF63BB403F6E20B7F47568"
     },
     {
       "id": "bottle-left-45",

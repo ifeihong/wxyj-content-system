@@ -11,17 +11,19 @@
 | 角色 | 用途 | 当前固定母版 |
 | --- | --- | --- |
 | `geometry_master` | 完整酒瓶比例 | `酒瓶-正面.png` |
+| `dimension_check` | 各高度投影宽度、纵向分段与瓶身曲线校准 | `尺寸示意图.png` |
 | `structure_master` | 礼盒、合页、开合角度 | 正面开盒用 `木质礼盒-内置酒瓶.png`；半开用对应半开图 |
 | `label_detail` | 酒标位置与字段形态 | `酒瓶-酒标.png` |
 | `style_anchor` | 光线、木纹和氛围 | 依据当前内容选择 |
 
-冲突时必须遵循：`geometry_master > structure_master > label_detail > style_anchor`。
+冲突时必须遵循：`geometry_master > structure_master > label_detail > style_anchor`；`dimension_check` 是独立的生成前/后验收层，不替换上述身份与结构角色。
 
 ## 人工验收卡
 
 完整酒瓶至少核对：
 
 - 瓶盖、瓶颈、瓶肩、瓶身与瓶底的纵向比例；
+- 使用 `尺寸示意图.png` 复核瓶盖、颈部、肩部过渡、最大肩宽、标签区、底部过渡与瓶底宽度的连续曲线；
 - 玻璃底座厚度、酒液高度和酒标位置；
 - 瓶身不得横向压扁、拉长、截断或出现第二套标签；
 - 暗背景中的边缘必须是自然折射与接触阴影，不得有白边、灰边或抠图光晕。
