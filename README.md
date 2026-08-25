@@ -2,7 +2,7 @@
 
 **威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996在小红书、抖音和视频号上的持续内容创作。** 它把该商品的事实、包装文案、品牌故事、23张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
 
-当前版本：`3.0.0`（中文维护入口）<br>
+当前版本：`3.0.1`（中文维护入口）<br>
 Skill ID：`wxyj-content-system`<br>
 GitHub Repository ID：`wxyj-content-system`
 

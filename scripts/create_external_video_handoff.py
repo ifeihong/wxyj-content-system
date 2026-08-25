@@ -25,6 +25,7 @@ ALLOWED_REFERENCE_ROLES = {
     "last_frame",
     "geometry_master",
     "structure_master",
+    "dimension_check",
     "label_detail",
     "style_anchor",
     "shot_keyframe",

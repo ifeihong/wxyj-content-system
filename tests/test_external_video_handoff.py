@@ -197,6 +197,15 @@ class ExternalVideoHandoffTests(unittest.TestCase):
         errors = self.module.validate_shot_spec(spec)
         self.assertEqual(errors, [])
 
+    def test_dimension_check_reference_role_is_supported(self):
+        spec = self.valid_spec()
+        spec["input_mode"] = "reference-guided"
+        references = spec["references"]
+        assert isinstance(references, list)
+        references[0]["role"] = "dimension_check"
+        errors = self.module.validate_shot_spec(spec)
+        self.assertEqual(errors, [])
+
     def test_create_handoff_rejects_conflicting_reference_overwrite(self):
         with workspace_tempdir() as workspace:
             run_dir = workspace / "2026-08-01-label-reading"

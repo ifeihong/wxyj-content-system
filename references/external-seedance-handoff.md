@@ -82,6 +82,7 @@ output_name: 20260801-wxyj-label-reading-s01-date-reveal-seedance-v01.mp4
 - `geometry_master`：锁定瓶型比例和关键结构。
 - `structure_master`：锁定木盒、包装开合与相对位置。
 - `label_detail`：只用于酒标信息和材质细节。
+- `dimension_check`：只用于复核瓶身各高度投影宽度、纵向比例和曲线，不把尺寸标注带入画面。
 - `style_anchor`：只提供色彩、光线、材质和设计语法。
 - `shot_keyframe`：当前镜头已通过产品QA的原生9:16构图帧；优先作为Seedance首帧或主参考，不得替代几何母版。
 - `motion_reference`：只提供运动方式，不覆盖产品身份。
