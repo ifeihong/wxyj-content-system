@@ -10,7 +10,7 @@ from pathlib import Path
 ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels", "ecommerce")
 VIDEO_PLATFORMS = {"douyin", "weixin-channels"}
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-VERSION = "2.9.0"
+VERSION = "3.0.0"
 DEFAULT_PRODUCT = "马克瑞普之选 单桶苏格兰威士忌"
 
 
@@ -425,11 +425,29 @@ def create_run(
             "incoming",
             "accepted",
             "media",
+            "style-frames",
         ):
             (video_master / directory).mkdir(parents=True, exist_ok=True)
         _write_once(
             video_master / "treatment.md",
             "# 视频创意方案\n\n## 核心命题\n\n## 视觉方向\n\n## 制作模式\n",
+        )
+        _write_once(
+            video_master / "style-anchor.md",
+            """# 共享视频风格锚点
+
+## 风格ID
+
+## 色彩与光线
+
+## 镜头与材质
+
+## 产品安全区
+
+## 每镜shot-keyframe
+
+先生成每个镜头的原生9:16 keyframe，通过产品视觉QA后，再用于Seedance首帧或ChatCut静态镜头。keyframe不得覆盖酒瓶与礼盒几何母版，也不得预生成字幕、日期、参数或后期图形。
+""",
         )
         _write_once(
             video_master / "shotlist.yaml",

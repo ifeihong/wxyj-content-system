@@ -145,6 +145,58 @@ class ExternalVideoHandoffTests(unittest.TestCase):
                 "用户已调整的提示词",
             )
 
+    def test_task_card_includes_reference_responsibilities(self):
+        with workspace_tempdir() as workspace:
+            run_dir = workspace / "2026-08-01-label-reading"
+            source_root = workspace / "source"
+            source_root.mkdir()
+            (source_root / "S01-first-frame-9x16.png").write_bytes(
+                b"reference-image"
+            )
+            spec = self.valid_spec()
+            references = spec["references"]
+            assert isinstance(references, list)
+            references[0]["description"] = (
+                "锁定日期酒标的横向布局、酒液琥珀色与玻璃边缘反射；"
+                "不得把白底轮廓带入暗背景。"
+            )
+
+            handoff = self.module.create_handoff(
+                run_dir,
+                [spec],
+                source_root,
+            )
+            task = (
+                handoff / "S01-date-reveal" / "任务卡.md"
+            ).read_text(encoding="utf-8")
+
+            self.assertIn("参考图职责与锁定细节", task)
+            self.assertIn("锁定日期酒标的横向布局", task)
+            self.assertIn("不得把白底轮廓带入暗背景", task)
+
+            for filename in (
+                "prompt-all-in-one.txt",
+                "prompt-positive.txt",
+                "prompt-negative.txt",
+            ):
+                prompt = (
+                    handoff / "S01-date-reveal" / filename
+                ).read_text(encoding="utf-8")
+                self.assertIn("参考图职责与锁定细节", prompt)
+                self.assertIn("S01-first-frame-9x16.png", prompt)
+                self.assertIn("素材视频时长：5秒", prompt)
+                self.assertIn("本镜头调用的参考图", prompt)
+                self.assertIn("锁定日期酒标的横向布局", prompt)
+                self.assertIn("不得把白底轮廓带入暗背景", prompt)
+
+    def test_shot_keyframe_reference_role_is_supported(self):
+        spec = self.valid_spec()
+        references = spec["references"]
+        assert isinstance(references, list)
+        references[0]["role"] = "shot_keyframe"
+        errors = self.module.validate_shot_spec(spec)
+        self.assertEqual(errors, [])
+
     def test_create_handoff_rejects_conflicting_reference_overwrite(self):
         with workspace_tempdir() as workspace:
             run_dir = workspace / "2026-08-01-label-reading"

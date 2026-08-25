@@ -27,6 +27,7 @@ ALLOWED_REFERENCE_ROLES = {
     "structure_master",
     "label_detail",
     "style_anchor",
+    "shot_keyframe",
     "motion_reference",
 }
 REQUIRED_FIELDS = (
@@ -146,8 +147,11 @@ def validate_shot_spec(spec: dict[str, object]) -> list[str]:
     ):
         errors.append("references.order must be unique and consecutive from 1")
 
-    if input_mode == "first-frame" and "first_frame" not in roles:
-        errors.append("first-frame mode requires a first_frame reference")
+    if input_mode == "first-frame" and not {
+        "first_frame",
+        "shot_keyframe",
+    }.intersection(roles):
+        errors.append("first-frame mode requires a first_frame or shot_keyframe reference")
     if input_mode == "first-last-frame":
         if "first_frame" not in roles or "last_frame" not in roles:
             errors.append(
@@ -195,6 +199,55 @@ def _shot_yaml(spec: dict[str, object], output_name: str) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _reference_details(references: list[dict[str, object]]) -> str:
+    reference_lines = "\n".join(
+        f"{reference['order']}. `references/{reference['file']}`"
+        f" — {reference['role']}"
+        for reference in sorted(references, key=lambda item: item["order"])
+    )
+    reference_detail_lines = []
+    for reference in sorted(references, key=lambda item: item["order"]):
+        description = str(reference.get("description", "")).strip()
+        must_keep = str(reference.get("must_keep", "")).strip()
+        do_not_inherit = str(reference.get("do_not_inherit", "")).strip()
+        reference_detail_lines.append(
+            "\n".join(
+                line
+                for line in (
+                    f"### `references/{reference['file']}`（{reference['role']}）",
+                    f"- 参考图具体职责：{description or '按提示词中的产品/结构职责使用，不作为泛风格图。'}",
+                    f"- 必须保留：{must_keep or '参考图中与本镜头主体身份直接相关的比例、材质和结构。'}",
+                    f"- 不得继承：{do_not_inherit or '参考图背景中的白底、边缘残影及与本镜头无关的小字细节。'}",
+                )
+                if line
+            )
+        )
+    return "\n\n".join(reference_detail_lines)
+
+
+def _prompt_bundle(
+    spec: dict[str, object],
+    reference_details: str,
+    reference_manifest: str,
+) -> tuple[str, str]:
+    positive = str(spec["prompt_positive"]).strip()
+    negative = str(spec["prompt_negative"]).strip()
+    prompt_context = (
+        "【本镜头生成参数】\n"
+        f"- 生成模式：{spec['input_mode']}\n"
+        "- 画幅：原生9:16\n"
+        f"- 素材视频时长：{spec['duration_seconds']}秒\n"
+        f"- 本镜头调用的参考图（按顺序上传）：\n{reference_manifest}\n\n"
+        "【参考图职责与锁定细节】\n"
+        + reference_details
+        + "\n\n【生成提示词】\n"
+    )
+    return (
+        prompt_context + positive,
+        prompt_context + positive + "\n\n【负面约束】\n" + negative,
+    )
+
+
 def _task_card(spec: dict[str, object], output_name: str) -> str:
     references = spec["references"]
     assert isinstance(references, list)
@@ -203,13 +256,16 @@ def _task_card(spec: dict[str, object], output_name: str) -> str:
         f" — {reference['role']}"
         for reference in sorted(references, key=lambda item: item["order"])
     )
+    reference_details = _reference_details(references)
+    reference_manifest = reference_lines
     shot_path = (
         "video-master/external-generation/"
         f"{spec['shot_id']}-{spec['slug']}"
     )
-    positive = str(spec["prompt_positive"]).strip()
+    positive_with_context, all_in_one = _prompt_bundle(
+        spec, reference_details, reference_manifest
+    )
     negative = str(spec["prompt_negative"]).strip()
-    all_in_one = positive + "\n\n【负面约束】\n" + negative
     return f"""# {spec['shot_id']} {spec['title']}
 
 ## 生成设置
@@ -228,6 +284,10 @@ def _task_card(spec: dict[str, object], output_name: str) -> str:
 
 {reference_lines}
 
+## 参考图职责与锁定细节
+
+{reference_details}
+
 ## 参考图文件位置
 
 - 当前镜头目录：`{shot_path}/`
@@ -243,7 +303,7 @@ def _task_card(spec: dict[str, object], output_name: str) -> str:
 ## 可直接复制：正向提示词
 
 ```text
-{positive}
+{positive_with_context}
 ```
 
 ## 可直接复制：负向提示词
@@ -268,10 +328,11 @@ def _start_readme() -> str:
 本任务包平台无关，适用于支持相应 Seedance 输入模式的第三方平台。
 
 1. 从 S01 开始，先生成并回传一个镜头。
-2. 打开镜头目录的 `任务卡.md`，按顺序上传 `references/` 中的文件。
-3. 复制对应提示词，保持任务卡规定的9:16、时长和模式。
-4. 下载原始视频并按任务卡命名，放入 `video-master/incoming/`。
-5. 未通过验收前不要批量生成后续镜头，避免浪费积分。
+2. 先阅读 `video-master/style-anchor.md`，确认共享色彩、光线、材质、镜头和安全区；每个镜头先生成一张原生9:16 `shot-keyframe`，并放入 `video-master/style-frames/`。
+3. 打开镜头目录的 `任务卡.md`，按顺序上传 `references/` 中的文件；`shot_keyframe` 优先作为首帧或主参考，几何/结构/尺寸参考负责产品一致性。
+4. 复制对应提示词，保持任务卡规定的9:16、时长和模式；Seedance只生成产品、环境、光线和自然镜头运动，不生成字幕、日期、数字、时间线或后期装饰。
+5. 下载原始视频并按任务卡命名，放入 `video-master/incoming/`。
+6. 未通过 S01 的产品与风格验收前不要批量生成后续镜头，避免浪费积分。
 """
 
 
@@ -341,19 +402,40 @@ def create_handoff(
 
         _write_once(shot_dir / "任务卡.md", _task_card(spec, output_name))
         _write_once(shot_dir / "shot.yaml", _shot_yaml(spec, output_name))
-        positive = str(spec["prompt_positive"]).strip() + "\n"
+        references = spec["references"]
+        assert isinstance(references, list)
+        reference_details = _reference_details(references)
+        reference_manifest = "\n".join(
+            f"- `references/{reference['file']}`（{reference['role']}）"
+            for reference in sorted(
+                references, key=lambda item: item["order"]
+            )
+        )
+        positive_with_context, all_in_one = _prompt_bundle(
+            spec, reference_details, reference_manifest
+        )
         negative = str(spec["prompt_negative"]).strip() + "\n"
-        _write_once(shot_dir / "prompt-positive.txt", positive)
-        _write_once(shot_dir / "prompt-negative.txt", negative)
         _write_once(
-            shot_dir / "prompt-all-in-one.txt",
-            positive.rstrip()
+            shot_dir / "prompt-positive.txt",
+            positive_with_context + "\n",
+        )
+        _write_once(
+            shot_dir / "prompt-negative.txt",
+            "【本镜头生成参数】\n"
+            f"- 生成模式：{spec['input_mode']}\n"
+            "- 画幅：原生9:16\n"
+            f"- 素材视频时长：{spec['duration_seconds']}秒\n"
+            f"- 本镜头调用的参考图（按顺序上传）：\n{reference_manifest}\n\n"
+            "【参考图职责与锁定细节】\n"
+            + reference_details
             + "\n\n【负面约束】\n"
             + negative,
         )
+        _write_once(
+            shot_dir / "prompt-all-in-one.txt",
+            all_in_one + "\n",
+        )
 
-        references = spec["references"]
-        assert isinstance(references, list)
         for reference in references:
             source = _safe_reference_path(source_root, reference["file"])
             destination = references_dir / source.name

@@ -133,6 +133,7 @@ class ContentRunContractTests(unittest.TestCase):
                 "weixin-channels/qa.md",
                 "weixin-channels/media",
                 "video-master/treatment.md",
+                "video-master/style-anchor.md",
                 "video-master/shotlist.yaml",
                 "video-master/storyboard.md",
                 "video-master/edit-plan.md",
@@ -142,6 +143,7 @@ class ContentRunContractTests(unittest.TestCase):
                 "video-master/incoming",
                 "video-master/accepted",
                 "video-master/media",
+                "video-master/style-frames",
             ]
             for relative in expected:
                 self.assertTrue((run_dir / relative).exists(), relative)
@@ -573,6 +575,7 @@ class ContentRunContractTests(unittest.TestCase):
 
             expected = [
                 "video-master/treatment.md",
+                "video-master/style-anchor.md",
                 "video-master/shotlist.yaml",
                 "video-master/storyboard.md",
                 "video-master/edit-plan.md",
@@ -581,6 +584,7 @@ class ContentRunContractTests(unittest.TestCase):
                 "video-master/incoming",
                 "video-master/accepted",
                 "video-master/media",
+                "video-master/style-frames",
             ]
             for relative in expected:
                 self.assertTrue((run_dir / relative).exists(), relative)

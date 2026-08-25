@@ -1,8 +1,8 @@
 # 威熏邑境自媒体内容生成系统
 
-**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996在小红书、抖音和视频号上的持续内容创作。** 它把该商品的事实、包装文案、品牌故事、22张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
+**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996在小红书、抖音和视频号上的持续内容创作。** 它把该商品的事实、包装文案、品牌故事、23张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
 
-当前版本：`2.9.0`（中文维护入口）<br>
+当前版本：`3.0.0`（中文维护入口）<br>
 Skill ID：`wxyj-content-system`<br>
 GitHub Repository ID：`wxyj-content-system`
 
@@ -101,7 +101,7 @@ GitHub Repository ID：`wxyj-content-system`
 
 ### 外部 Seedance 协作
 
-抖音与视频号共用一个原生9:16视频母版。默认采用平台无关的外部 Seedance 工作流：系统为每个镜头选择并复制实际参考图，提供上传顺序、单字段/双字段提示词、通用参数和回传命名；你可在任意支持对应输入模式的平台生成。ChatCut 默认承担可编辑剪辑、字幕、声音与导出，只有当前任务明确授权时才使用其付费视频生成功能。
+抖音与视频号共用一个原生9:16视频母版。默认采用平台无关的外部 Seedance 工作流：系统为每个镜头选择并复制实际参考图，提供上传顺序、单字段/双字段提示词、通用参数和回传命名；你可在任意支持对应输入模式的平台生成。Seedance提示词只描述产品、礼盒、真实环境、自然光和镜头运动；字幕、日期、参数、时间线、扫描线、图形卡等由ChatCut在可编辑时间线上制作，绝不写入外部生成提示词。ChatCut 默认承担可编辑剪辑、字幕、声音与导出，只有当前任务明确授权时才使用其付费视频生成功能。
 
 V4静帧视频要求“一张图对应一个连续运动镜头”。同一图片不得拆成多张静态裁切图模拟移动；运动方向、起止位置、转场和声音状态统一登记在 `video-master/motion-plan.json`。
 
@@ -154,12 +154,13 @@ wxyj-content-system/
 │   ├── products/
 │   │   └── mackillops-choice-aberlour-1996/
 │   │       ├── asset-manifest.json
-│   │       └── reference-images/  # 22张产品参考图
+│   │       └── reference-images/  # 23张产品参考图与尺寸校准图
 │   └── templates/
 ├── references/
 │   ├── product-visual-consistency-system.md
 │   ├── ecommerce-production-system.md
 │   ├── video-direction-and-audio-system.md
+│   ├── style-anchor-frame-system.md
 │   └── evidence-asset-system.md
 ├── scripts/
 ├── examples/
@@ -173,6 +174,8 @@ wxyj-content-system/
 ├── OPEN_SOURCE.md
 └── outputs/
 ```
+
+视频运行包在 `video-master/` 内额外维护 `style-anchor.md` 与 `style-frames/`：先锁定共享风格，再为每个镜头生成原生 9:16 构图帧，Seedance 动态镜头与静态 ChatCut 镜头都从对应构图帧出发。风格帧只约束色彩、光线、材质、镜头和安全区；酒瓶、酒标、礼盒与尺寸示意图仍拥有最高优先级。
 
 仓库根目录就是 Skill 根目录。`SKILL.md`、运行脚本、参考资料和模板均可从根目录直接访问。由于本 Skill 面向中文运营团队和中文平台内容生产，仓库只维护中文 `README.md`，不再维护容易与产品事实漂移的英文副本。
 
