@@ -76,6 +76,7 @@ REQUIRED_DOCS = [
     "references/ecommerce-production-system.md",
     "references/video-direction-and-audio-system.md",
     "references/evidence-asset-system.md",
+    "references/agent-image-seedance-chatcut-system.md",
 ]
 
 
@@ -179,7 +180,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "3.0.1")
+        self.assertEqual(identity["version"], "3.1.0")
         self.assertEqual(
             identity["product_identity"]["brand"],
             "Mackillop's Choice（马克瑞普之选）",

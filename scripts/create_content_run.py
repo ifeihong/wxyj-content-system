@@ -10,7 +10,7 @@ from pathlib import Path
 ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels", "ecommerce")
 VIDEO_PLATFORMS = {"douyin", "weixin-channels"}
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-VERSION = "3.0.0"
+VERSION = "3.1.0"
 DEFAULT_PRODUCT = "马克瑞普之选 单桶苏格兰威士忌"
 
 
@@ -426,6 +426,8 @@ def create_run(
             "accepted",
             "media",
             "style-frames",
+            "agent-images/seedance-references",
+            "agent-images/static-shots",
         ):
             (video_master / directory).mkdir(parents=True, exist_ok=True)
         _write_once(
@@ -447,6 +449,18 @@ def create_run(
 ## 每镜shot-keyframe
 
 先生成每个镜头的原生9:16 keyframe，通过产品视觉QA后，再用于Seedance首帧或ChatCut静态镜头。keyframe不得覆盖酒瓶与礼盒几何母版，也不得预生成字幕、日期、参数或后期图形。
+""",
+        )
+        _write_once(
+            video_master / "agent-images" / "README.md",
+            """# Agent 直接生图资产
+
+本目录由 Agent 直接调用多模态生图能力生成，不由用户手工制作。
+
+- `seedance-references/`：外部 Seedance 镜头的原生9:16首帧/主参考图；任务卡把它们作为 `first_frame` 或 `shot_keyframe` 复制给用户。
+- `static-shots/`：直接进入 ChatCut 的原生9:16静态镜头成图；每张图只对应一个连续运动镜头。
+
+每张图片必须先通过产品视觉QA，再允许进入外部任务或ChatCut剪辑。不得在这些参考图中预生成字幕、日期、参数、时间线或剪辑图形。
 """,
         )
         _write_once(

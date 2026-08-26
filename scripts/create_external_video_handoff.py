@@ -31,6 +31,7 @@ ALLOWED_REFERENCE_ROLES = {
     "shot_keyframe",
     "motion_reference",
 }
+ALLOWED_REFERENCE_SOURCES = {"product", "agent"}
 REQUIRED_FIELDS = (
     "shot_id",
     "slug",
@@ -141,6 +142,9 @@ def validate_shot_spec(spec: dict[str, object]) -> list[str]:
             or Path(filename).name != filename
         ):
             errors.append(f"references.file invalid at item {index}")
+        reference_source = reference.get("source", "product")
+        if reference_source not in ALLOWED_REFERENCE_SOURCES:
+            errors.append(f"references.source invalid at item {index}")
 
     if orders and (
         len(orders) != len(set(orders))
@@ -193,6 +197,7 @@ def _shot_yaml(spec: dict[str, object], output_name: str) -> str:
                 f"  - order: {reference['order']}",
                 f"    file: references/{reference['file']}",
                 f"    role: {reference['role']}",
+                f"    source: {reference.get('source', 'product')}",
                 "    required: "
                 + ("true" if reference.get("required", True) else "false"),
             ]
@@ -203,7 +208,7 @@ def _shot_yaml(spec: dict[str, object], output_name: str) -> str:
 def _reference_details(references: list[dict[str, object]]) -> str:
     reference_lines = "\n".join(
         f"{reference['order']}. `references/{reference['file']}`"
-        f" — {reference['role']}"
+        f" — {reference['role']}，来源：{reference.get('source', 'product')}"
         for reference in sorted(references, key=lambda item: item["order"])
     )
     reference_detail_lines = []
@@ -215,7 +220,8 @@ def _reference_details(references: list[dict[str, object]]) -> str:
             "\n".join(
                 line
                 for line in (
-                    f"### `references/{reference['file']}`（{reference['role']}）",
+                    f"### `references/{reference['file']}`（{reference['role']}，"
+                    f"{reference.get('source', 'product')}）",
                     f"- 参考图具体职责：{description or '按提示词中的产品/结构职责使用，不作为泛风格图。'}",
                     f"- 必须保留：{must_keep or '参考图中与本镜头主体身份直接相关的比例、材质和结构。'}",
                     f"- 不得继承：{do_not_inherit or '参考图背景中的白底、边缘残影及与本镜头无关的小字细节。'}",
@@ -254,7 +260,7 @@ def _task_card(spec: dict[str, object], output_name: str) -> str:
     assert isinstance(references, list)
     reference_lines = "\n".join(
         f"{reference['order']}. `references/{reference['file']}`"
-        f" — {reference['role']}"
+        f" — {reference['role']}，来源：{reference.get('source', 'product')}"
         for reference in sorted(references, key=lambda item: item["order"])
     )
     reference_details = _reference_details(references)
@@ -438,7 +444,13 @@ def create_handoff(
         )
 
         for reference in references:
-            source = _safe_reference_path(source_root, reference["file"])
+            reference_source = reference.get("source", "product")
+            reference_root = (
+                run_dir / "video-master" / "agent-images" / "seedance-references"
+                if reference_source == "agent"
+                else source_root
+            )
+            source = _safe_reference_path(reference_root, reference["file"])
             destination = references_dir / source.name
             if destination.exists():
                 if _sha256(source) != _sha256(destination):

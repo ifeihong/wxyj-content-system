@@ -45,6 +45,8 @@ video-master/
 
 混合视频的 `video-master/` 还必须包含 `style-anchor.md` 与 `style-frames/`：前者登记共享色彩、光线、材质、镜头高度和字幕安全区，后者保存每个镜头通过产品QA的原生9:16 `shot-keyframe`。Seedance与静态镜头必须从对应keyframe出发。
 
+每个外部镜头还必须优先使用 Agent 已生成的原生9:16参考图，保存于 `video-master/agent-images/seedance-references/`。在镜头规格中把该文件写为 `source: agent`；任务脚本会自动复制给用户，用户无需再制作或寻找首帧。
+
 ## shot.yaml 必填字段
 
 ```yaml
@@ -85,6 +87,8 @@ output_name: 20260801-wxyj-label-reading-s01-date-reveal-seedance-v01.mp4
 - `dimension_check`：只用于复核瓶身各高度投影宽度、纵向比例和曲线，不把尺寸标注带入画面。
 - `style_anchor`：只提供色彩、光线、材质和设计语法。
 - `shot_keyframe`：当前镜头已通过产品QA的原生9:16构图帧；优先作为Seedance首帧或主参考，不得替代几何母版。
+
+参考图来源：省略 `source` 时默认为 `product`（内置产品参考图）；`source: agent` 表示当前运行包内由Agent直接生成的 `video-master/agent-images/seedance-references/` 图片。
 - `motion_reference`：只提供运动方式，不覆盖产品身份。
 
 任务包必须复制当前镜头实际需要的参考文件，并在 `references.order` 中给出上传顺序。不得只写22张图库的原始路径，不能要求用户自行找图。半开礼盒镜头应优先复制新增的 `木质礼盒-45度°半打开内置酒瓶.png` 或 `木质礼盒-半打开内置酒瓶.png`，正面175°–180°开盒镜头使用 `木质礼盒-内置酒瓶.png`。

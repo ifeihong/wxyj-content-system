@@ -144,6 +144,9 @@ class ContentRunContractTests(unittest.TestCase):
                 "video-master/accepted",
                 "video-master/media",
                 "video-master/style-frames",
+                "video-master/agent-images/README.md",
+                "video-master/agent-images/seedance-references",
+                "video-master/agent-images/static-shots",
             ]
             for relative in expected:
                 self.assertTrue((run_dir / relative).exists(), relative)
@@ -585,6 +588,9 @@ class ContentRunContractTests(unittest.TestCase):
                 "video-master/accepted",
                 "video-master/media",
                 "video-master/style-frames",
+                "video-master/agent-images/README.md",
+                "video-master/agent-images/seedance-references",
+                "video-master/agent-images/static-shots",
             ]
             for relative in expected:
                 self.assertTrue((run_dir / relative).exists(), relative)

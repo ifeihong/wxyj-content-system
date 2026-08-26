@@ -35,6 +35,9 @@ outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
 │   ├── qa.md
 │   └── media/
 ├── video-master/
+│   ├── agent-images/
+│   │   ├── seedance-references/ # Agent直接生成并验收的Seedance首帧
+│   │   └── static-shots/        # Agent直接生成、供ChatCut使用的静态镜头
 │   ├── treatment.md
 │   ├── style-anchor.md
 │   ├── style-frames/          # 每个镜头通过产品QA的原生9:16构图帧
@@ -57,7 +60,7 @@ outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
     └── media/
 ```
 
-`video-master/external-generation/` 是平台无关的外部 Seedance 交接区；`video-master/incoming/` 永久保留回传原件；`accepted/` 只保存通过验收的副本。平台目录只保存发布文案、平台 QA 和必要导出，不复制共同分镜。
+`video-master/agent-images/` 是 Agent 直接生图与视觉QA的交付区；`video-master/external-generation/` 是平台无关的外部 Seedance 交接区；`video-master/incoming/` 永久保留回传原件；`accepted/` 只保存通过验收的副本。平台目录只保存发布文案、平台 QA 和必要导出，不复制共同分镜。
 
 混合视频必须先完成 `style-anchor.md` 和各镜头 `style-frames/`，再进入 Seedance 或静态镜头制作。构图帧统一使用原生 9:16；任何风格锚点都不得覆盖产品几何母版、结构母版和尺寸校准图。
 
@@ -67,7 +70,7 @@ outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
 
 ```yaml
 run_id: 2026-08-01-label-reading
-version: 3.0.0
+version: 3.1.0
 date: 2026-08-01
 topic_slug: label-reading
 product: "马克瑞普之选 单桶苏格兰威士忌"

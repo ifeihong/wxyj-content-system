@@ -34,7 +34,7 @@
 3. 填写 `brief.md`、`sources.md` 和 `creative-record.json`；
 4. 用近期 `performance-log.csv` 生成 `performance-brief.json`，填写唯一实验变量；
 4. 生成平台 `publish.md`；
-5. 生成小红书 `prompts.md`；视频使用共享 `video-master/storyboard.md`；
+5. 生成小红书 `prompts.md`；视频使用共享 `video-master/storyboard.md`，并由 Agent 直接产出静态镜头成图与 Seedance 首帧；
 6. 保存媒体并使用规范文件名；
 7. 完成 `qa.md` 与 `product-visual-qa.md`；电商资产同时完成 `ecommerce-asset-qa.md`；
 8. 在 `release-manifest.json` 登记候选、退回和发布资产；
@@ -44,10 +44,11 @@
 抖音或视频号任务还需要：
 
 1. 为需要生成的镜头准备原生9:16首帧或参考图；
-2. 创建平台无关的外部 Seedance 逐镜任务包；
-3. 用户按任务卡生成并将原件回传至 `video-master/incoming/`；
-4. 验证回传；通过的副本进入 `accepted/`；
-5. 用通过镜头完成可编辑剪辑，再分别输出两个平台发布包。
+2. 先在 `video-master/agent-images/` 生成并验收原生9:16静态镜头与 Seedance 首帧，再创建平台无关的外部 Seedance 逐镜任务包；
+3. 运行 `python scripts/validate_agent_images.py <run-dir>`，仅将精确 `1080×1920` 的 Agent 图交给 Seedance 或 ChatCut；
+4. 用户按任务卡生成并将原件回传至 `video-master/incoming/`；
+5. 验证回传；通过的副本进入 `accepted/`；
+6. 用通过镜头完成可编辑剪辑，再分别输出两个平台发布包。
 
 ## 创建运行目录
 

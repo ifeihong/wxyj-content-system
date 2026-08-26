@@ -206,6 +206,35 @@ class ExternalVideoHandoffTests(unittest.TestCase):
         errors = self.module.validate_shot_spec(spec)
         self.assertEqual(errors, [])
 
+    def test_create_handoff_copies_agent_generated_reference(self):
+        with workspace_tempdir() as workspace:
+            run_dir = workspace / "2026-08-01-label-reading"
+            source_root = workspace / "source"
+            source_root.mkdir()
+            agent_root = (
+                run_dir / "video-master" / "agent-images"
+                / "seedance-references"
+            )
+            agent_root.mkdir(parents=True)
+            (agent_root / "S01-agent-keyframe.png").write_bytes(
+                b"agent-reference-image"
+            )
+            spec = self.valid_spec()
+            references = spec["references"]
+            assert isinstance(references, list)
+            references[0]["file"] = "S01-agent-keyframe.png"
+            references[0]["role"] = "shot_keyframe"
+            references[0]["source"] = "agent"
+
+            handoff = self.module.create_handoff(
+                run_dir,
+                [spec],
+                source_root,
+            )
+
+            copied = handoff / "S01-date-reveal" / "references" / "S01-agent-keyframe.png"
+            self.assertEqual(copied.read_bytes(), b"agent-reference-image")
+
     def test_create_handoff_rejects_conflicting_reference_overwrite(self):
         with workspace_tempdir() as workspace:
             run_dir = workspace / "2026-08-01-label-reading"

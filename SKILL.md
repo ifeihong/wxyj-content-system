@@ -30,7 +30,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 | 当前热点、节日、节气 | `references/trend-and-calendar-system.md` | 实时检索、适配评分、采用理由 |
 | 三平台创作 | `references/platform-playbooks.md` | 平台原生发布包 |
 | 小红书套图 | `references/xiaohongshu-carousel-system.md`、`references/editorial-art-direction.md`、`references/text-in-image-system.md`、`references/visual-asset-library.md` | 动态页数、艺术方向、逐页提示词、成图文字、QA |
-| 抖音/视频号短视频 | `references/video-production-system.md`、`references/external-seedance-handoff.md`、`references/style-anchor-frame-system.md`、`references/visual-asset-library.md` | 风格锚点帧、共享母版、逐镜任务包、回传验收、双平台发布包 |
+| 抖音/视频号短视频 | `references/video-production-system.md`、`references/agent-image-seedance-chatcut-system.md`、`references/external-seedance-handoff.md`、`references/style-anchor-frame-system.md`、`references/visual-asset-library.md` | Agent静态成图与Seedance首帧、共享母版、逐镜任务包、ChatCut剪辑交接、回传验收、双平台发布包 |
 | 图片/视频 AIGC | `references/visual-asset-library.md`、`references/text-in-image-system.md`、`assets/products/mackillops-choice-aberlour-1996/asset-manifest.json` | 内置参考图编排、提示词、产品锁定、负面词 |
 | 产品比例、边缘、礼盒和文字洁净度 | `references/product-visual-consistency-system.md` | 参考图角色、人工验收卡、局部重绘规则 |
 | 电商缩略图与详情长图 | `references/ecommerce-production-system.md`、`references/product-visual-consistency-system.md` | 1:1主图、详情长图、商品文案与验收 |
@@ -60,7 +60,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 python scripts/create_content_run.py --root <输出根目录> --date YYYY-MM-DD --slug <topic-slug> --product "“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996" --platforms xiaohongshu douyin weixin-channels
 ```
 
-8. **生成平台版本**：按平台原生结构生成，不机械复制。抖音或视频号视频采用一个共享 `video-master/`；默认路径为“建立共享风格锚点→为每个镜头生成原生9:16 keyframe→选择制作模式→为external-seedance镜头创建逐镜任务包→等待用户回传→验收incoming→把accepted素材进入可编辑剪辑”。
+8. **生成平台版本**：按平台原生结构生成，不机械复制。抖音或视频号视频采用一个共享 `video-master/`；默认路径为“建立共享风格锚点→Agent直接生成原生9:16静态成图与Seedance参考图→为external-seedance镜头创建逐镜任务包→用户回传原片→验收incoming→把accepted素材与静态成图交给ChatCut可编辑剪辑”。
 9. **锁定小红书艺术方向、事实、机位与几何**：整套先选一个 `typography_mode`，各页轮换 `layout_pattern`；再建立逐页 `primary_fact_id` 表和机位分配表。完整正面酒瓶统一以 `酒瓶-正面.png` 为 `geometry_master`，并以 `尺寸示意图.png` 复核关键宽度与曲线；不得让风格参考覆盖瓶型。
 10. **锁定首轮画幅**：每页首轮原生成文件必须是宽:高 = 3:4，并立即执行 `python scripts/validate_xhs_image.py <image.png>`；不通过就按原提示词重新生成，不允许通过裁切、拉伸或补边把错误比例伪装成合格成图。
 11. **保存发布文案**：把采用标题、正文/描述、标签、评论、CTA和最终素材顺序写入各平台 `publish.md`；备选标题只作策划记录。素材来源与事实核验状态只写入内部 `sources.md` 和 `qa.md`。
@@ -149,7 +149,7 @@ V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一
 
 ## 视频风格锚点帧锁定
 
-每条同时包含 Seedance 与静态镜头的视频，必须先建立 `video-master/style-anchor.md`，再为每个镜头生成一张原生9:16 `shot-keyframe`。keyframe统一色彩、光线、背景材质、镜头高度、景深、颗粒和产品安全区；它是镜头构图与风格入口，不得覆盖 `geometry_master`、`structure_master` 或 `尺寸示意图.png` 的产品几何。Seedance使用对应keyframe作为首要参考，静态镜头直接使用对应keyframe在ChatCut中连续运动。详见 `references/style-anchor-frame-system.md`。
+每条同时包含 Seedance 与静态镜头的视频，必须先建立 `video-master/style-anchor.md`，再由Agent直接生成每个镜头一张原生9:16 `shot-keyframe`。Seedance参考图保存至 `video-master/agent-images/seedance-references/`，静态成图保存至 `video-master/agent-images/static-shots/`；它们统一色彩、光线、背景材质、镜头高度、景深、颗粒和产品安全区，均不得覆盖 `geometry_master`、`structure_master` 或 `尺寸示意图.png` 的产品几何。每张实际交接图必须通过 `python scripts/validate_agent_images.py <run-dir>`，确保为精确 `1080×1920`；不得用3:4补边、拉伸或裁切成成片。用户只使用已生成的Seedance参考图与任务卡在第三方平台出视频；ChatCut只接收静态成图、验收通过的Seedance原片和剪辑方案。详见 `references/agent-image-seedance-chatcut-system.md`。
 
 让多模态生图模型直接生成产品、场景与设计文字的最终图片。不下载字体文件，不用程序贴字，不把无字底图当成静态图文成品。
 

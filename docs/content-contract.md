@@ -65,11 +65,13 @@
 
 - 所有全屏镜头、首帧、尾帧和封面均为原生9:16；
 - 抖音与视频号共用 `video-master/storyboard.md` 和成片母版；
+- Agent 先在 `video-master/agent-images/` 直接生成精确1080×1920静态镜头与 Seedance 首帧；
 - `video-master/external-generation/` 保存平台无关逐镜任务包；
 - 每镜同时提供 `prompt-all-in-one.txt`、`prompt-positive.txt` 和 `prompt-negative.txt`；
 - 用户回传原件进入 `video-master/incoming/`，不覆盖、不移动；
 - 机器与人工 QA 通过的副本进入 `video-master/accepted/`；
 - ChatCut 付费生成只有在当前任务明确授权后才可使用。
+- ChatCut 只读取静态成图、`accepted/` 动态原片及 `storyboard.md`、`edit-plan.md`、`motion-plan.json`，不从外部提示词反向生成画面。
 
 ## 视频号
 

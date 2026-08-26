@@ -2,6 +2,19 @@
 
 本项目采用 [Semantic Versioning](https://semver.org/)。
 
+## [3.1.0] - 2026-08-26
+
+### 新增
+
+- 新增 Agent 生图、外部 Seedance 与 ChatCut 三层交接系统：Agent 直接生成并验收原生9:16静态镜头和 Seedance 首帧，用户只需在第三方 Seedance 平台完成动态原片，ChatCut 只接收可编辑剪辑所需素材与方案。
+- 运行包新增 `video-master/agent-images/seedance-references/` 与 `video-master/agent-images/static-shots/`；每张图对应独立视觉QA记录。
+- 外部任务包新增 `source: agent`，可将运行包内的 Agent 首帧自动复制到逐镜参考图目录。
+
+### 变更
+
+- 明确 Seedance 仅负责产品、场景、真实光线和自然镜头运动；所有字幕、旁白、音乐、音效、转场与剪辑逻辑只由 ChatCut 可编辑时间线执行。
+- 当完整酒瓶连续两次无法通过几何校验时，改用酒标、礼盒、内页或无完整瓶身构图，不用失真产品图强行补镜。
+
 ## [3.0.1] - 2026-08-25
 
 ### 修复
