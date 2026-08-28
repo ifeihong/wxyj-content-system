@@ -1,8 +1,8 @@
 # 威熏邑境自媒体内容生成系统
 
-**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996在小红书、抖音和视频号上的持续内容创作。** 它把该商品的事实、包装文案、品牌故事、23张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
+**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务马克瑞普之选 · 单桶苏格兰威士忌在小红书、抖音和视频号上的持续内容创作。** 它把该商品的事实、包装文案、品牌故事、23张高清参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
 
-当前版本：`3.1.2`（中文维护入口）<br>
+当前版本：`3.2.0`（中文维护入口）<br>
 Skill ID：`wxyj-content-system`<br>
 GitHub Repository ID：`wxyj-content-system`
 
@@ -10,7 +10,7 @@ GitHub Repository ID：`wxyj-content-system`
 
 - 品牌：威熏邑境。
 - 业务范围：威士忌品牌在中国市场的销售、运营与宣传。
-- 当前核心商品：“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996。
+- 当前核心商品：马克瑞普之选 · 单桶苏格兰威士忌。
 - 当前核心平台：小红书、抖音、视频号。
 - 当前目标：先建立账号影响力、专业认知与粉丝规模，再承接私信、企微、店铺和线下品鉴。
 - 内容原则：所有威士忌知识、节日表达和热点切入都必须回到当前产品，不经营脱离产品的泛知识账号。
@@ -18,7 +18,7 @@ GitHub Repository ID：`wxyj-content-system`
 ## 适合谁
 
 - 威熏邑境自营内容、品牌、销售与品鉴活动团队；
-- 负责“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996中国市场传播的运营人员；
+- 负责马克瑞普之选 · 单桶苏格兰威士忌中国市场传播的运营人员；
 - 需要持续生成小红书图文、抖音脚本和视频号内容的 AIGC 创作者；
 - 需要统一产品事实、参考图、标题、正文、标签、首评、提示词和媒体归档的协作人员。
 
@@ -26,7 +26,7 @@ GitHub Repository ID：`wxyj-content-system`
 
 | 字段 | 已确认信息 |
 | --- | --- |
-| 商品名称 | “马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996 |
+| 商品名称 | 马克瑞普之选 · 单桶苏格兰威士忌 |
 | 品牌 | Mackillop's Choice（马克瑞普之选） |
 | 酒厂 | ABERLOUR（亚伯乐） |
 | 产区 | 苏格兰斯佩塞 |
@@ -56,11 +56,11 @@ GitHub Repository ID：`wxyj-content-system`
 
 <p>
   <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-正面.png" alt="马克瑞普之选 亚伯乐1996酒瓶正面参考图" width="220">
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/尺寸示意图.png" alt="马克瑞普之选 单桶苏格兰威士忌酒瓶尺寸示意图" width="220">
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-酒标.png" alt="马克瑞普之选 单桶苏格兰威士忌酒标参考图" width="220">
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-内置酒瓶.png" alt="马克瑞普之选 单桶苏格兰威士忌木质礼盒内置酒瓶参考图" width="220">
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-背面右侧45°.png" alt="马克瑞普之选 单桶苏格兰威士忌木质礼盒背面右侧45度参考图" width="220">
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-背面品鉴标签.png" alt="马克瑞普之选 单桶苏格兰威士忌木质礼盒背面品鉴标签参考图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/尺寸示意图.png" alt="马克瑞普之选 · 单桶苏格兰威士忌酒瓶尺寸示意图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-酒标.png" alt="马克瑞普之选 · 单桶苏格兰威士忌酒标参考图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-内置酒瓶.png" alt="马克瑞普之选 · 单桶苏格兰威士忌木质礼盒内置酒瓶参考图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-背面右侧45°.png" alt="马克瑞普之选 · 单桶苏格兰威士忌木质礼盒背面右侧45度参考图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-背面品鉴标签.png" alt="马克瑞普之选 · 单桶苏格兰威士忌木质礼盒背面品鉴标签参考图" width="220">
 </p>
 
 - [查看23张参考图](assets/products/mackillops-choice-aberlour-1996/reference-images/)
@@ -103,9 +103,9 @@ GitHub Repository ID：`wxyj-content-system`
 
 抖音与视频号共用一个原生9:16视频母版。先由 Agent 直接生成每个静态镜头成图及每个 Seedance 镜头的首帧/主参考图；用户只需把任务包内实际图片和提示词提交至任意支持 Seedance 的第三方平台。Seedance提示词只描述产品、礼盒、真实环境、自然光和镜头运动；字幕、日期、参数、时间线、扫描线、图形卡等由ChatCut在可编辑时间线上制作，绝不写入外部生成提示词。ChatCut 默认承担可编辑剪辑、字幕、声音与导出，只有当前任务明确授权时才使用其付费视频生成功能。详见 [三层交接系统](references/agent-image-seedance-chatcut-system.md)。
 
-V4静帧视频要求“一张图对应一个连续运动镜头”。同一图片不得拆成多张静态裁切图模拟移动；运动方向、起止位置、转场和声音状态统一登记在 `video-master/motion-plan.json`。
+V4静帧视频要求“一张图对应一个连续运动镜头”。同一图片不得拆成多张静态裁切图模拟移动；默认从100%连续推至103%–106%，直到镜头最后一帧。转场、三帧运动检查和声音状态统一登记在 `video-master/motion-plan.json`；画内文字安全区不足时才允许明确登记静止理由。
 
-每个运行包同时生成 `release-manifest.json`、`product-visual-qa.md` 和 `deliverables.md`。发布前运行 `python scripts/validate_release_preflight.py <运行目录>`，只有通过事实、证据、产品几何、文字洁净度、原生画幅、公开文案、媒体、音频、交付与多样性门槛的资产才能进入最终索引。
+每个运行包同时生成 `release-manifest.json`、`product-visual-qa.md` 和 `deliverables.md`。发布前运行 `python scripts/validate_release_preflight.py <运行目录>`；视频还须运行 `python scripts/validate_video_motion_plan.py <运行目录>/video-master/motion-plan.json`。只有通过事实、证据、产品几何、文字洁净度、原生画幅、公开文案、媒体、音频、运动、交付与多样性门槛的资产才能进入最终索引。
 
 ### 电商商品资产
 
@@ -116,7 +116,7 @@ python scripts\create_content_run.py `
   --root outputs `
   --date 2026-08-20 `
   --slug valentine-thumbnail `
-  --product "“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996" `
+  --product "马克瑞普之选 · 单桶苏格兰威士忌" `
   --platforms ecommerce
 ```
 
@@ -196,7 +196,7 @@ C:\Users\<用户名>\.codex\skills\wxyj-content-system
 ### 2. 调用
 
 ```text
-使用 $wxyj-content-system，为“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996
+使用 $wxyj-content-system，为马克瑞普之选 · 单桶苏格兰威士忌
 生成一套8月1日小红书图文，
 同时生成采用标题、备选标题记录、发布正文、Tag、首评、逐页提示词和QA。
 ```
@@ -208,7 +208,7 @@ python scripts\create_content_run.py `
   --root outputs `
   --date 2026-08-01 `
   --slug label-reading `
-  --product "“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996" `
+  --product "马克瑞普之选 · 单桶苏格兰威士忌" `
   --platforms xiaohongshu
 ```
 
@@ -315,7 +315,7 @@ AIGC来源与事实核验只记录在内部 `sources.md` 和 `qa.md`，不进入
 
 ### 能否用于其他威士忌产品？
 
-当前 Skill 默认且主要服务“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996。未来产品只有在威熏邑境明确提供并核验产品卡、素材和传播边界后才接入，不会自动把通用威士忌内容替代当前商品。
+当前 Skill 默认且主要服务马克瑞普之选 · 单桶苏格兰威士忌。未来产品只有在威熏邑境明确提供并核验产品卡、素材和传播边界后才接入，不会自动把通用威士忌内容替代当前商品。
 
 ## 文档与维护
 

@@ -62,6 +62,7 @@ REQUIRED_DOCS = [
     "scripts/validate_product_assets.py",
     "scripts/validate_xhs_image.py",
     "scripts/validate_release_preflight.py",
+    "scripts/validate_video_motion_plan.py",
     "scripts/validate_content_diversity.py",
     "scripts/analyze_performance.py",
     "assets/templates/release-manifest.json",
@@ -122,7 +123,7 @@ class RepositoryContractTests(unittest.TestCase):
         facts = (PROJECT_ROOT / "references" / "product-facts.md").read_text(
             encoding="utf-8"
         )
-        self.assertIn("| 商品名称 | “马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996 |", facts)
+        self.assertIn("| 商品名称 | 马克瑞普之选 · 单桶苏格兰威士忌 |", facts)
         self.assertIn("| 品牌 | Mackillop's Choice（马克瑞普之选） |", facts)
         self.assertIn("| 酒厂 | ABERLOUR（亚伯乐） |", facts)
         self.assertIn("| 酒龄 | 30年 |", facts)
@@ -139,7 +140,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(manifest["brand"], "威熏邑境")
         self.assertEqual(
             manifest["product_name"],
-            "“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996",
+            "马克瑞普之选 · 单桶苏格兰威士忌",
         )
         self.assertEqual(
             manifest["product_brand"], "Mackillop's Choice（马克瑞普之选）"
@@ -180,7 +181,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(identity["display_name"], "威熏邑境自媒体内容生成系统")
         self.assertEqual(identity["skill_id"], "wxyj-content-system")
         self.assertEqual(identity["github_repository_id"], "wxyj-content-system")
-        self.assertEqual(identity["version"], "3.1.0")
+        self.assertEqual(identity["version"], "3.2.0")
         self.assertEqual(
             identity["product_identity"]["brand"],
             "Mackillop's Choice（马克瑞普之选）",
@@ -190,7 +191,7 @@ class RepositoryContractTests(unittest.TestCase):
         )
         self.assertEqual(
             identity["product_identity"]["official_product_name"],
-            "“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996",
+            "马克瑞普之选 · 单桶苏格兰威士忌",
         )
         self.assertEqual(identity["product_identity"]["age_statement"], "30年")
 

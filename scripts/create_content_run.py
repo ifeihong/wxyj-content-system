@@ -10,8 +10,8 @@ from pathlib import Path
 ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels", "ecommerce")
 VIDEO_PLATFORMS = {"douyin", "weixin-channels"}
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-VERSION = "3.1.2"
-DEFAULT_PRODUCT = "马克瑞普之选 单桶苏格兰威士忌"
+VERSION = "3.2.0"
+DEFAULT_PRODUCT = "马克瑞普之选 · 单桶苏格兰威士忌"
 
 
 PUBLISH_TEMPLATES = {
@@ -220,7 +220,7 @@ def create_run(
     )
     _write_once(run_dir / "manifest.yaml", manifest)
     release_manifest = {
-        "schema_version": 3,
+        "schema_version": 4,
         "run_id": run_id,
         "release_status": "working",
         "native_targets": {
@@ -264,6 +264,7 @@ def create_run(
             "public_copy": "pending",
             "media": "pending",
             "audio": "pending" if needs_video_master(normalized_platforms) else "not-applicable",
+            "motion": "pending" if needs_video_master(normalized_platforms) else "not-applicable",
             "deliverables": "pending",
             "diversity": "pending",
         },
@@ -352,10 +353,10 @@ def create_run(
 
 ## 每张发布资产
 
-| 文件 | 产品形态 | 几何参考 | 瓶盖与瓶肩 | 酒标与液面 | 边缘融合 | 礼盒结构与内页 | 文字洁净度 | 结论 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 文件 | 产品形态 | 几何参考 | 分段比例 | 瓶盖与瓶肩 | 酒标与液面 | 边缘融合 | 礼盒结构与内页 | 文字洁净度 | 结论 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
-完整酒瓶必须核对瓶盖、瓶肩、瓶身宽高、酒标位置、液面和瓶底。开盒画面必须保持175°–180°，保留左侧白色内皮、故事文字、中央合页和右侧瓶槽。文字洁净度必须核对逐字准确、无波纹/摩尔纹/颗粒干扰、无字体变形，且360px手机预览可读。脚本只核对登记状态，不能替代人工视觉判断。
+完整正面酒瓶必须以`酒瓶-正面.png`和`尺寸示意图.png`共同复核：瓶顶至酒肩约8cm、酒肩至瓶底约22cm的高度关系；瓶颈酒液顶端、金色环、瓶肩、酒标和瓶底位置不得被压缩、拉长或重排。透视镜头只核对可见结构，不把正面投影比例硬套到45度视图。开盒画面必须保持175°–180°，保留左侧白色内皮、故事文字、中央合页和右侧瓶槽。文字洁净度必须核对逐字准确、无波纹/摩尔纹/颗粒干扰、无字体变形，且360px手机预览可读。脚本只核对登记状态，不能替代人工视觉判断。
 """,
     )
     if "ecommerce" in normalized_platforms:
@@ -479,13 +480,20 @@ def create_run(
             video_master / "motion-plan.json",
             json.dumps(
                 {
-                    "version": 1,
+                    "version": 2,
                     "mode": "unset",
                     "shots": [],
                     "audio_mix": {
                         "voice": "pending",
                         "music": "pending",
                         "effects": "pending",
+                        "tail_extension_seconds": 0,
+                        "tail_music_continuity": "not-applicable",
+                        "segment_listening": {
+                            "opening": "pending",
+                            "voice": "pending",
+                            "tail": "pending",
+                        },
                     },
                 },
                 ensure_ascii=False,

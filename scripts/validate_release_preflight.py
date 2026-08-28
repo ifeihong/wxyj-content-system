@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import struct
 import subprocess
@@ -90,6 +91,18 @@ def _validate_motion_plan(run_dir: Path, errors: list[str]) -> None:
     motion = _load_json(motion_path, "视频运动计划", errors)
     if motion is None or motion.get("mode") != "V4":
         return
+    if motion.get("version") == 2:
+        script = Path(__file__).with_name("validate_video_motion_plan.py")
+        spec = importlib.util.spec_from_file_location(
+            "wxyj_validate_video_motion_plan", script
+        )
+        if spec is None or spec.loader is None:
+            errors.append("无法加载视频运动计划校验脚本")
+            return
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        errors.extend(module.validate(motion))
+        return
     shots = motion.get("shots")
     if not isinstance(shots, list) or not shots:
         errors.append("V4视频运动计划必须至少包含一个镜头")
@@ -138,6 +151,8 @@ def validate_release(run_dir: Path) -> list[str]:
     required_gates = list(REQUIRED_GATES)
     if isinstance(release.get("schema_version"), int) and release.get("schema_version") >= 2:
         required_gates.append("diversity")
+    if isinstance(release.get("schema_version"), int) and release.get("schema_version") >= 4:
+        required_gates.append("motion")
     for gate in required_gates:
         if gate not in gates:
             errors.append(f"发布清单缺少质量门槛: {gate}")

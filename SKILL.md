@@ -1,15 +1,15 @@
 ---
 name: wxyj-content-system
-description: Use when creating, repurposing, reviewing, scheduling, storing, or analyzing 威熏邑境 brand content for “马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996 across 小红书, 抖音, 视频号, private messages, WeCom, platform stores, and tasting events.
+description: Use when creating, repurposing, reviewing, scheduling, storing, or analyzing 威熏邑境 brand content for 马克瑞普之选 · 单桶苏格兰威士忌 across 小红书, 抖音, 视频号, private messages, WeCom, platform stores, and tasting events.
 ---
 
 # 威熏邑境自媒体内容生成系统
 
 ## 专属范围
 
-这是威熏邑境品牌专属 Skill，不是通用威士忌内容模板。它服务威熏邑境在中国市场的威士忌销售、运营与宣传；当前默认且主要服务的商品是““马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996”，目标是在小红书、抖音和视频号持续生产以该商品为核心的增长型内容。
+这是威熏邑境品牌专属 Skill，不是通用威士忌内容模板。它服务威熏邑境在中国市场的威士忌销售、运营与宣传；当前默认且主要服务的商品是“马克瑞普之选 · 单桶苏格兰威士忌”，目标是在小红书、抖音和视频号持续生产以该商品为核心的增长型内容。
 
-- 用户没有指定产品时，默认使用““马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996”。
+- 用户没有指定产品时，默认使用“马克瑞普之选 · 单桶苏格兰威士忌”。
 - 每次产品内容创作都读取 `references/product-facts.md`；涉及包装品鉴词、品牌故事或人物信息时，同时读取 `references/product-packaging-copy.md`。
 - 每次图片或视频生产都先读取 `references/visual-asset-library.md` 和 `assets/products/mackillops-choice-aberlour-1996/asset-manifest.json`，从内置23张参考图中按职责选图；凡完整酒瓶、瓶盒同框或产品局部重绘，均将 `尺寸示意图.png` 作为几何校准依据。
 - 新产品只有在用户明确提供并核验产品卡后才能接入；不得因此稀释当前核心产品定位。
@@ -30,7 +30,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 | 当前热点、节日、节气 | `references/trend-and-calendar-system.md` | 实时检索、适配评分、采用理由 |
 | 三平台创作 | `references/platform-playbooks.md` | 平台原生发布包 |
 | 小红书套图 | `references/xiaohongshu-carousel-system.md`、`references/editorial-art-direction.md`、`references/text-in-image-system.md`、`references/visual-asset-library.md` | 动态页数、艺术方向、逐页提示词、成图文字、QA |
-| 抖音/视频号短视频 | `references/video-production-system.md`、`references/agent-image-seedance-chatcut-system.md`、`references/external-seedance-handoff.md`、`references/style-anchor-frame-system.md`、`references/visual-asset-library.md` | Agent静态成图与Seedance首帧、共享母版、逐镜任务包、ChatCut剪辑交接、回传验收、双平台发布包 |
+| 抖音/视频号短视频 | `references/video-production-system.md`、`references/video-direction-and-audio-system.md`、`references/agent-image-seedance-chatcut-system.md`、`references/external-seedance-handoff.md`、`references/style-anchor-frame-system.md`、`references/visual-asset-library.md` | Agent静态成图与Seedance首帧、共享母版、逐镜任务包、运动/声音验收、ChatCut剪辑交接、回传验收、双平台发布包 |
 | 图片/视频 AIGC | `references/visual-asset-library.md`、`references/text-in-image-system.md`、`assets/products/mackillops-choice-aberlour-1996/asset-manifest.json` | 内置参考图编排、提示词、产品锁定、负面词 |
 | 产品比例、边缘、礼盒和文字洁净度 | `references/product-visual-consistency-system.md` | 参考图角色、人工验收卡、局部重绘规则 |
 | 电商缩略图与详情长图 | `references/ecommerce-production-system.md`、`references/product-visual-consistency-system.md` | 1:1主图、详情长图、商品文案与验收 |
@@ -48,7 +48,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 ## 标准工作流
 
 1. **识别任务**：确定是定位、选题、创作、排期、审核、互动、复盘或新品接入。
-2. **锁定事实**：默认商品从 `references/product-facts.md` 取值；先分清“马克瑞普之选＝品牌、亚伯乐＝酒厂、30年＝酒龄”，商品名称固定为““马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996”，规格为700毫升/瓶，蒸馏日期为1996年2月14日，桶型为PX Sherry Hogshead，桶号261311，酒精度51%；缺失字段标为“待核验”，不推断。
+2. **锁定事实**：默认商品从 `references/product-facts.md` 取值；先分清“马克瑞普之选＝品牌、亚伯乐＝酒厂、30年＝酒龄”，商品名称固定为“马克瑞普之选 · 单桶苏格兰威士忌”，规格为700毫升/瓶，蒸馏日期为1996年2月14日，桶型为PX Sherry Hogshead，桶号261311，酒精度51%；缺失字段标为“待核验”，不推断。
 3. **验证并盘点素材**：先执行 `python scripts/validate_product_assets.py`；通过后从内置23张产品参考图选择当前页面或镜头需要的2–3张，并按 `geometry_master > structure_master > label_detail > style_anchor` 登记职责。凡出现完整酒瓶、瓶盒同框或产品局部重绘，再加入 `尺寸示意图.png` 作 `dimension_check`，复核瓶盖、瓶颈、瓶肩、瓶腹、瓶底的各高度投影宽度与曲线；同时标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
 4. **查询近期创意**：读取最近30天 `creative-ledger.csv`，先排除完整创意指纹、14天视觉配方和连续版式路线重复。
 5. **读取成熟效果**：读取近期 `performance-log.csv`；用 `python scripts/analyze_performance.py <台账> --date YYYY-MM-DD --theme-family <主题族> --output <运行目录>/performance-brief.json` 生成简报。发布不足48小时的数据只记录为观察，少于10条可比成熟内容只生成假设。
@@ -57,7 +57,7 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 7. **创建运行包**：需要交付可发布内容时，先执行：
 
 ```powershell
-python scripts/create_content_run.py --root <输出根目录> --date YYYY-MM-DD --slug <topic-slug> --product "“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996" --platforms xiaohongshu douyin weixin-channels
+python scripts/create_content_run.py --root <输出根目录> --date YYYY-MM-DD --slug <topic-slug> --product "马克瑞普之选 · 单桶苏格兰威士忌" --platforms xiaohongshu douyin weixin-channels
 ```
 
 8. **生成平台版本**：按平台原生结构生成，不机械复制。抖音或视频号视频采用一个共享 `video-master/`；默认路径为“建立共享风格锚点→Agent直接生成原生9:16静态成图与Seedance参考图→为external-seedance镜头创建逐镜任务包→用户回传原片→验收incoming→把accepted素材与静态成图交给ChatCut可编辑剪辑”。
@@ -73,6 +73,7 @@ python scripts/create_content_run.py --root <输出根目录> --date YYYY-MM-DD 
 python scripts/validate_content_run.py <运行目录>
 python scripts/validate_release_preflight.py <运行目录>
 python scripts/validate_content_diversity.py <运行目录>/creative-record.json --ledger <运营内容库>/creative-ledger.csv
+python scripts/validate_video_motion_plan.py <运行目录>/video-master/motion-plan.json
 ```
 
 16. **生成交付索引**：在 `deliverables.md` 只列出通过发布预检和多样性校验的素材、最终平台文案和共享视频母版。
@@ -196,6 +197,8 @@ Seedance镜头中的产品本体不得新增参考图外的文字、数字、标
 使用 `references/review-rubric.md` 评分。低于80分不标记为可发布。以下情况直接退回：
 
 - 产品事实错误或来源冲突；
+- 完整正面酒瓶未按`酒瓶-正面.png`与`尺寸示意图.png`校核，或出现瓶肩至瓶底比例失真、酒标脱离玻璃、礼盒结构错误；
+- 静帧镜头中途停止运动、尾部重置，镜头间未声明转场，或片尾延长导致画面或音乐重置；
 - AIGC 冒充真实酒厂、人物、历史现场、品鉴或顾客反馈；
 - 金融收益、绝对品质或虚假紧迫承诺；
 - 未成年人导向、豪饮或酒驾暗示；
@@ -238,6 +241,7 @@ Seedance镜头中的产品本体不得新增参考图外的文字、数字、标
 
 - 运行与命名规范：`references/content-run-system.md`
 - 发布预检脚本：`scripts/validate_release_preflight.py`
+- 视频运动与音频计划校验：`scripts/validate_video_motion_plan.py`
 - 内容多样性校验：`scripts/validate_content_diversity.py`
 - 效果分析与提示简报：`scripts/analyze_performance.py`
 - 高奢编辑艺术方向：`references/editorial-art-direction.md`

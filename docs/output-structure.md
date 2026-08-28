@@ -64,7 +64,7 @@ outputs/YYYY/MM/YYYY-MM-DD-topic-slug/
 
 混合视频必须先完成 `style-anchor.md` 和各镜头 `style-frames/`，再进入 Seedance 或静态镜头制作。构图帧统一使用原生 9:16；任何风格锚点都不得覆盖产品几何母版、结构母版和尺寸校准图。
 
-`release-manifest.json` 管理候选、退回与发布资产及事实、证据、产品几何、文字洁净度等质量门槛；`creative-record.json` 管理本条内容的主题、事实、首图机位、版式、钩子、CTA、受众问题、情绪主轴、首屏母题和单变量实验；`performance-brief.json` 记录成熟数据、主题冷却和平台提示。前者回答“能否发布”，创意记录回答“是否与近期内容重复”，效果简报回答“下一条该测试什么”。
+`release-manifest.json` 管理候选、退回与发布资产及事实、证据、产品几何、文字洁净度、音频和运动等质量门槛；`motion-plan.json` 记录静帧镜头的唯一素材、全程运动、转场、三帧检查与片尾音频连续性；`creative-record.json` 管理本条内容的主题、事实、首图机位、版式、钩子、CTA、受众问题、情绪主轴、首屏母题和单变量实验；`performance-brief.json` 记录成熟数据、主题冷却和平台提示。前者回答“能否发布”，运动计划回答“画面与声音是否连续”，创意记录回答“是否与近期内容重复”，效果简报回答“下一条该测试什么”。
 
 ## Manifest 字段
 
@@ -73,7 +73,7 @@ run_id: 2026-08-01-label-reading
 version: 3.1.0
 date: 2026-08-01
 topic_slug: label-reading
-product: "马克瑞普之选 单桶苏格兰威士忌"
+product: "马克瑞普之选 · 单桶苏格兰威士忌"
 status: draft
 platforms:
   - xiaohongshu

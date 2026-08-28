@@ -4,7 +4,7 @@
 
 - Codex 或兼容 Agent Skills 的运行环境；
 - Python 3.10 或更高版本；
-- Skill 已内置马克瑞普之选 单桶苏格兰威士忌的产品知识与23张 AIGC 高清参考图（含尺寸校准图）；
+- Skill 已内置马克瑞普之选 · 单桶苏格兰威士忌的产品知识与23张 AIGC 高清参考图（含尺寸校准图）；
 - 发布前仍需使用真实酒标、实物照片及运营方文件核对消费者事实。
 
 ## 安装
@@ -23,7 +23,7 @@
 
 ```text
 使用 $wxyj-content-system，
-为马克瑞普之选 单桶苏格兰威士忌生成一套小红书内容。
+为马克瑞普之选 · 单桶苏格兰威士忌生成一套小红书内容。
 输出采用标题、备选标题记录、正文、Tag、首评、逐页提示词、参考图和QA。
 ```
 
@@ -36,7 +36,7 @@
 4. 生成平台 `publish.md`；
 5. 生成小红书 `prompts.md`；视频使用共享 `video-master/storyboard.md`，并由 Agent 直接产出静态镜头成图与 Seedance 首帧；
 6. 保存媒体并使用规范文件名；
-7. 完成 `qa.md` 与 `product-visual-qa.md`；电商资产同时完成 `ecommerce-asset-qa.md`；
+7. 完成 `qa.md` 与 `product-visual-qa.md`；视频同时填写并检查 `motion-plan.json`，电商资产同时完成 `ecommerce-asset-qa.md`；
 8. 在 `release-manifest.json` 登记候选、退回和发布资产；
 9. 运行目录校验器与发布预检；
 10. 在 `deliverables.md` 汇总最终交付，发布后更新状态和数据台账。
@@ -57,7 +57,7 @@ python scripts\create_content_run.py `
   --root outputs `
   --date 2026-08-01 `
   --slug label-reading `
-  --product "马克瑞普之选 单桶苏格兰威士忌" `
+  --product "马克瑞普之选 · 单桶苏格兰威士忌" `
   --platforms xiaohongshu douyin weixin-channels
 ```
 
@@ -70,7 +70,7 @@ python scripts\create_content_run.py `
   --root outputs `
   --date 2026-08-01 `
   --slug label-reading `
-  --product "马克瑞普之选 单桶苏格兰威士忌" `
+  --product "马克瑞普之选 · 单桶苏格兰威士忌" `
   --platforms xiaohongshu
 ```
 
@@ -86,6 +86,9 @@ python scripts\validate_content_run.py `
 
 python scripts\validate_release_preflight.py `
   outputs\2026\08\2026-08-01-label-reading
+
+python scripts\validate_video_motion_plan.py `
+  outputs\2026\08\2026-08-01-label-reading\video-master\motion-plan.json
 
 python scripts\validate_content_diversity.py `
   outputs\2026\08\2026-08-01-label-reading\creative-record.json `

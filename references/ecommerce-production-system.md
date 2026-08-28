@@ -9,7 +9,7 @@
 创建电商资产时使用：
 
 ```powershell
-python scripts/create_content_run.py --root outputs --date YYYY-MM-DD --slug <topic-slug> --product "“马克瑞普之选”单一单桶系列威士忌 - 亚伯乐1996" --platforms ecommerce
+python scripts/create_content_run.py --root outputs --date YYYY-MM-DD --slug <topic-slug> --product "马克瑞普之选 · 单桶苏格兰威士忌" --platforms ecommerce
 ```
 
 电商运行包必须填写 `ecommerce/publish.md`、`ecommerce/prompts.md` 与 `ecommerce-asset-qa.md`。
