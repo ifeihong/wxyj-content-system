@@ -10,7 +10,7 @@ from pathlib import Path
 ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels", "ecommerce")
 VIDEO_PLATFORMS = {"douyin", "weixin-channels"}
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-VERSION = "3.2.0"
+VERSION = "3.3.0"
 DEFAULT_PRODUCT = "马克瑞普之选 · 单桶苏格兰威士忌"
 
 
