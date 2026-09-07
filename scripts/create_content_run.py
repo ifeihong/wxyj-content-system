@@ -10,7 +10,7 @@ from pathlib import Path
 ALLOWED_PLATFORMS = ("xiaohongshu", "douyin", "weixin-channels", "ecommerce")
 VIDEO_PLATFORMS = {"douyin", "weixin-channels"}
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-VERSION = "3.3.0"
+VERSION = (Path(__file__).resolve().parents[1] / "VERSION").read_text(encoding="utf-8").strip()
 DEFAULT_PRODUCT = "马克瑞普之选 · 单桶苏格兰威士忌"
 
 
@@ -220,7 +220,7 @@ def create_run(
     )
     _write_once(run_dir / "manifest.yaml", manifest)
     release_manifest = {
-        "schema_version": 4,
+        "schema_version": 5,
         "run_id": run_id,
         "release_status": "working",
         "native_targets": {
@@ -270,6 +270,12 @@ def create_run(
         },
         "assets": [],
     }
+    if needs_video_master(normalized_platforms):
+        release_manifest["video_acceptance"] = {
+            "status": "pending", "render_path": "", "render_sha256": "",
+            "editable_project": {"path": "", "sha256": ""},
+            "av_review": {"path": "", "sha256": ""},
+        }
     _write_once(
         run_dir / "release-manifest.json",
         json.dumps(release_manifest, ensure_ascii=False, indent=2) + "\n",
@@ -356,7 +362,7 @@ def create_run(
 | 文件 | 产品形态 | 几何参考 | 分段比例 | 瓶盖与瓶肩 | 酒标与液面 | 边缘融合 | 礼盒结构与内页 | 文字洁净度 | 结论 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
-完整正面酒瓶必须以`酒瓶-正面.png`和`尺寸示意图.png`共同复核：瓶顶至酒肩约8cm、酒肩至瓶底约22cm的高度关系；瓶颈酒液顶端、金色环、瓶肩、酒标和瓶底位置不得被压缩、拉长或重排。透视镜头只核对可见结构，不把正面投影比例硬套到45度视图。开盒画面必须保持175°–180°，保留左侧白色内皮、故事文字、中央合页和右侧瓶槽。文字洁净度必须核对逐字准确、无波纹/摩尔纹/颗粒干扰、无字体变形，且360px手机预览可读。脚本只核对登记状态，不能替代人工视觉判断。
+完整正面酒瓶以`酒瓶-正面.png`和`尺寸示意图.png`共同复核；尺寸图是估算辅助，先定义肩部标记，再对比同透视归一化比例，不强制套用8cm/22cm。记录成图路径/版本、同尺度对照图、金边—液面间隙、盖—肩/肩—底比例、各段宽度、标签与瓶底关系；不可见区域标为无法核准。全开礼盒保持175°–180°，半开依对应母版且不超过180°；保留左侧故事、签名、内衬和铰链空间关系。独立检查灰白边、文字波纹及360px可读性。脚本仅检查登记，不能替代实际看图。
 """,
     )
     if "ecommerce" in normalized_platforms:
@@ -421,6 +427,10 @@ def create_run(
 
     if needs_video_master(normalized_platforms):
         video_master = run_dir / "video-master"
+        _write_once(
+            video_master / "production-plan.json",
+            (Path(__file__).resolve().parents[1] / "assets/templates/video-production-plan.json").read_text(encoding="utf-8"),
+        )
         for directory in (
             "external-generation",
             "incoming",

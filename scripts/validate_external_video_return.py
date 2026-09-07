@@ -91,16 +91,22 @@ def validate_probe(
     else:
         divisor = math.gcd(width, height)
         reduced = (width // divisor, height // divisor)
-        if reduced != (9, 16):
+        ratio = contract.get("aspect_ratio")
+        expected = {"9:16": (9, 16), "3:4": (3, 4)}.get(ratio) if isinstance(ratio, str) else None
+        if expected is None:
+            errors.append("任务缺少有效aspect_ratio")
+        elif reduced != expected:
             errors.append(
-                f"画幅必须为精确9:16，当前为{width}×{height}"
+                f"画幅必须为精确{ratio}，当前为{width}×{height}"
             )
 
     resolution = contract.get("final_resolution")
-    if resolution == "1080p" and height < 1920:
-        errors.append("成片分辨率不足：1080p任务高度至少1920")
-    elif resolution == "720p" and height < 1280:
-        errors.append("成片分辨率不足：720p任务高度至少1280")
+    if resolution == "1080p" and min(width, height) < 1080:
+        errors.append("成片分辨率不足：1080p任务短边至少1080")
+    elif resolution == "720p" and min(width, height) < 720:
+        errors.append("成片分辨率不足：720p任务短边至少720")
+    elif resolution not in ("1080p", "720p"):
+        errors.append("任务final_resolution不受支持")
 
     try:
         actual_duration = float(metadata["duration"])
@@ -111,7 +117,9 @@ def validate_probe(
     except (KeyError, TypeError, ValueError):
         errors.append("无法核对视频时长")
     else:
-        if abs(actual_duration - expected_duration) > tolerance:
+        if not all(math.isfinite(n) for n in (actual_duration, expected_duration, tolerance)) or min(actual_duration, expected_duration) <= 0 or tolerance < 0:
+            errors.append("视频时长或容差无效")
+        elif abs(actual_duration - expected_duration) > tolerance:
             errors.append(
                 "视频时长不符："
                 f"目标{expected_duration:g}秒±{tolerance:g}秒，"

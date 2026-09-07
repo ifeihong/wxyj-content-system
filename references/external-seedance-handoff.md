@@ -43,9 +43,9 @@ video-master/
 
 `incoming` 永久保留用户下载的原始回传文件。只有经过机器检查与人工 QA 的版本才复制到 `accepted`，不能移动或覆盖原件。
 
-混合视频的 `video-master/` 还必须包含 `style-anchor.md` 与 `style-frames/`：前者登记共享色彩、光线、材质、镜头高度和字幕安全区，后者保存每个镜头通过产品QA的原生9:16 `shot-keyframe`。Seedance与静态镜头必须从对应keyframe出发。
+混合视频的 `video-master/` 必须包含 `style-anchor.md`：登记共享色彩、光线、材质、镜头高度和文字安全区。每镜通过产品QA的shot-keyframe统一存入agent-images对应目录，style-frames仅可作为预览索引，不能维护第二份互相冲突的母版。默认原生9:16；当次指定3:4则计划、成图、任务卡和回传均为3:4。
 
-每个外部镜头还必须优先使用 Agent 已生成的原生9:16参考图，保存于 `video-master/agent-images/seedance-references/`。在镜头规格中把该文件写为 `source: agent`；任务脚本会自动复制给用户，用户无需再制作或寻找首帧。
+每个外部镜头还必须优先使用 Agent 已生成的当次画幅参考图，保存于 `video-master/agent-images/seedance-references/`。在镜头规格中把该文件写为 `source: agent`；任务脚本会自动复制给用户，用户无需再制作或寻找首帧。
 
 ## shot.yaml 必填字段
 
@@ -79,21 +79,21 @@ output_name: 20260801-wxyj-label-reading-s01-date-reveal-seedance-v01.mp4
 
 ## 参考图角色与顺序
 
-- `first_frame`：原生9:16、已完成产品与文字 QA 的运动首帧。
-- `last_frame`：原生9:16、与首帧身份和光线一致的尾帧。
+- `first_frame`：符合当次原生画幅、已完成产品与文字 QA 的运动首帧。
+- `last_frame`：与首帧画幅、身份和光线一致的尾帧。
 - `geometry_master`：锁定瓶型比例和关键结构。
 - `structure_master`：锁定木盒、包装开合与相对位置。
 - `label_detail`：只用于酒标信息和材质细节。
 - `dimension_check`：只用于复核瓶身各高度投影宽度、纵向比例和曲线，不把尺寸标注带入画面。
 - `style_anchor`：只提供色彩、光线、材质和设计语法。
-- `shot_keyframe`：当前镜头已通过产品QA的原生9:16构图帧；优先作为Seedance首帧或主参考，不得替代几何母版。
+- `shot_keyframe`：当前镜头已通过产品QA的当次画幅构图帧；优先作为Seedance首帧或主参考，不得替代几何母版。
 
 参考图来源：省略 `source` 时默认为 `product`（内置产品参考图）；`source: agent` 表示当前运行包内由Agent直接生成的 `video-master/agent-images/seedance-references/` 图片。
 - `motion_reference`：只提供运动方式，不覆盖产品身份。
 
-任务包必须复制当前镜头实际需要的参考文件，并在 `references.order` 中给出上传顺序。不得只写22张图库的原始路径，不能要求用户自行找图。半开礼盒镜头应优先复制新增的 `木质礼盒-45度°半打开内置酒瓶.png` 或 `木质礼盒-半打开内置酒瓶.png`，正面175°–180°开盒镜头使用 `木质礼盒-内置酒瓶.png`。
+任务包必须复制当前镜头实际需要的参考文件，并在 `references.order` 中给出文件顺序。不得只写23张图库的原始路径，不能要求用户自行找图。半开礼盒镜头应优先复制新增的 `木质礼盒-45度°半打开内置酒瓶.png` 或 `木质礼盒-半打开内置酒瓶.png`，正面175°–180°开盒镜头使用 `木质礼盒-内置酒瓶.png`。
 
-对于混合视频，上传顺序固定为：`shot_keyframe` → `geometry_master` / `structure_master` → `dimension_check` / `label_detail`。风格锚点帧锁定当前镜头构图与光线；原始产品参考仍负责瓶型、酒标和礼盒结构。
+对于混合视频，文件按`shot_keyframe` → `geometry_master` / `structure_master` → `dimension_check` / `label_detail`组织。首帧槽只放一张shot_keyframe/first_frame；其他参考只在平台支持辅助参考槽时上传，否则用于Agent校准，不冒充多张首帧。风格锚点不覆盖原始产品几何。
 
 ## 提示词交付
 
@@ -121,13 +121,15 @@ output_name: 20260801-wxyj-label-reading-s01-date-reveal-seedance-v01.mp4
 
 每个 `任务卡.md` 必须把三种提示词全文展开，并同时保留三个独立提示词文件。任务卡、独立文件与最终回复必须内容一致；一体化提示词等于正向提示词加清晰标记的负面约束。
 
+负向TXT只放负向约束，不重复正向参数和参考职责。重建任务包前检查`.generated-state.json`：未人工修改的文件可备份更新；人工改动与新规格冲突则停止合并，不静默保留旧提示词后声称更新完成。详见`docs/reliability-v3.4.1.md`。
+
 ## 用户执行步骤
 
 1. 只打开当前镜头目录；
 2. 阅读 `任务卡.md`；
 3. 按顺序上传 `references/` 中的文件；
 4. 选择任务卡指定的通用输入模式；
-5. 设置9:16、时长和分辨率；
+5. 设置任务卡指定画幅（默认9:16）、时长和分辨率；
 6. 复制单字段或双字段提示词；
 7. 首次只生成一个候选；
 8. 下载原始 MP4/MOV，不录屏、不二次压缩；
@@ -145,6 +147,7 @@ YYYYMMDD-wxyj-topic-slug-sNN-role-seedance-vNN.mp4
 
 | 状态 | 含义 |
 | --- | --- |
+| `pending-qa` | 文件初建，Agent尚未完成图像和全片验收，不可批量生成 |
 | `ready` | 任务包完整，可生成 |
 | `generated` | 用户已生成但尚未回传 |
 | `returned` | 原件已进入 `incoming` |
@@ -160,7 +163,7 @@ YYYYMMDD-wxyj-topic-slug-sNN-role-seedance-vNN.mp4
 - 第二次只修改对应参考图或提示词；
 - 同一问题连续失败两次后停止抽卡；
 - 不因镜头失败自动调用 ChatCut 付费生成；
-- S01 通过后再批量启动后续镜头。
+- 第一个实际外部生成镜头通过后再批量启动后续镜头，不一定是S01。
 
 ## 验收与修订卡
 
@@ -172,7 +175,7 @@ python scripts/validate_external_video_return.py `
   --shot-dir <video-master/external-generation/SNN-shot-slug>
 ```
 
-机器检查精确9:16、分辨率、时长、命名、可解码性与持续上下黑边。人工继续检查瓶型、酒标、液面、白灰轮廓、礼盒结构、运动自然度、文字和品牌气质。
+机器检查契约指定画幅、分辨率、时长、命名、流元数据与持续上下黑边。1080p/720p在本交接契约中按短边最低1080/720像素解释。元数据读取不证明全片可解码；人工继续播放全片并检查瓶型、酒标、液面、白灰轮廓、礼盒结构、运动自然度、文字和品牌气质。
 
 退回时只写一张修订卡：
 

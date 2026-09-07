@@ -423,7 +423,7 @@ def main() -> int:
         for error in errors:
             print(f"- {error}")
         return 1
-    print("内容运行包验证通过")
+    print("内容运行包结构验证通过；交付就绪请另查ready，不能替代视觉/视听验收")
     return 0
 
 

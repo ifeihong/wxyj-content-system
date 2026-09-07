@@ -1,19 +1,12 @@
 from __future__ import annotations
 
-import struct
 import sys
 from pathlib import Path
 
-
-PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
-
-
-def read_png_dimensions(path: Path) -> tuple[int, int]:
-    with path.open("rb") as stream:
-        header = stream.read(24)
-    if len(header) < 24 or header[:8] != PNG_SIGNATURE or header[12:16] != b"IHDR":
-        raise ValueError("仅支持带有效IHDR头的PNG文件")
-    return struct.unpack(">II", header[16:24])
+try:
+    from scripts.media_contract import read_png_dimensions
+except ModuleNotFoundError:
+    from media_contract import read_png_dimensions
 
 
 def validate_xhs_image(path: Path) -> list[str]:

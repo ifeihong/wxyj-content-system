@@ -2,7 +2,11 @@
 
 ## 当前版本
 
-`3.1.0`
+`3.4.1`
+
+以根目录 `VERSION` 为版本来源；运行包脚本直接读取，metadata与README随发布同步。v3.4新增schema 5生产包检查；旧schema仍按旧规则检查，但不能将旧草稿通过解释为素材已齐全。
+
+v3.4.1修复此前错误放行的输入；历史文件不自动修改。schema 5视频再次发布前需补齐实际成片验收与requested_motion，详见[迁移说明](reliability-v3.4.1.md)。
 
 ## Semantic Versioning
 

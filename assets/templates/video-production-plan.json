@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "stage": "draft",
+  "canvas": {"width": 1080, "height": 1920, "aspect_ratio": "9:16"},
+  "story": "",
+  "style": "",
+  "shots": [],
+  "documents": [],
+  "sequence_review": {"status": "pending", "path": "", "sha256": "", "revision": 1}
+}

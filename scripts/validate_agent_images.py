@@ -1,8 +1,13 @@
 from __future__ import annotations
 
-import struct
+import json
 import sys
 from pathlib import Path
+
+try:
+    from scripts.media_contract import read_png_dimensions
+except ModuleNotFoundError:
+    from media_contract import read_png_dimensions
 
 
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
@@ -13,16 +18,29 @@ REQUIRED_DIRECTORIES = (
 )
 
 
-def read_png_dimensions(path: Path) -> tuple[int, int]:
-    with path.open("rb") as stream:
-        header = stream.read(24)
-    if len(header) < 24 or header[:8] != PNG_SIGNATURE or header[12:16] != b"IHDR":
-        raise ValueError("仅支持带有效IHDR头的PNG文件")
-    return struct.unpack(">II", header[16:24])
-
-
 def validate_agent_images(run_dir: Path) -> list[str]:
     errors: list[str] = []
+    plan_path = run_dir / "video-master/production-plan.json"
+    if plan_path.exists():
+        try:
+            plan = json.loads(plan_path.read_text(encoding="utf-8-sig"))
+            canvas = plan["canvas"]
+            target = (canvas["width"], canvas["height"])
+            ratio = {"9:16": (9, 16), "3:4": (3, 4)}[canvas["aspect_ratio"]]
+            if not all(type(n) is int and n > 0 for n in target) or target[0] * ratio[1] != target[1] * ratio[0]:
+                return ["production-plan画幅无效"]
+            shots = plan["shots"]
+            if not isinstance(shots, list) or not shots:
+                return ["production-plan尚未登记实际镜头图片"]
+            for shot in shots:
+                image = (run_dir / shot["image"]["path"]).resolve()
+                if not image.is_relative_to(run_dir.resolve()):
+                    errors.append("production-plan图片路径越界")
+                elif read_png_dimensions(image) != target:
+                    errors.append(f"{image.name}: 图片尺寸与production-plan画幅不一致")
+            return errors
+        except (OSError, ValueError, TypeError, KeyError) as exc:
+            return [f"production-plan图片登记无效: {exc}"]
     for relative in REQUIRED_DIRECTORIES:
         directory = run_dir / relative
         if not directory.is_dir():
@@ -58,7 +76,7 @@ def main(argv: list[str] | None = None) -> int:
         for error in errors:
             print(f"FAIL {error}", file=sys.stderr)
         return 1
-    print("PASS Agent静态镜头与Seedance首帧均为精确1080×1920原生9:16")
+    print("PASS Agent图片尺寸符合登记画幅；不证明原生生成来源或产品视觉一致性")
     return 0
 
 

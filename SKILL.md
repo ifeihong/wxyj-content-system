@@ -18,6 +18,14 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 
 从真实产品事实出发，一题三做，先增长后转化。每次可发布内容都同时交付视觉/分镜与匹配的标题、正文、标签、评论和 CTA，并保存为可追踪的内容运行包。
 
+### 当次约定与历史反馈
+
+当前用户明确要求优先于当次旧方案，已确认的当次方案优先于模板默认值。历史的“无字幕/花字/逐字字幕”“保持原尺寸/100%→106%”“3:4/9:16”“降低/提高音乐”不能同时固化为全局要求。开工先在 `edit-plan.md` 记录本次画幅、字幕模式、运动起止倍率、旁白稿版本、音乐策略和片尾时长；未指定项采用相关参考文档默认值。产品事实、几何、不得新增标志等一致性约束不随风格改变。
+
+使用仓库或已安装副本前核对实际目录与 `VERSION`；版本不一致先报告，不把仓库升级等同于所有已安装副本或 GitHub 已同步。全历史返工分析见 `docs/rework-audit-v3.4.0.md`。
+
+更新已有任务包或判定发布完成时，读取 `docs/reliability-v3.4.1.md`：图片需完整解码，任务包变更先检查人工修改冲突并备份，生成模式与当次画幅贯穿计划/任务卡/回传。publish不能只有working资产或unset运动，必须登记实际成片与对应工程、视听审阅文件。检查登记不等于实际看图听音；安装更新使用受管理同步清单，不清理用户文件。
+
 ## 任务路由
 
 | 任务 | 必读文件 | 交付 |
@@ -43,13 +51,13 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 | 真实产品、文件与活动证据 | `references/evidence-asset-system.md` | 证据资产选择、公开边界与内部登记 |
 | 新品接入 | `assets/templates/product-card.md` | 新产品事实卡 |
 
-只读取与当前任务相关的 references。需要三平台完整成品时，读取全部 references。
+只读取与当前任务相关的 references。三平台完整成品读取平台规则及实际采用媒介的生产规则，不加载无关模式。视频策划、生成包和返工还必须读取 `references/video-continuity-and-delivery.md`，检查整片连续性与交付版本。
 
 ## 标准工作流
 
 1. **识别任务**：确定是定位、选题、创作、排期、审核、互动、复盘或新品接入。
 2. **锁定事实**：默认商品从 `references/product-facts.md` 取值；先分清“马克瑞普之选＝品牌、亚伯乐＝酒厂、30年＝酒龄”，商品名称固定为“马克瑞普之选 · 单桶苏格兰威士忌”，规格为700毫升/瓶，蒸馏日期为1996年2月14日，桶型为PX Sherry Hogshead，桶号261311，酒精度51%；缺失字段标为“待核验”，不推断。
-3. **验证并盘点素材**：先执行 `python scripts/validate_product_assets.py`；通过后从内置23张产品参考图选择当前页面或镜头需要的2–3张，并按 `geometry_master > structure_master > label_detail > style_anchor` 登记职责。凡出现完整酒瓶、瓶盒同框或产品局部重绘，再加入 `尺寸示意图.png` 作 `dimension_check`，复核瓶盖、瓶颈、瓶肩、瓶腹、瓶底的各高度投影宽度与曲线；同时标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
+3. **验证并盘点素材**：先执行 `python scripts/validate_product_assets.py`；通过后按画面职责选择参考，不设2–3张的硬上限，不为凑数量加入无关图。登记 `geometry_master > structure_master > label_detail > style_anchor`。完整酒瓶、瓶盒同框或产品局部重绘加入 `尺寸示意图.png` 作 `dimension_check`，但它是估算辅助图，不得用含糊分段数值覆盖正面母版；同时标记真实产品、真实文件、真实活动、主观品鉴、AIGC 或待补。
 4. **查询近期创意**：读取最近30天 `creative-ledger.csv`，先排除完整创意指纹、14天视觉配方和连续版式路线重复。
 5. **读取成熟效果**：读取近期 `performance-log.csv`；用 `python scripts/analyze_performance.py <台账> --date YYYY-MM-DD --theme-family <主题族> --output <运行目录>/performance-brief.json` 生成简报。发布不足48小时的数据只记录为观察，少于10条可比成熟内容只生成假设。
 6. **建立母题与实验**：只回答一个具体用户问题，直接关联当前产品；在 `creative-record.json` 登记主题族、事实、首图机位、钩子结构、CTA、`typography_mode`、受众问题、情绪主轴、首屏视觉母题、产品形态、互动方式和唯一实验变量。主题冷却提示出现时默认换主主题；如继续使用，填写 `campaign_override` 并改变用户问题、首屏形式和主事实中的至少两项。
@@ -140,13 +148,13 @@ python scripts/validate_video_motion_plan.py <运行目录>/video-master/motion-
 
 ## 视频镜头多样性硬门槛
 
-五镜头共享母版必须先建立 `shot-diversity-matrix`，为每个镜头登记唯一的 `view_id`、`product_form`、`visual_role` 和 `primary_motion`。默认五镜至少覆盖四种视觉职责：结构开场、背面故事/证据、开盒宽景、产品细节、收藏收束；同一 `product_form` 不得占三镜或以上，相邻镜头不得使用相同 `view_id`。如果五镜实际只剩两类画面（例如“礼盒背面全景”与“半开礼盒+酒瓶”），必须退回重新策划，不得用不同转场或不同字幕掩盖构图重复。
+先写故事因果链，再分配镜头与制作方式，不固定每条都是“结构—背面—开盒—酒标—收藏”。建立 `shot-diversity-matrix`，登记 `view_id`、`product_form`、`visual_role`、`primary_motion`，并对全片任意两镜比较“主体部位×机位×景别×新增信息”。同一产品身份必须连续，但同主体、同角度、同景别、同信息的重复画面须重策划，不能仅换字幕、裁切或文件名冒充新镜头。
 
-背面礼盒与半开礼盒必须分别承担不同叙事职责：背面全景只允许一个镜头；其他背面镜头必须改为边缘/铰链/铭牌细节或不同透视。半开礼盒+酒瓶宽景最多两个镜头，且必须在机位、主体比例或视觉任务上显著不同；至少一个镜头应改为酒标/瓶体细节或包装结构细节。镜头规划完成后，先做缩略图接触表和人工重复检查，再生成任务卡。
+全片最多一个背面全景；半开礼盒+酒瓶宽景不能反复充当开场、证据、收束。差异也不能破坏逻辑：逐镜记录进入/离开时的开合、瓶位、朝向、光向，以及与前镜的视觉或语义承接。旁白讲开盒不能配不相关背面标签；修掉重复后必须重新核对旁白和全部相邻接缝。生成包使用 `production-plan.json` 登记实际图像、任务卡和文档的版本与哈希，执行 `python scripts/validate_video_production_plan.py <运行目录> --stage ready` 后才称可交接；详见连续性规则。
 
 小红书成品规格固定写入：`3:4 portrait, width:height = 3:4, target 1086x1448 or 1536x2048, full bleed; do not output 2:3, 4:5 or square.` 每次图像生成调用结束后，先对首轮原生成文件执行 `python scripts/validate_xhs_image.py <image.png>`，比例不合格直接重生成；不允许通过裁切、拉伸、扩图或程序改尺寸作为首轮比例修复。
 
-视频全屏画面、运动首帧、尾帧和封面必须原生9:16，成片目标 `1080×1920`。3:4图片不能作为全屏主画面，禁止黑边、上下补边和拉伸。
+视频默认原生9:16、`1080×1920`；用户明确要求3:4时全片及资产按3:4生产。禁止将3:4图片补边或拉伸伪装为9:16；跨画幅复用必须先验证文字与产品安全区，不能自行裁掉内容。
 
 电商主缩略图必须原生1:1；商品主体优先于装饰文案，缩略图与详情长图不得机械复用小红书图文页。电商资产读取 `references/ecommerce-production-system.md` 与 `references/product-visual-consistency-system.md`。
 
@@ -156,7 +164,7 @@ V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一
 
 ## 视频风格锚点帧锁定
 
-每条同时包含 Seedance 与静态镜头的视频，必须先建立 `video-master/style-anchor.md`，再由Agent直接生成每个镜头一张原生9:16 `shot-keyframe`。Seedance参考图保存至 `video-master/agent-images/seedance-references/`，静态成图保存至 `video-master/agent-images/static-shots/`；它们统一色彩、光线、背景材质、镜头高度、景深、颗粒和产品安全区，均不得覆盖 `geometry_master`、`structure_master` 或 `尺寸示意图.png` 的产品几何。每张实际交接图必须通过 `python scripts/validate_agent_images.py <run-dir>`，确保为精确 `1080×1920`；不得用3:4补边、拉伸或裁切成成片。用户只使用已生成的Seedance参考图与任务卡在第三方平台出视频；ChatCut只接收静态成图、验收通过的Seedance原片和剪辑方案。详见 `references/agent-image-seedance-chatcut-system.md`。
+每条混合视频先建立 `video-master/style-anchor.md`，再由Agent直接生成每个镜头一张符合当次画幅的 `shot-keyframe`（默认9:16/1080×1920）。Seedance参考图保存至 `video-master/agent-images/seedance-references/`，静态成图保存至 `video-master/agent-images/static-shots/`。统一场景色彩、光线、材质和安全区，允许叙事需要的机位/景别变化，风格不得覆盖产品几何。执行 `python scripts/validate_agent_images.py <run-dir>` 验证实际登记图片尺寸，再做产品和全片人工审阅。用户使用已生成首帧及任务卡出外部视频；ChatCut接收通过验收的素材和剪辑方案。详见 `references/agent-image-seedance-chatcut-system.md`。
 
 让多模态生图模型直接生成产品、场景与设计文字的最终图片。不下载字体文件，不用程序贴字，不把无字底图当成静态图文成品。
 
@@ -164,7 +172,7 @@ V4静帧视频必须把一张图片作为一个镜头的唯一素材，在同一
 
 锁定瓶型、瓶盖、瓶肩、酒标位置和事实字段；软化最外缘像素。白底参考进入深色场景时，重新生成玻璃折射、环境色和接触阴影，禁止白边、灰边、抠图光晕和均匀描边。
 
-所有参考图必须声明角色；冲突时固定采用 `geometry_master > structure_master > label_detail > style_anchor`。完整正面酒瓶只认 `酒瓶-正面.png` 的整瓶几何比例，并用 `尺寸示意图.png` 作为不改变身份的 `dimension_check`：复核瓶盖、瓶颈、肩部过渡、最大肩宽、标签区、底部过渡和瓶底宽度。**`酒瓶-酒标.png` 的职责仅限酒标区域（文字、边界、贴附位置与曲面关系）；不得把它单独当作整瓶瓶型、瓶颈长度、酒肩到瓶底比例或整体透视的唯一依据。** 生成含酒标的整瓶画面时，必须同时调用 `酒瓶-正面.png` + `尺寸示意图.png`，再用 `酒瓶-酒标.png` 只校准酒标。连续3次仍无法保持瓶型时，减少完整酒瓶露出，不接受明显变形的产品。
+所有参考图必须声明角色；冲突时固定采用 `geometry_master > structure_master > label_detail > style_anchor`。完整正面酒瓶只认 `酒瓶-正面.png` 的整瓶几何比例，并用 `尺寸示意图.png` 作估算辅助 `dimension_check`；斜视结合对应角度母版。**`酒瓶-酒标.png` 的职责仅限酒标区域（文字、边界、贴附位置与曲面关系）；不得单独决定整瓶、瓶颈长度、肩底比例或透视。** 含酒标整瓶必须同时调用正面+尺寸+对应角度参考，再用酒标图校准局部。两次相同失败后先重新定位输入、构图和可见偏差，不无限重试；如需更换用户指定的整瓶构图先说明并确认，不接受明显变形的产品。
 
 内置23张图片均为 AIGC 高清产品参考图，只负责身份、角度、结构、材质与构图一致性。它们不是真实拍摄，也不能替代酒标实拍、报关、溯源或授权文件。酒瓶正面图是整瓶几何母版，酒标近景图是酒标局部母版；二者职责不可互换。`尺寸示意图.png` 是按实物照片比例推算的几何校准图，只用于复核酒瓶各维度尺寸、投影宽度与轮廓曲线，不用作酒标或包装事实证据。其他图中可见的细小瓶号、铭牌或物流文字不得直接作为发布事实。新增两张半开礼盒图只用于45度或半开状态的结构与透视参考，不能替代正面175°–180°开盒母版。
 

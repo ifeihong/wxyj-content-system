@@ -3,7 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import io
-import struct
+from PIL import Image
 import shutil
 import unittest
 import uuid
@@ -76,11 +76,7 @@ class ContentRunContractTests(unittest.TestCase):
     def test_xhs_image_validator_accepts_exact_three_four_png(self):
         with workspace_tempdir() as tmp:
             path = Path(tmp) / "page.png"
-            path.write_bytes(
-                b"\x89PNG\r\n\x1a\n"
-                + b"\x00\x00\x00\rIHDR"
-                + struct.pack(">II", 1086, 1448)
-            )
+            Image.new("RGB", (1086, 1448)).save(path)
 
             self.assertEqual(
                 self.xhs_image_validator.validate_xhs_image(path),
@@ -90,16 +86,19 @@ class ContentRunContractTests(unittest.TestCase):
     def test_xhs_image_validator_rejects_two_three_png(self):
         with workspace_tempdir() as tmp:
             path = Path(tmp) / "page.png"
-            path.write_bytes(
-                b"\x89PNG\r\n\x1a\n"
-                + b"\x00\x00\x00\rIHDR"
-                + struct.pack(">II", 1024, 1536)
-            )
+            Image.new("RGB", (1024, 1536)).save(path)
 
             errors = self.xhs_image_validator.validate_xhs_image(path)
 
             self.assertTrue(errors)
             self.assertIn("必须为精确3:4", errors[0])
+
+    def test_xhs_image_validator_rejects_truncated_png(self):
+        with workspace_tempdir() as tmp:
+            path = Path(tmp) / "page.png"
+            Image.new("RGB", (1086, 1448)).save(path)
+            path.write_bytes(path.read_bytes()[:24])
+            self.assertTrue(self.xhs_image_validator.validate_xhs_image(path))
 
     def test_create_run_builds_platform_native_structure(self):
         with workspace_tempdir() as tmp:

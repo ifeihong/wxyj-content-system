@@ -3,9 +3,14 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
-import struct
+import hashlib
 import subprocess
 from pathlib import Path
+
+try:
+    from scripts.media_contract import read_png_dimensions
+except ModuleNotFoundError:
+    from media_contract import read_png_dimensions
 
 
 ALLOWED_RELEASE_STATUSES = {"working", "publish", "archived"}
@@ -39,12 +44,9 @@ def _load_json(path: Path, label: str, errors: list[str]) -> dict | None:
 
 def _png_dimensions(path: Path) -> tuple[int, int] | None:
     try:
-        data = path.read_bytes()[:24]
-    except OSError:
+        return read_png_dimensions(path)
+    except (OSError, ValueError):
         return None
-    if data.startswith(b"\x89PNG\r\n\x1a\n") and len(data) >= 24:
-        return struct.unpack(">II", data[16:24])
-    return None
 
 
 def _video_dimensions(path: Path) -> tuple[int, int] | None:
@@ -86,10 +88,14 @@ def _dimensions(path: Path) -> tuple[int, int] | None:
     return None
 
 
-def _validate_motion_plan(run_dir: Path, errors: list[str]) -> None:
+def _validate_motion_plan(run_dir: Path, errors: list[str], publish=False) -> None:
     motion_path = run_dir / "video-master" / "motion-plan.json"
     motion = _load_json(motion_path, "视频运动计划", errors)
-    if motion is None or motion.get("mode") != "V4":
+    if motion is None:
+        return
+    if motion.get("mode") == "unset":
+        if publish:
+            errors.append("发布视频的motion-plan不能为unset")
         return
     if motion.get("version") == 2:
         script = Path(__file__).with_name("validate_video_motion_plan.py")
@@ -101,7 +107,15 @@ def _validate_motion_plan(run_dir: Path, errors: list[str]) -> None:
             return
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        errors.extend(module.validate(motion))
+        production_path = run_dir / "video-master/production-plan.json"
+        expected = None
+        if publish and production_path.exists():
+            production = _load_json(production_path, "生产计划", errors)
+            if production and isinstance(production.get("shots"), list):
+                expected = production["shots"]
+        errors.extend(module.validate(motion, expected_shots=expected))
+        return
+    if motion.get("mode") != "V4":
         return
     shots = motion.get("shots")
     if not isinstance(shots, list) or not shots:
@@ -141,8 +155,11 @@ def validate_release(run_dir: Path) -> list[str]:
     if release.get("run_id") != run_dir.name:
         errors.append("发布清单run_id与运行目录不一致")
     release_status = release.get("release_status")
-    if release_status not in ALLOWED_RELEASE_STATUSES:
+    if not isinstance(release_status, str) or release_status not in ALLOWED_RELEASE_STATUSES:
         errors.append("发布清单release_status不合法")
+    schema = release.get("schema_version")
+    if type(schema) is not int or schema not in range(1, 6):
+        errors.append("发布清单schema_version必须是支持的整数版本1–5")
 
     gates = release.get("quality_gates")
     if not isinstance(gates, dict):
@@ -163,14 +180,14 @@ def validate_release(run_dir: Path) -> list[str]:
     if not isinstance(assets, list):
         errors.append("发布清单assets必须是数组")
         assets = []
-    if release_status == "publish" and not assets:
+    if release_status == "publish" and not any(isinstance(a, dict) and a.get("status") == "publish" for a in assets):
         errors.append("发布状态为publish时必须登记至少一个发布资产")
 
     for index, asset in enumerate(assets, start=1):
         if not isinstance(asset, dict):
             errors.append(f"发布资产{index}必须是对象")
             continue
-        if asset.get("status") not in ALLOWED_ASSET_STATUSES:
+        if not isinstance(asset.get("status"), str) or asset.get("status") not in ALLOWED_ASSET_STATUSES:
             errors.append(f"发布资产{index}状态不合法")
             continue
         if asset.get("status") != "publish":
@@ -179,7 +196,11 @@ def validate_release(run_dir: Path) -> list[str]:
         if not isinstance(relative, str) or not relative.strip():
             errors.append(f"发布资产{index}缺少path")
             continue
-        path = (run_dir / relative).resolve()
+        try:
+            path = (run_dir / relative).resolve()
+        except (OSError, ValueError):
+            errors.append(f"发布资产{index}路径无效")
+            continue
         if not path.is_relative_to(run_dir.resolve()):
             errors.append(f"发布资产{index}路径越界")
             continue
@@ -188,7 +209,15 @@ def validate_release(run_dir: Path) -> list[str]:
             continue
         expected_ratio = asset.get("native_ratio")
         dimensions = _dimensions(path)
-        if expected_ratio in {"1:1", "3:4", "9:16"}:
+        if expected_ratio not in ("1:1", "3:4", "9:16", "long"):
+            errors.append(f"发布资产缺少有效native_ratio: {relative}")
+        elif expected_ratio == "long":
+            expected_size = asset.get("pixel_size")
+            if (not isinstance(expected_size, list) or len(expected_size) != 2
+                    or not all(type(n) is int and n > 0 for n in expected_size)
+                    or dimensions != tuple(expected_size) or expected_size[1] <= expected_size[0]):
+                errors.append(f"长图必须登记与实际一致的竖向pixel_size: {relative}")
+        else:
             if dimensions is None:
                 errors.append(f"无法读取发布资产画幅: {relative}")
             else:
@@ -202,7 +231,23 @@ def validate_release(run_dir: Path) -> list[str]:
                     errors.append(f"发布资产不是原生{expected_ratio}: {relative}")
 
     if (run_dir / "video-master").exists():
-        _validate_motion_plan(run_dir, errors)
+        _validate_motion_plan(run_dir, errors, publish=release_status == "publish")
+        if release_status == "publish":
+            videos = [a for a in assets if isinstance(a, dict) and a.get("status") == "publish"
+                      and isinstance(a.get("path"), str) and Path(a["path"]).suffix.lower() in (".mp4", ".mov")]
+            if not videos:
+                errors.append("视频发布必须登记实际导出的成片发布资产")
+            if type(schema) is int and schema >= 5:
+                _validate_video_acceptance(run_dir, release.get("video_acceptance"), videos, errors)
+        if isinstance(release.get("schema_version"), int) and release["schema_version"] >= 5:
+            script = Path(__file__).with_name("validate_video_production_plan.py")
+            spec = importlib.util.spec_from_file_location("video_production_plan", script)
+            if spec is None or spec.loader is None:
+                errors.append("无法加载生产包校验")
+            else:
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                errors.extend(module.validate_package(run_dir, "ready" if release_status == "publish" else None))
     if not (run_dir / "product-visual-qa.md").exists():
         errors.append("缺少产品视觉人工验收卡")
     if not (run_dir / "deliverables.md").exists():
@@ -214,6 +259,35 @@ def validate_release(run_dir: Path) -> list[str]:
     return errors
 
 
+def _validate_video_acceptance(root, record, videos, errors):
+    """Bind human AV review and editable-project evidence to this exact render."""
+    if not isinstance(record, dict) or record.get("status") != "pass":
+        errors.append("缺少成片video_acceptance验收登记")
+        return
+    render = record.get("render_path")
+    if render not in [asset["path"] for asset in videos]:
+        errors.append("成片验收render_path不在发布视频中")
+        return
+    path = (root / render).resolve()
+    if not path.is_relative_to(root.resolve()) or not path.is_file():
+        errors.append("成片验收文件不存在或越界")
+        return
+    if record.get("render_sha256") != hashlib.sha256(path.read_bytes()).hexdigest():
+        errors.append("成片验收render_sha256已过期或缺失")
+    for key in ("editable_project", "av_review"):
+        item = record.get(key)
+        if not isinstance(item, dict) or not isinstance(item.get("path"), str) or not item["path"].strip():
+            errors.append(f"成片验收缺少{key}文件证据")
+            continue
+        try:
+            evidence = (root / item["path"]).resolve()
+            if (not evidence.is_relative_to(root.resolve()) or not evidence.is_file()
+                    or item.get("sha256") != hashlib.sha256(evidence.read_bytes()).hexdigest()):
+                errors.append(f"成片验收{key}文件或hash无效")
+        except (OSError, ValueError):
+            errors.append(f"成片验收{key}路径无效")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate release readiness for a wxyj content run.")
     parser.add_argument("run_dir", type=Path)
@@ -223,7 +297,11 @@ def main() -> int:
         for error in errors:
             print(f"- {error}")
         return 1
-    print("发布预检通过")
+    release = json.loads((args.run_dir / "release-manifest.json").read_text(encoding="utf-8"))
+    if release.get("release_status") == "publish":
+        print("发布登记预检通过；实际图像与视听验收仍以人工证据为准")
+    else:
+        print("草稿结构检查通过；未证明素材齐全、产品准确或成片可发布")
     return 0
 
 

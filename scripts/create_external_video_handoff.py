@@ -1,11 +1,20 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
+import io
 import json
 import re
 import shutil
+import uuid
+import warnings
 from pathlib import Path
+
+try:
+    from scripts.media_contract import INPUT_MODES, VIDEO_RATIOS, nonempty_text
+except ModuleNotFoundError:
+    from media_contract import INPUT_MODES, VIDEO_RATIOS, nonempty_text
 
 
 SHOT_ID_PATTERN = re.compile(r"^S\d{2}$")
@@ -14,12 +23,7 @@ RUN_PATTERN = re.compile(
     r"^(?P<date>\d{4}-\d{2}-\d{2})-"
     r"(?P<slug>[a-z0-9]+(?:-[a-z0-9]+)*)$"
 )
-ALLOWED_INPUT_MODES = {
-    "text-to-video",
-    "first-frame",
-    "first-last-frame",
-    "reference-guided",
-}
+ALLOWED_INPUT_MODES = INPUT_MODES
 ALLOWED_REFERENCE_ROLES = {
     "first_frame",
     "last_frame",
@@ -48,21 +52,6 @@ REQUIRED_FIELDS = (
 )
 
 
-def _write_once(path: Path, content: str) -> None:
-    if path.exists():
-        return
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content, encoding="utf-8")
-
-
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
 def _safe_reference_path(source_root: Path, filename: object) -> Path:
     if not isinstance(filename, str) or not filename:
         raise ValueError("reference file must be a non-empty string")
@@ -79,6 +68,8 @@ def _safe_reference_path(source_root: Path, filename: object) -> Path:
 
 
 def validate_shot_spec(spec: dict[str, object]) -> list[str]:
+    if not isinstance(spec, dict):
+        return ["shot spec must be an object"]
     errors: list[str] = []
     for field in REQUIRED_FIELDS:
         if field not in spec:
@@ -93,25 +84,29 @@ def validate_shot_spec(spec: dict[str, object]) -> list[str]:
         errors.append("slug must use lowercase kebab-case")
 
     input_mode = spec.get("input_mode")
-    if input_mode not in ALLOWED_INPUT_MODES:
+    if not isinstance(input_mode, str) or input_mode not in ALLOWED_INPUT_MODES:
         errors.append(
             "input_mode must be one of: "
             + ", ".join(sorted(ALLOWED_INPUT_MODES))
         )
 
-    if spec.get("aspect_ratio", "9:16") != "9:16":
-        errors.append("aspect_ratio must be 9:16")
+    ratio = spec.get("aspect_ratio", "9:16")
+    if not isinstance(ratio, str) or ratio not in VIDEO_RATIOS:
+        errors.append("aspect_ratio must be 9:16 or 3:4")
+    for field in ("title", "prompt_positive", "prompt_negative"):
+        if not nonempty_text(spec.get(field)):
+            errors.append(f"{field} must be non-empty text")
 
     duration = spec.get("duration_seconds")
-    if not isinstance(duration, (int, float)) or not 4 <= duration <= 15:
+    if type(duration) not in (int, float) or not 4 <= duration <= 15:
         errors.append("duration_seconds must be between 4 and 15")
 
     candidate_target = spec.get("candidate_target")
-    if not isinstance(candidate_target, int) or not 1 <= candidate_target <= 2:
+    if type(candidate_target) is not int or not 1 <= candidate_target <= 2:
         errors.append("candidate_target must be 1 or 2")
 
     max_attempts = spec.get("max_attempts")
-    if not isinstance(max_attempts, int) or not 1 <= max_attempts <= 2:
+    if type(max_attempts) is not int or not 1 <= max_attempts <= 2:
         errors.append("max_attempts must be 1 or 2")
 
     references = spec.get("references")
@@ -126,12 +121,12 @@ def validate_shot_spec(spec: dict[str, object]) -> list[str]:
             errors.append(f"references[{index}] must be an object")
             continue
         order = reference.get("order")
-        if not isinstance(order, int):
+        if type(order) is not int:
             errors.append(f"references.order missing at item {index}")
         else:
             orders.append(order)
         role = reference.get("role")
-        if role not in ALLOWED_REFERENCE_ROLES:
+        if not isinstance(role, str) or role not in ALLOWED_REFERENCE_ROLES:
             errors.append(f"references.role invalid at item {index}")
         else:
             roles.append(role)
@@ -143,7 +138,7 @@ def validate_shot_spec(spec: dict[str, object]) -> list[str]:
         ):
             errors.append(f"references.file invalid at item {index}")
         reference_source = reference.get("source", "product")
-        if reference_source not in ALLOWED_REFERENCE_SOURCES:
+        if not isinstance(reference_source, str) or reference_source not in ALLOWED_REFERENCE_SOURCES:
             errors.append(f"references.source invalid at item {index}")
 
     if orders and (
@@ -169,6 +164,20 @@ def validate_shot_spec(spec: dict[str, object]) -> list[str]:
         errors.append(
             "reference-guided mode cannot mix first_frame or last_frame roles"
         )
+    if input_mode == "reference-guided" and not roles:
+        errors.append("reference-guided mode requires references")
+    if input_mode == "text-to-video" and references:
+        errors.append("text-to-video cannot contain image input references")
+    if input_mode in ("first-frame", "first-last-frame"):
+        if sum(role in ("first_frame", "shot_keyframe") for role in roles) != 1:
+            errors.append("frame mode requires exactly one first-frame slot")
+    if input_mode == "first-last-frame" and roles.count("last_frame") != 1:
+        errors.append("first-last-frame requires exactly one last-frame slot")
+    if input_mode == "first-frame" and "last_frame" in roles:
+        errors.append("first-frame cannot contain last_frame")
+    for field in ("draft_resolution", "final_resolution"):
+        if spec.get(field) not in ("720p", "1080p"):
+            errors.append(f"unsupported {field}")
 
     return errors
 
@@ -179,7 +188,7 @@ def _shot_yaml(spec: dict[str, object], output_name: str) -> str:
         f"slug: {spec['slug']}",
         f"title: {json.dumps(spec['title'], ensure_ascii=False)}",
         f"input_mode: {spec['input_mode']}",
-        "aspect_ratio: 9:16",
+        f"aspect_ratio: {spec.get('aspect_ratio', '9:16')}",
         f"duration_seconds: {spec['duration_seconds']}",
         "duration_tolerance_seconds: 0.75",
         f"draft_resolution: {spec['draft_resolution']}",
@@ -205,12 +214,15 @@ def _shot_yaml(spec: dict[str, object], output_name: str) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _reference_details(references: list[dict[str, object]]) -> str:
-    reference_lines = "\n".join(
+def _reference_manifest(references):
+    return "\n".join(
         f"{reference['order']}. `references/{reference['file']}`"
         f" — {reference['role']}，来源：{reference.get('source', 'product')}"
         for reference in sorted(references, key=lambda item: item["order"])
     )
+
+
+def _reference_details(references: list[dict[str, object]]) -> str:
     reference_detail_lines = []
     for reference in sorted(references, key=lambda item: item["order"]):
         description = str(reference.get("description", "")).strip()
@@ -238,11 +250,11 @@ def _prompt_bundle(
     reference_manifest: str,
 ) -> tuple[str, str]:
     positive = str(spec["prompt_positive"]).strip()
-    negative = str(spec["prompt_negative"]).strip()
+    negative = _negative_prompt(spec)
     prompt_context = (
         "【本镜头生成参数】\n"
         f"- 生成模式：{spec['input_mode']}\n"
-        "- 画幅：原生9:16\n"
+        f"- 画幅：原生{spec.get('aspect_ratio', '9:16')}\n"
         f"- 素材视频时长：{spec['duration_seconds']}秒\n"
         f"- 本镜头调用的参考图（按顺序上传）：\n{reference_manifest}\n\n"
         "【参考图职责与锁定细节】\n"
@@ -255,14 +267,15 @@ def _prompt_bundle(
     )
 
 
+def _negative_prompt(spec):
+    return (str(spec["prompt_negative"]).strip()
+            + "\n不得在产品上新增文字、数字、标志、浮雕或标签；保留参考图既有标识，不擦除、不改写、不重复。")
+
+
 def _task_card(spec: dict[str, object], output_name: str) -> str:
     references = spec["references"]
     assert isinstance(references, list)
-    reference_lines = "\n".join(
-        f"{reference['order']}. `references/{reference['file']}`"
-        f" — {reference['role']}，来源：{reference.get('source', 'product')}"
-        for reference in sorted(references, key=lambda item: item["order"])
-    )
+    reference_lines = _reference_manifest(references)
     reference_details = _reference_details(references)
     reference_manifest = reference_lines
     shot_path = (
@@ -272,13 +285,13 @@ def _task_card(spec: dict[str, object], output_name: str) -> str:
     positive_with_context, all_in_one = _prompt_bundle(
         spec, reference_details, reference_manifest
     )
-    negative = str(spec["prompt_negative"]).strip()
+    negative = _negative_prompt(spec)
     return f"""# {spec['shot_id']} {spec['title']}
 
 ## 生成设置
 
 - 模式：`{spec['input_mode']}`
-- 画幅：`9:16`
+- 画幅：`{spec.get('aspect_ratio', '9:16')}`
 - 时长：`{spec['duration_seconds']}秒`
 - 草稿分辨率：`{spec['draft_resolution']}`
 - 成片分辨率：`{spec['final_resolution']}`
@@ -287,7 +300,7 @@ def _task_card(spec: dict[str, object], output_name: str) -> str:
 
 ## 上传参考图
 
-严格按以下顺序上传，只使用本目录内的文件：
+按以下编号核对文件。first-frame仅将first_frame或shot_keyframe上传首帧槽；first-last-frame分别使用首帧与尾帧槽。其余产品/尺寸参考仅在平台支持辅助参考时上传，否则用于校准，不混入首帧槽：
 
 {reference_lines}
 
@@ -329,17 +342,17 @@ def _task_card(spec: dict[str, object], output_name: str) -> str:
 """
 
 
-def _start_readme() -> str:
-    return """# 外部 Seedance 生成开始前必读
+def _start_readme(first_shot: str) -> str:
+    return f"""# 外部 Seedance 生成开始前必读
 
 本任务包平台无关，适用于支持相应 Seedance 输入模式的第三方平台。
 
-1. 从 S01 开始，先生成并回传一个镜头。
-2. 先阅读 `video-master/style-anchor.md`，确认共享色彩、光线、材质、镜头和安全区；每个镜头先生成一张原生9:16 `shot-keyframe`，并放入 `video-master/style-frames/`。
+1. 从 {first_shot} 开始，先生成并回传一个镜头。
+2. Agent负责先生成并验收参考起始图；用户不需要另行生图。状态pending-qa表示仍待验收，不应消耗视频积分。
 3. 打开镜头目录的 `任务卡.md`，按顺序上传 `references/` 中的文件；`shot_keyframe` 优先作为首帧或主参考，几何/结构/尺寸参考负责产品一致性。
-4. 复制对应提示词，保持任务卡规定的9:16、时长和模式；Seedance只生成产品、环境、光线和自然镜头运动，不生成字幕、日期、数字、时间线或后期装饰。
+4. 复制对应提示词，保持任务卡规定的画幅、时长和模式；Seedance只生成产品、环境、光线和自然镜头运动。保留原产品文字，不添加新文字、标志或图形。
 5. 下载原始视频并按任务卡命名，放入 `video-master/incoming/`。
-6. 未通过 S01 的产品与风格验收前不要批量生成后续镜头，避免浪费积分。
+6. 未通过 {first_shot} 的产品与风格验收前不要批量生成后续镜头，避免浪费积分。
 """
 
 
@@ -351,24 +364,28 @@ def create_handoff(
     run_dir = Path(run_dir)
     source_root = Path(source_root)
     handoff = run_dir / "video-master" / "external-generation"
-    handoff.mkdir(parents=True, exist_ok=True)
-    for directory in ("incoming", "accepted"):
-        (run_dir / "video-master" / directory).mkdir(
-            parents=True,
-            exist_ok=True,
-        )
-
+    if not isinstance(shot_specs, list) or not shot_specs:
+        raise ValueError("shot specs must be a non-empty list")
     all_errors: list[str] = []
     seen_shots: set[str] = set()
     for spec in shot_specs:
         errors = validate_shot_spec(spec)
-        shot_id = str(spec.get("shot_id", "<missing>"))
+        shot_id = str(spec.get("shot_id", "<missing>")) if isinstance(spec, dict) else "<invalid>"
         if shot_id in seen_shots:
             errors.append("shot_id must be unique")
         seen_shots.add(shot_id)
         all_errors.extend(f"{shot_id}: {error}" for error in errors)
     if all_errors:
         raise ValueError("invalid shot specs:\n" + "\n".join(all_errors))
+
+    ratios = {spec.get("aspect_ratio", "9:16") for spec in shot_specs}
+    if len(ratios) != 1:
+        raise ValueError("all shots must share one canvas")
+    plan_path = run_dir / "video-master/production-plan.json"
+    if plan_path.exists():
+        plan = json.loads(plan_path.read_text(encoding="utf-8-sig"))
+        if plan.get("canvas", {}).get("aspect_ratio") not in ratios:
+            raise ValueError("handoff canvas conflicts with production-plan")
 
     run_match = RUN_PATTERN.fullmatch(run_dir.name)
     date_token = (
@@ -378,68 +395,50 @@ def create_handoff(
     )
     topic_slug = run_match.group("slug") if run_match else "topic"
 
-    _write_once(handoff / "00-开始前必读.md", _start_readme())
-    _write_once(
-        handoff / "00-镜头状态表.csv",
-        "shot_id,title,status,attempts,returned_file,qa_result\n"
-        + "".join(
-            f"{spec['shot_id']},{spec['title']},ready,0,,\n"
-            for spec in shot_specs
-        ),
-    )
-    _write_once(
-        handoff / "handoff-manifest.yaml",
+    # Prepare every byte and resolve all sources before changing any existing file.
+    payload = {}
+    def document(relative, content):
+        payload[relative] = content.encode("utf-8")
+    document("00-开始前必读.md", _start_readme(str(shot_specs[0]["shot_id"])))
+    status_csv = io.StringIO(newline="")
+    writer = csv.writer(status_csv, lineterminator="\n")
+    writer.writerow(("shot_id", "title", "status", "attempts", "returned_file", "qa_result"))
+    writer.writerows((spec["shot_id"], spec["title"], "pending-qa", 0, "", "") for spec in shot_specs)
+    document("00-镜头状态表.csv", status_csv.getvalue())
+    document("handoff-manifest.yaml",
         "version: 1\n"
         "workflow: external-seedance\n"
         "platform_specific: false\n"
-        "aspect_ratio: 9:16\n"
+        f"aspect_ratio: {next(iter(ratios))}\n"
         f"shot_count: {len(shot_specs)}\n",
     )
 
     for spec in shot_specs:
         shot_id = str(spec["shot_id"])
         slug = str(spec["slug"])
-        shot_dir = handoff / f"{shot_id}-{slug}"
-        references_dir = shot_dir / "references"
-        references_dir.mkdir(parents=True, exist_ok=True)
+        relative_dir = f"{shot_id}-{slug}"
         output_name = (
             f"{date_token}-wxyj-{topic_slug}-{shot_id.lower()}-"
             f"{slug}-seedance-v01.mp4"
         )
 
-        _write_once(shot_dir / "任务卡.md", _task_card(spec, output_name))
-        _write_once(shot_dir / "shot.yaml", _shot_yaml(spec, output_name))
+        document(f"{relative_dir}/任务卡.md", _task_card(spec, output_name))
+        document(f"{relative_dir}/shot.yaml", _shot_yaml(spec, output_name))
         references = spec["references"]
         assert isinstance(references, list)
         reference_details = _reference_details(references)
-        reference_manifest = "\n".join(
-            f"- `references/{reference['file']}`（{reference['role']}）"
-            for reference in sorted(
-                references, key=lambda item: item["order"]
-            )
-        )
+        reference_manifest = _reference_manifest(references)
         positive_with_context, all_in_one = _prompt_bundle(
             spec, reference_details, reference_manifest
         )
-        negative = str(spec["prompt_negative"]).strip() + "\n"
-        _write_once(
-            shot_dir / "prompt-positive.txt",
+        negative = _negative_prompt(spec) + "\n"
+        document(
+            f"{relative_dir}/prompt-positive.txt",
             positive_with_context + "\n",
         )
-        _write_once(
-            shot_dir / "prompt-negative.txt",
-            "【本镜头生成参数】\n"
-            f"- 生成模式：{spec['input_mode']}\n"
-            "- 画幅：原生9:16\n"
-            f"- 素材视频时长：{spec['duration_seconds']}秒\n"
-            f"- 本镜头调用的参考图（按顺序上传）：\n{reference_manifest}\n\n"
-            "【参考图职责与锁定细节】\n"
-            + reference_details
-            + "\n\n【负面约束】\n"
-            + negative,
-        )
-        _write_once(
-            shot_dir / "prompt-all-in-one.txt",
+        document(f"{relative_dir}/prompt-negative.txt", negative)
+        document(
+            f"{relative_dir}/prompt-all-in-one.txt",
             all_in_one + "\n",
         )
 
@@ -451,15 +450,52 @@ def create_handoff(
                 else source_root
             )
             source = _safe_reference_path(reference_root, reference["file"])
-            destination = references_dir / source.name
-            if destination.exists():
-                if _sha256(source) != _sha256(destination):
-                    raise ValueError(
-                        f"reference conflict: {destination}"
-                    )
-                continue
-            shutil.copy2(source, destination)
+            relative = f"{relative_dir}/references/{source.name}"
+            content = source.read_bytes()
+            if relative in payload and payload[relative] != content:
+                raise ValueError(f"reference conflict: {relative}")
+            payload[relative] = content
 
+    state_path = handoff / ".generated-state.json"
+    state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
+    digest = hashlib.sha256(json.dumps(shot_specs, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
+    previous = state.get("files", {})
+    if previous and set(previous) != set(payload):
+        raise ValueError("shot/reference set changed: create a new versioned run; existing package preserved")
+    same_spec = state.get("spec_sha256") == digest
+    changes = {}
+    for relative, content in payload.items():
+        target = (handoff / relative).resolve()
+        if not target.is_relative_to(handoff.resolve()):
+            raise ValueError(f"path outside handoff: {relative}")
+        if target.exists():
+            old = target.read_bytes()
+            if old == content:
+                continue
+            if "/references/" in relative:
+                raise ValueError(f"reference conflict: {target}; use a versioned reference/run")
+            current_hash = hashlib.sha256(old).hexdigest()
+            if current_hash != previous.get(relative):
+                if same_spec:
+                    warnings.warn(f"manual file preserved, not revalidated: {relative}")
+                    continue
+                raise ValueError(f"manual file conflict: {target}; merge edits or use a new run")
+        changes[relative] = content
+    backup = handoff / ".history" / uuid.uuid4().hex
+    for relative, content in changes.items():
+        target = handoff / relative
+        if target.exists():
+            saved = backup / relative
+            saved.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(target, saved)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
+    handoff.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(json.dumps({"spec_sha256": digest, "files": {
+        key: hashlib.sha256(value).hexdigest() for key, value in payload.items()
+    }}, ensure_ascii=False, indent=2), encoding="utf-8")
+    for directory in ("incoming", "accepted"):
+        (run_dir / "video-master" / directory).mkdir(parents=True, exist_ok=True)
     return handoff
 
 

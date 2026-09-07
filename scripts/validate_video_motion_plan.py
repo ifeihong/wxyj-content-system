@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import json
+import math
+import re
 import sys
 from pathlib import Path
 
@@ -11,34 +13,70 @@ from pathlib import Path
 VALID_TRANSITIONS = {"cross_dissolve", "material_match", "cut", "none"}
 
 
-def validate(plan: dict[str, object]) -> list[str]:
+def positive_number(value):
+    return type(value) in (int, float) and math.isfinite(value) and value > 0
+
+
+def validate(plan: dict[str, object], expected_shots: list | None = None) -> list[str]:
     """Return contract errors without attempting to judge the rendered picture."""
     errors: list[str] = []
-    if plan.get("version") != 2:
+    if not isinstance(plan, dict):
+        return ["motion-plan must be an object"]
+    if type(plan.get("version")) is not int or plan.get("version") != 2:
         errors.append("motion-plan version must be 2")
 
     mode = plan.get("mode")
-    if mode not in {"unset", "V1", "V2", "V3", "V4"}:
-        errors.append("mode must be unset, V1, V2, V3, or V4")
+    if not isinstance(mode, str) or mode not in {"V1", "V2", "V3", "V4"}:
+        errors.append("mode cannot be unset; select V1, V2, V3, or V4")
 
     shots = plan.get("shots")
     if not isinstance(shots, list):
         return errors + ["shots must be a list"]
+    if not shots:
+        errors.append("shots must not be empty")
+    if expected_shots is not None:
+        actual_ids = [s.get("shot_id") for s in shots if isinstance(s, dict)]
+        expected_ids = [s.get("id") for s in expected_shots if isinstance(s, dict)]
+        if actual_ids != expected_ids:
+            errors.append("motion shot order differs from production-plan")
+    seen = set()
 
     for index, shot in enumerate(shots, start=1):
         if not isinstance(shot, dict):
             errors.append(f"shot {index} must be an object")
             continue
         shot_id = shot.get("shot_id", f"shot {index}")
+        if not isinstance(shot_id, str) or not re.fullmatch(r"S\d{2}", shot_id):
+            errors.append(f"shot {index}: invalid shot_id")
+            continue
+        if shot_id in seen:
+            errors.append(f"{shot_id}: duplicate shot_id")
+        seen.add(shot_id)
+        if shot.get("source_type") not in ("static", "seedance", "video"):
+            errors.append(f"{shot_id}: invalid source_type")
+        if expected_shots is not None:
+            expected = next((s for s in expected_shots if isinstance(s, dict) and s.get("id") == shot_id), {})
+            if shot.get("source_type") != expected.get("source_type"):
+                errors.append(f"{shot_id}: source differs from production-plan")
+            if shot.get("source_type") == "static":
+                requested = expected.get("requested_motion")
+                if not isinstance(requested, dict) or not all(k in requested for k in ("motion_pattern", "start_scale", "end_scale")):
+                    errors.append(f"{shot_id}: missing requested_motion in production-plan")
+                else:
+                    for key in ("motion_pattern", "start_scale", "end_scale", "start_position", "end_position"):
+                        if key in requested and requested[key] != shot.get(key):
+                            errors.append(f"{shot_id}: {key} differs from requested_motion")
         transition = shot.get("transition_out", {})
         if not isinstance(transition, dict):
             errors.append(f"{shot_id}: transition_out must be an object")
         else:
             transition_type = transition.get("type")
-            if transition_type not in VALID_TRANSITIONS:
+            if not isinstance(transition_type, str) or transition_type not in VALID_TRANSITIONS:
                 errors.append(f"{shot_id}: unsupported transition type")
             frames = transition.get("duration_frames", 0)
-            if transition_type == "cross_dissolve" and not 8 <= frames <= 24:
+            if type(frames) is not int or frames < 0:
+                errors.append(f"{shot_id}: duration_frames must be a non-negative integer")
+            elif transition_type == "cross_dissolve" and not 8 <= frames <= 24:
                 errors.append(f"{shot_id}: cross_dissolve must be 8–24 frames")
 
         if shot.get("source_type") != "static":
@@ -51,15 +89,26 @@ def validate(plan: dict[str, object]) -> list[str]:
 
         start_scale = shot.get("start_scale")
         end_scale = shot.get("end_scale")
-        if not isinstance(start_scale, (int, float)) or not 0.98 <= start_scale <= 1.02:
-            errors.append(f"{shot_id}: start_scale must be near 100%")
-        if not isinstance(end_scale, (int, float)):
-            errors.append(f"{shot_id}: end_scale is required")
-        elif shot.get("motion_pattern") == "hold":
-            if not str(shot.get("motion_rationale", "")).strip():
+        pattern = shot.get("motion_pattern")
+        if not isinstance(pattern, str) or pattern not in {"push-in", "pull-out", "pan", "hold"}:
+            errors.append(f"{shot_id}: unsupported motion pattern")
+        if not positive_number(start_scale) or not positive_number(end_scale):
+            errors.append(f"{shot_id}: scales must be finite positive numbers")
+        elif pattern == "hold":
+            if not isinstance(shot.get("motion_rationale"), str) or not shot["motion_rationale"].strip():
                 errors.append(f"{shot_id}: hold requires motion_rationale")
-        elif isinstance(start_scale, (int, float)) and end_scale <= start_scale:
-            errors.append(f"{shot_id}: end_scale must exceed start_scale for continuous motion")
+            if start_scale != end_scale:
+                errors.append(f"{shot_id}: hold cannot change scale")
+        elif pattern == "push-in" and end_scale <= start_scale:
+            errors.append(f"{shot_id}: push-in must increase scale")
+        elif pattern == "pull-out" and end_scale >= start_scale:
+            errors.append(f"{shot_id}: pull-out must decrease scale")
+        elif pattern == "pan":
+            positions = [shot.get("start_position"), shot.get("end_position")]
+            valid = all(isinstance(p, list) and len(p) == 2 and all(
+                type(v) in (int, float) and math.isfinite(v) for v in p) for p in positions)
+            if not valid or positions[0] == positions[1] or start_scale != end_scale:
+                errors.append(f"{shot_id}: pan requires distinct positions and equal scales")
 
         checkpoints = shot.get("rendered_checkpoints")
         if not isinstance(checkpoints, dict) or not all(
@@ -75,7 +124,10 @@ def validate(plan: dict[str, object]) -> list[str]:
         checks.get(key) == "pass" for key in ("opening", "voice", "tail")
     ):
         errors.append("audio_mix: opening, voice, and tail listening checks must pass")
-    if audio.get("tail_extension_seconds", 0) and audio.get("tail_music_continuity") != "pass":
+    tail = audio.get("tail_extension_seconds", 0)
+    if type(tail) not in (int, float) or not math.isfinite(tail) or tail < 0:
+        errors.append("audio_mix: invalid tail_extension_seconds")
+    if tail and audio.get("tail_music_continuity") != "pass":
         errors.append("audio_mix: tail extension requires tail_music_continuity=pass")
     return errors
 

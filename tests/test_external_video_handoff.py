@@ -37,6 +37,44 @@ def load_module(name: str, filename: str):
 
 
 class ExternalVideoHandoffTests(unittest.TestCase):
+    def test_update_refreshes_untouched_files_and_backs_up(self):
+        with workspace_tempdir() as root:
+            source = root / "source"
+            source.mkdir()
+            (source / "S01-first-frame-9x16.png").write_bytes(b"reference")
+            run = root / "2026-09-07-update"
+            spec = self.valid_spec()
+            handoff = self.module.create_handoff(run, [spec], source)
+            spec.update(duration_seconds=8, prompt_positive="新的自然光线描述")
+            self.module.create_handoff(run, [spec], source)
+            shot = handoff / "S01-date-reveal"
+            self.assertIn("duration_seconds: 8", (shot / "shot.yaml").read_text(encoding="utf-8"))
+            self.assertIn("新的自然光线描述", (shot / "prompt-positive.txt").read_text(encoding="utf-8"))
+            self.assertTrue(list((handoff / ".history").glob("*/S01-date-reveal/shot.yaml")))
+            before = (shot / "shot.yaml").read_bytes()
+            (shot / "prompt-positive.txt").write_text("manual", encoding="utf-8")
+            spec["duration_seconds"] = 10
+            with self.assertRaisesRegex(ValueError, "manual|conflict"):
+                self.module.create_handoff(run, [spec], source)
+            self.assertEqual(before, (shot / "shot.yaml").read_bytes())
+
+    def test_three_four_contract_matches_task_txt_and_return(self):
+        spec = self.valid_spec()
+        spec["aspect_ratio"] = "3:4"
+        self.assertEqual(self.module.validate_shot_spec(spec), [])
+        self.assertEqual(self.return_validator.validate_probe(
+            {"codec_type": "video", "width": 1080, "height": 1440, "duration": 5}, spec), [])
+        with workspace_tempdir() as root:
+            source = root / "source"
+            source.mkdir()
+            (source / "S01-first-frame-9x16.png").write_bytes(b"reference")
+            handoff = self.module.create_handoff(root / "2026-09-07-test", [spec], source)
+            shot = handoff / "S01-date-reveal"
+            task = (shot / "任务卡.md").read_text(encoding="utf-8")
+            for name in ("positive", "negative", "all-in-one"):
+                content = (shot / f"prompt-{name}.txt").read_text(encoding="utf-8").strip()
+                self.assertIn(content, task)
+            self.assertIn("aspect_ratio: 3:4", (shot / "shot.yaml").read_text(encoding="utf-8"))
     @classmethod
     def setUpClass(cls):
         cls.module = load_module(
@@ -177,7 +215,6 @@ class ExternalVideoHandoffTests(unittest.TestCase):
             for filename in (
                 "prompt-all-in-one.txt",
                 "prompt-positive.txt",
-                "prompt-negative.txt",
             ):
                 prompt = (
                     handoff / "S01-date-reveal" / filename
@@ -188,6 +225,10 @@ class ExternalVideoHandoffTests(unittest.TestCase):
                 self.assertIn("本镜头调用的参考图", prompt)
                 self.assertIn("锁定日期酒标的横向布局", prompt)
                 self.assertIn("不得把白底轮廓带入暗背景", prompt)
+
+            negative = (handoff / "S01-date-reveal/prompt-negative.txt").read_text(encoding="utf-8")
+            self.assertNotIn("生成参数", negative)
+            self.assertIn(spec["prompt_negative"], negative)
 
     def test_shot_keyframe_reference_role_is_supported(self):
         spec = self.valid_spec()

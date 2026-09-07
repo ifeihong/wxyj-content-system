@@ -4,6 +4,7 @@
 
 - Codex 或兼容 Agent Skills 的运行环境；
 - Python 3.10 或更高版本；
+- 图片完整校验需要Pillow（`python -m pip install Pillow`）；视频元数据检查需要ffprobe，缺依赖不能按通过处理；
 - Skill 已内置马克瑞普之选 · 单桶苏格兰威士忌的产品知识与23张 AIGC 高清参考图（含尺寸校准图）；
 - 发布前仍需使用真实酒标、实物照片及运营方文件核对消费者事实。
 
@@ -18,6 +19,8 @@
 <Codex Skills>/wxyj-content-system/SKILL.md
 <Codex Skills>/wxyj-content-system/assets/products/mackillops-choice-aberlour-1996/reference-images/
 ```
+
+更新既有安装先预览：`python scripts/sync_installed_skill.py --source <仓库根> --target <安装根> --backup-root <备份目录>`；确认后加`--apply`，越过环境写入边界需申请授权。仅同步受管理文件，备份旧内容并移走退役README.en.md，不同步outputs或用户临时图。
 
 ## 第一次调用
 
@@ -45,7 +48,7 @@
 
 1. 为需要生成的镜头准备原生9:16首帧或参考图；
 2. 先在 `video-master/agent-images/` 生成并验收原生9:16静态镜头与 Seedance 首帧，再创建平台无关的外部 Seedance 逐镜任务包；
-3. 运行 `python scripts/validate_agent_images.py <run-dir>`，仅将精确 `1080×1920` 的 Agent 图交给 Seedance 或 ChatCut；
+3. 运行 `python scripts/validate_agent_images.py <run-dir>`，核对完整PNG与production-plan画幅（默认1080×1920，明确3:4则按当次计划），不要将尺寸检查冒充产品QA；
 4. 用户按任务卡生成并将原件回传至 `video-master/incoming/`；
 5. 验证回传；通过的副本进入 `accepted/`；
 6. 用通过镜头完成可编辑剪辑，再分别输出两个平台发布包。

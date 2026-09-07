@@ -64,6 +64,26 @@ class VideoMotionPlanTests(unittest.TestCase):
     def test_accepts_one_asset_continuous_push_and_audio_continuity(self):
         self.assertEqual(self.validator.validate(self.valid_plan()), [])
 
+    def test_rejects_empty_or_unset_plan(self):
+        for change in ({"shots": []}, {"mode": "unset"}):
+            plan = self.valid_plan()
+            plan.update(change)
+            self.assertTrue(self.validator.validate(plan))
+
+    def test_malformed_frames_and_missing_source_return_errors(self):
+        plan = self.valid_plan()
+        plan["shots"][0]["transition_out"]["duration_frames"] = None
+        plan["shots"][0].pop("source_type")
+        self.assertTrue(self.validator.validate(plan))
+
+    def test_requested_zoom_must_match_without_global_scale_cap(self):
+        plan = self.valid_plan()
+        expected = [{"id": "S01", "source_type": "static", "requested_motion": {
+            "motion_pattern": "push-in", "start_scale": 1.0, "end_scale": 1.06}}]
+        self.assertEqual(self.validator.validate(plan, expected_shots=expected), [])
+        plan["shots"][0]["end_scale"] = 10.0
+        self.assertTrue(self.validator.validate(plan, expected_shots=expected))
+
     def test_rejects_motion_that_stops_before_shot_end(self):
         plan = self.valid_plan()
         shot = plan["shots"][0]
@@ -89,3 +109,23 @@ class VideoMotionPlanTests(unittest.TestCase):
         errors = self.validator.validate(plan)
         self.assertTrue(any("tail extension" in error for error in errors))
 
+    def test_accepts_requested_pull_out(self):
+        plan = self.valid_plan()
+        plan["shots"][0].update(motion_pattern="pull-out", start_scale=1.06, end_scale=1.0)
+        self.assertEqual(self.validator.validate(plan), [])
+
+    def test_accepts_requested_pan_without_zoom(self):
+        plan = self.valid_plan()
+        plan["shots"][0].update(motion_pattern="pan", start_scale=1.0, end_scale=1.0,
+                                 start_position=[-0.03, 0], end_position=[0.03, 0])
+        self.assertEqual(self.validator.validate(plan), [])
+
+    def test_rejects_hold_with_scale_change(self):
+        plan = self.valid_plan()
+        plan["shots"][0].update(motion_pattern="hold", motion_rationale="用户要求静止")
+        self.assertTrue(self.validator.validate(plan))
+
+    def test_rejects_unknown_motion(self):
+        plan = self.valid_plan()
+        plan["shots"][0]["motion_pattern"] = "invented"
+        self.assertTrue(self.validator.validate(plan))

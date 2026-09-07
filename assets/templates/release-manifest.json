@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "run_id": "YYYY-MM-DD-topic-slug",
   "release_status": "working",
   "native_targets": {
@@ -19,5 +19,12 @@
     "deliverables": "pending",
     "diversity": "pending"
   },
-  "assets": []
+  "assets": [],
+  "video_acceptance": {
+    "status": "pending",
+    "render_path": "",
+    "render_sha256": "",
+    "editable_project": {"path": "", "sha256": ""},
+    "av_review": {"path": "", "sha256": ""}
+  }
 }
