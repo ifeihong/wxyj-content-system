@@ -73,6 +73,31 @@ class ContentRunContractTests(unittest.TestCase):
         )
         self.assertEqual(self.asset_validator.validate_assets(product_root), [])
 
+    def test_supplementary_product_assets_are_checked(self):
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            images = root / "reference-images"
+            images.mkdir()
+            image = images / "bag.png"
+            Image.new("RGB", (8, 8)).save(image)
+            manifest = {
+                "asset_count": 0,
+                "assets": [],
+                "supplementary_assets": [{
+                    "file": "bag.png",
+                    "sha256": self.asset_validator.sha256_file(image),
+                }],
+            }
+            path = root / "asset-manifest.json"
+            path.write_text(json.dumps(manifest), encoding="utf-8")
+            self.assertEqual(self.asset_validator.validate_assets(root), [])
+            image.write_bytes(b"changed")
+            self.assertTrue(any("哈希不一致" in error for error in
+                                self.asset_validator.validate_assets(root)))
+            image.unlink()
+            self.assertTrue(any("缺少参考图" in error for error in
+                                self.asset_validator.validate_assets(root)))
+
     def test_xhs_image_validator_accepts_exact_three_four_png(self):
         with workspace_tempdir() as tmp:
             path = Path(tmp) / "page.png"

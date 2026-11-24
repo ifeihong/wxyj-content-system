@@ -48,8 +48,12 @@ def validate_assets(product_root: Path) -> list[str]:
             f"asset_count={declared_count}，实际清单条目={len(entries)}"
         )
 
+    supplementary = manifest.get("supplementary_assets", [])
+    if not isinstance(supplementary, list):
+        return ["资产清单的 supplementary_assets 必须是数组"]
+
     expected: dict[str, str] = {}
-    for index, entry in enumerate(entries, start=1):
+    for index, entry in enumerate(entries + supplementary, start=1):
         if not isinstance(entry, dict):
             errors.append(f"第{index}条资产不是对象")
             continue
