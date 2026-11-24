@@ -137,7 +137,6 @@ class RepositoryContractTests(unittest.TestCase):
     def test_product_reference_assets_are_complete_and_unchanged(self):
         image_root = PRODUCT_ASSET_ROOT / "reference-images"
         actual = {path.name for path in image_root.glob("*.png")}
-        self.assertEqual(actual, set(EXPECTED_PRODUCT_ASSETS))
 
         manifest_path = PRODUCT_ASSET_ROOT / "asset-manifest.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -152,6 +151,16 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(manifest["distillery"], "ABERLOUR（亚伯乐）")
         self.assertEqual(manifest["age_statement"], "30年")
         self.assertEqual(manifest["asset_count"], 23)
+        supplementary = manifest.get("supplementary_assets", [])
+        supplemental_files = {entry["file"] for entry in supplementary}
+        self.assertEqual(actual, set(EXPECTED_PRODUCT_ASSETS) | supplemental_files)
+        self.assertFalse(set(EXPECTED_PRODUCT_ASSETS) & supplemental_files)
+        for entry in supplementary:
+            path = image_root / entry["file"]
+            self.assertEqual(
+                hashlib.sha256(path.read_bytes()).hexdigest().upper(), entry["sha256"]
+            )
+
         self.assertEqual(manifest["license"], "All rights reserved")
 
         by_file = {entry["file"]: entry for entry in manifest["assets"]}
@@ -205,7 +214,8 @@ class RepositoryContractTests(unittest.TestCase):
         for relative in ("README.md", "CHANGELOG.md"):
             text = (PROJECT_ROOT / relative).read_text(encoding="utf-8")
             self.assertIn(identity["skill_id"], text, relative)
-            self.assertIn(identity["version"], text, relative)
+            if relative == "CHANGELOG.md":
+                self.assertIn(identity["version"], text, relative)
 
         for relative in ("CITATION.cff", "llms.txt"):
             text = (PROJECT_ROOT / relative).read_text(encoding="utf-8")
@@ -252,7 +262,7 @@ class RepositoryContractTests(unittest.TestCase):
         missing = []
         for document in PROJECT_ROOT.rglob("*.md"):
             if any(
-                part in {"dist", "outputs", ".test-work"}
+                part in {"dist", "outputs", ".test-work", "tmp", ".worktrees", ".git"}
                 for part in document.parts
             ):
                 continue

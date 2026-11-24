@@ -52,3 +52,7 @@ Important boundaries:
 - Paid ChatCut generation requires explicit authorization in the current task.
 
 This file is a concise agent-reading aid.
+
+Gift-set and targeted poster revisions:
+- references/gift-set-and-targeted-revision.md
+- Red leather bag fits the woodcase snugly; woodcase fits the bottle snugly. Top-plane V closure, original product materials, and approved relative scales must be preserved. Illustrated dimensions do not prove measured internal fit.

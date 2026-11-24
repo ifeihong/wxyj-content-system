@@ -18,6 +18,8 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 
 涉及节日礼包、皮包或礼赠套装时，读取 `references/product-facts.md` 的“节日手提皮革包礼包”及 `references/visual-asset-library.md` 的补充参考。用户已确认包装层级：**红色手提皮革包 → 木质礼盒 → 威士忌酒瓶**；新增附件为原23张核心参考之外的补充素材，不以皮包替代木盒。
 
+涉及礼包同框或指定海报修订时，读取 `references/gift-set-and-targeted-revision.md`：按用户确认的紧配容纳关系陈列；浅V封口限于上盖面；确认比例后锁定尺度，原始参考负责外观，旧海报只负责已确认构图。单张要求不拆页，逐项验收比例、材质、标签和边缘，不以提示词代替实际一致性证据。
+
 ## 核心原则
 
 从真实产品事实出发，一题三做，先增长后转化。每次可发布内容都同时交付视觉/分镜与匹配的标题、正文、标签、评论和 CTA，并保存为可追踪的内容运行包。
