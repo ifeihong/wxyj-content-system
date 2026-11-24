@@ -1,389 +1,267 @@
-# 威熏邑境自媒体内容生成系统
+# 威熏邑境自媒体内容生成系统 · WXYJ Content System
 
-**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，当前主要服务马克瑞普之选 · 单桶苏格兰威士忌在小红书、抖音和视频号上的持续内容创作。** 它把该商品的事实、包装文案、品牌故事、23张核心高清参考图与1张节日皮包补充参考图、选题、标题、正文、Tag、AIGC 图片/视频提示词、发布审核和内容归档组织成一个可重复执行的工作流。
+**威熏邑境自媒体内容生成系统（WXYJ Content System）是威熏邑境品牌专属的 Codex Skill，围绕“马克瑞普之选 · 单桶苏格兰威士忌”，提供小红书图文、抖音短视频、视频号内容和电商商品素材的策划、生产指引、审核与归档。**
 
-当前版本：`3.4.1`（中文维护入口）<br>
-Skill ID：`wxyj-content-system`<br>
-GitHub Repository ID：`wxyj-content-system`
+系统把产品知识、包装关系、参考图片、选题、文案、图像提示词、视频分镜和发布检查组织在同一个工作流中：从一个母题出发，分别交付适合各平台的画面与文案，并用内容台账和真实表现数据支持后续优化。
 
-## 最新内容补充：节日手提皮革包礼包
+> WXYJ Content System is a brand-specific Codex Skill for whisky content planning and production across Xiaohongshu (RED), Douyin, WeChat Channels and ecommerce. It combines product facts, visual references, image prompts, video storyboards, quality checks and content archives for Mackillop's Choice single cask Scotch whisky.
 
-已内置用户于2026年11月24日确认的节日礼包知识及多角度参考图。包装层级为：
-
-**红色手提皮革包（节日外层礼包） → 木质礼盒 → 马克瑞普之选 · 单桶苏格兰威士忌酒瓶。**
-
-皮包内放置木质礼盒，木盒内放置酒瓶；这是现有酒款的节日礼赠包装组合。创作文案、礼包主视觉、电商图和开包分镜时，都应保留这一关系，不把酒瓶直接装进皮包或用皮包替代木盒。具体说明见下方[节日礼包与皮包参考](#节日礼包与皮包参考)。
-
-本次为3.4.1基础上的知识与文档补充，尚未另行发布版本；完整变更见 [CHANGELOG](CHANGELOG.md)。
-
-## v3.4.1 更新重点
-
-修复“文件存在就算完成”的交付漏洞：PNG需完整解码；任务卡与TXT由同一内容生成；修改提示词或时长时安全更新未人工修改的文件并保留备份，发现人工改动则报告冲突。生产计划、生成任务与回传检查共同使用当次画幅，默认9:16，支持明确指定3:4。
-
-发布视频必须登记实际成片、对应文件哈希、可编辑工程证据与视听审阅记录；空镜头、未设置运动和未登记发布资产不再通过。运动计划核对当次要求的倍率，不能用一个全局上限替代用户选择。检查通过仍不等于模型已准确还原瓶型。
-
-- [v3.4.1可靠性修复与迁移说明](docs/reliability-v3.4.1.md)
-- 图片完整校验需要 Pillow；安装与同步方法见[开始使用](docs/getting-started.md)。
-
-### 延续 v3.4.0 的返工治理
-
-这次升级汇总历次图文、商品图和视频返工：明确瓶型与酒标参考职责、估算尺寸使用边界、礼盒结构、文字与边缘独立验收；把全片镜头去重与叙事连续性一起审核。字幕、画幅和推拉按当次确认，不机械沿用历史选择。
-
-视频生产包新增 `video-master/production-plan.json`，登记实际图片、参考图、任务卡、版本和文件哈希。Agent负责静态成图及Seedance首帧，用户负责外部视频生成，ChatCut负责剪辑。结构检查通过不等于产品准确或成片完成。
-
-- [历次返工分析与本次修正](docs/rework-audit-v3.4.0.md)
-- [连续性与可交接生产包规范](references/video-continuity-and-delivery.md)
-- 可交接检查：`python scripts/validate_video_production_plan.py <运行目录> --stage ready`
-
-## 专属定位
-
-- 品牌：威熏邑境。
-- 业务范围：威士忌品牌在中国市场的销售、运营与宣传。
-- 当前核心商品：马克瑞普之选 · 单桶苏格兰威士忌。
-- 当前核心平台：小红书、抖音、视频号。
-- 当前目标：先建立账号影响力、专业认知与粉丝规模，再承接私信、企微、店铺和线下品鉴。
-- 内容原则：所有威士忌知识、节日表达和热点切入都必须回到当前产品，不经营脱离产品的泛知识账号。
-
-## 适合谁
-
-- 威熏邑境自营内容、品牌、销售与品鉴活动团队；
-- 负责马克瑞普之选 · 单桶苏格兰威士忌中国市场传播的运营人员；
-- 需要持续生成小红书图文、抖音脚本和视频号内容的 AIGC 创作者；
-- 需要统一产品事实、参考图、标题、正文、标签、首评、提示词和媒体归档的协作人员。
-
-## 当前核心产品知识
-
-| 字段 | 已确认信息 |
+| 项目 | 说明 |
 | --- | --- |
-| 商品名称 | 马克瑞普之选 · 单桶苏格兰威士忌 |
-| 品牌 | Mackillop's Choice（马克瑞普之选） |
-| 酒厂 | ABERLOUR（亚伯乐） |
-| 产区 | 苏格兰斯佩塞 |
-| 入桶 / 装瓶 | 1996年2月14日 / 2026年2月14日 |
-| 酒龄 | 30年 |
-| 规格 | 700毫升/瓶 |
-| 蒸馏日期 | 1996年2月14日 |
-| 桶型 | PX Sherry Hogshead |
-| 桶号 | 261311 |
+| Skill ID | `wxyj-content-system` |
+| 服务品牌 | 威熏邑境 |
+| 当前核心商品 | 马克瑞普之选 · 单桶苏格兰威士忌 |
+| 主要平台 | 小红书、抖音、视频号；兼顾电商、私信、企微及品鉴活动承接 |
+| 主要用户 | 品牌运营、内容策划、视觉创作者、销售与品鉴活动团队 |
+| 使用入口 | [SKILL.md](SKILL.md) · [开始使用](docs/getting-started.md) · [GitHub 仓库](https://github.com/ifeihong/wxyj-content-system) |
+
+## 目录
+
+- [功能与交付](#功能与交付)
+- [产品知识与节日礼包](#产品知识与节日礼包)
+- [内置参考素材](#内置参考素材)
+- [内容生产与审核流程](#内容生产与审核流程)
+- [安装与快速使用](#安装与快速使用)
+- [内容包与项目结构](#内容包与项目结构)
+- [常见问题](#常见问题)
+- [文档与许可](#文档与许可)
+
+## 功能与交付
+
+### 一题三做：小红书、抖音与视频号
+
+三个平台共享产品事实与内容母题，分别设计开头、结构、语气和行动引导。每套内容同时提供视觉方案和匹配的发布文案，避免只交图片、缺少正文或把同一稿机械复制到不同平台。
+
+| 使用场景 | 主要交付 |
+| --- | --- |
+| 小红书图文 | 选题、采用标题与备选标题、按信息量安排的页数、逐页画面与提示词、正文、标签、首评、CTA及审核记录 |
+| 抖音短视频 | 标题、3秒钩子、逐镜分镜、旁白与字幕方案、封面文案、视频简介、标签与置顶评论 |
+| 视频号内容 | 标题、5秒观看理由、完整叙事分镜、视频描述、标签、首评与朋友圈转发文案 |
+| 电商商品素材 | 原生1:1商品缩略图、详情长图信息结构、商品文案、产品参考组合及独立验收卡 |
+| 节日礼赠内容 | 礼包包装层级、送礼场景、开包与开盒分镜、套装陈列和配套发布文案 |
+| 运营与转化承接 | 评论、私信、企微、店铺与品鉴活动的内容建议和话术 |
+
+### 产品视觉一致性
+
+系统为完整酒瓶、酒标、木质礼盒和节日皮包分配不同参考职责。完整酒瓶使用正面几何母版与尺寸校准图，酒标近景负责局部字段，礼盒参考负责开合与合页结构，风格参考负责色彩、光线和材质氛围。
+
+- 小红书图片采用原生3:4；电商主缩略图采用原生1:1。
+- 视频默认原生9:16；用户明确要求3:4时，按当次计划统一生产与验证。
+- 文字准确度、文字区洁净度、产品比例、边缘融合和手机可读性分别验收。
+- 同一套内容分配不同机位与主要事实，减少重复构图及重复信息。
+
+### 视频分镜、外部生成与可编辑剪辑
+
+抖音和视频号可共用 `video-master/` 母版。默认协作路径为：Agent准备静态镜头和Seedance参考帧 → 输出逐镜任务卡与提示词 → 用户通过外部平台生成并回传视频 → 验收素材 → 交给ChatCut制作可编辑剪辑、字幕、声音与导出。
+
+系统提供镜头任务包、回传检查、连续运动计划、旁白与音乐衔接要求，以及实际成片和工程证据登记。视频生成与剪辑需要相应工具和运行环境；安装Skill不等于已接通全部服务。
+
+### 内容去重与数据复盘
+
+通过创意台账比对近期主题、事实、首图机位、钩子和版式组合。效果分析优先读取真实平台数据，每条候选内容登记一个实验变量、假设和成功指标。发布不足48小时的数据只作观察；少于10条可比成熟内容时只形成假设，不据单条表现淘汰整个栏目。
+
+## 产品知识与节日礼包
+
+### 当前核心商品
+
+**Mackillop's Choice（马克瑞普之选）是品牌，ABERLOUR（亚伯乐）是酒厂，1996年是蒸馏年份，30年是酒龄。** 正式商品名称为“马克瑞普之选 · 单桶苏格兰威士忌”，这些身份字段不能互相替代。
+
+| 字段 | 产品知识库记录 |
+| --- | --- |
+| 酒厂 / 产区 | ABERLOUR（亚伯乐）/ 苏格兰斯佩塞 |
+| 入桶 / 装瓶日期 | 1996年2月14日 / 2026年2月14日 |
+| 酒龄 / 容量 | 30年 / 700毫升 |
+| 桶型 / 桶号 | PX Sherry Hogshead / 261311 |
 | 酒精度 | 51% |
-| 总装瓶数 | 184瓶 |
+| 该桶总装瓶数 | 184瓶；不代表当前库存 |
 | 当前标准样瓶号 | 180 of 184 |
-| 标示价格 | 7888元 |
-| 经营身份 | 运营方自行进口并单桶装瓶，具备合法销售与宣传授权 |
-| 核心传播词 | 亚伯乐30年、30年、2月14日、情人节 |
 
-完整知识体系已经内置：
+产品事实、包装品鉴词与品牌故事分别维护，发布前仍需核对真实酒标和运营方文件。价格、库存与销售条件按当次确认，不从参考图推断。
 
-- [产品事实、推导、团队品鉴与发布前核对](references/product-facts.md)
-- [木盒品鉴词、礼盒内页故事与传播边界](references/product-packaging-copy.md)
-- [品牌定位、受众、栏目与内容比例](references/brand-positioning.md)
-- [产品参考图选择和生成约束](references/visual-asset-library.md)
+### 节日手提皮革包礼包
 
-## 内置产品参考素材：23张核心图 + 1张节日补充图
+**红色手提皮革包 → 木质礼盒 → 威士忌酒瓶。** 用户已确认：皮包内放置木质礼盒，木盒内放置“马克瑞普之选 · 单桶苏格兰威士忌”酒瓶。这是现有酒款的节日礼赠包装组合。
 
-仓库内置酒瓶5张、酒瓶尺寸示意图1张、木质礼盒10张、白色外包装7张，共23张 AIGC 高清产品参考图。尺寸示意图用于校准酒瓶各高度投影宽度、纵向分段与轮廓曲线，避免横向压扁、过瘦长颈或异常宽肩；它是按实物照片比例推算的几何参考，不作为产品事实证据。另含木质礼盒背面右侧45°、背面左侧45°、背面品鉴标签近景，以及45度半打开内置酒瓶、半打开内置酒瓶两张，用于背面透视、半开礼盒、合页/门缝、木纹、品鉴牌位置及开盒动态结构锁定。原始 PNG、中文角度文件名和 SHA-256 均被保留，可直接用于小红书逐页生图以及抖音、视频号逐镜生产。
+![节日礼包红色皮革手提包：正面、侧面、细节及尺寸参考](assets/products/mackillops-choice-aberlour-1996/reference-images/红色皮革手提包多角度展示板.png)
+
+皮包参考特征包括红色皮革纹理、双提手、翻盖、圆形金属扣与叶形吊饰。图中标注长30 cm × 深17 cm × 包身高14 cm，高度不含提手；这只是参考图标注，不是实测或内腔尺寸证据。
+
+制作礼包图与开包分镜时，保留三层容纳关系，不将酒瓶直接装进皮包。开包露木盒须结合木盒参考，开盒露酒瓶须继续使用酒瓶几何参考。未确认真皮或具体皮料、内衬结构、礼包售价、赠送条件及是否随所有订单附送，不自行补写。
+
+## 内置参考素材
+
+仓库内置 **23张核心AIGC产品参考图 + 1张用户提供的节日皮包补充参考图**，共24张PNG素材。
+
+| 素材类别 | 数量 | 参考用途 |
+| --- | --- | --- |
+| 酒瓶 | 5 | 正面、左右45°、背面及酒标近景 |
+| 酒瓶尺寸示意图 | 1 | 各高度投影宽度、纵向分段和轮廓曲线校准 |
+| 木质礼盒 | 10 | 正背面、透视、品鉴标签、开盒与半开结构 |
+| 白色外包装 | 7 | 外包装身份、角度与结构 |
+| 红色节日皮包展示板 | 1 | 皮包多角度外观、五金细节和图示尺寸 |
 
 <p>
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-正面.png" alt="马克瑞普之选 亚伯乐1996酒瓶正面参考图" width="220">
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/尺寸示意图.png" alt="马克瑞普之选 · 单桶苏格兰威士忌酒瓶尺寸示意图" width="220">
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-酒标.png" alt="马克瑞普之选 · 单桶苏格兰威士忌酒标参考图" width="220">
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-内置酒瓶.png" alt="马克瑞普之选 · 单桶苏格兰威士忌木质礼盒内置酒瓶参考图" width="220">
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-背面右侧45°.png" alt="马克瑞普之选 · 单桶苏格兰威士忌木质礼盒背面右侧45度参考图" width="220">
-  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-背面品鉴标签.png" alt="马克瑞普之选 · 单桶苏格兰威士忌木质礼盒背面品鉴标签参考图" width="220">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-正面.png" alt="马克瑞普之选单桶苏格兰威士忌酒瓶正面几何参考" width="200">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/酒瓶-酒标.png" alt="Mackillop's Choice 亚伯乐1996酒标局部参考" width="200">
+  <img src="assets/products/mackillops-choice-aberlour-1996/reference-images/木质礼盒-内置酒瓶.png" alt="木质礼盒开盒及内置威士忌酒瓶结构参考" width="200">
 </p>
 
-- [查看全部参考素材（23张核心图 + 1张补充图）](assets/products/mackillops-choice-aberlour-1996/reference-images/)
-- [查看资产清单、用途与文件哈希](assets/products/mackillops-choice-aberlour-1996/asset-manifest.json)
+- [浏览全部参考图](assets/products/mackillops-choice-aberlour-1996/reference-images/)
+- [资产清单、来源、用途与SHA-256](assets/products/mackillops-choice-aberlour-1996/asset-manifest.json)
+- [视觉素材选取规则](references/visual-asset-library.md)
+- [产品视觉一致性与人工验收](references/product-visual-consistency-system.md)
 
-这些图片属于威熏邑境受限品牌资产，不适用 Apache-2.0。它们是 AIGC 高清参考图，不是消费者事实证据；发布事实仍应以真实酒标、实物照片、报关和溯源文件为准。
+原23张为AIGC参考图；皮包展示板的拍摄或生成方式未核验，单独登记于 `supplementary_assets`。酒瓶尺寸图是按实物照片比例推算的几何参考。这些素材用于身份、结构和视觉控制，不替代真实酒标、实物照片、进口或溯源文件，也不自动授予品牌素材使用权。
 
-### 节日礼包与皮包参考
+## 内容生产与审核流程
 
-![红色皮革手提包多角度展示板](assets/products/mackillops-choice-aberlour-1996/reference-images/红色皮革手提包多角度展示板.png)
+1. **明确任务**：确定平台、母题、受众、目标及当次画幅、字幕、运动与声音要求。
+2. **读取产品知识**：核对产品事实、包装文案和相关参考素材，记录证据缺口。
+3. **策划内容**：结合近期台账与成熟数据，分配每页或每镜的主要事实和视觉职责。
+4. **创建内容包**：保存简报、来源、创意记录、平台文案、提示词及分镜。
+5. **生产与验收**：按当前环境调用图像或视频工具，分别检查产品、文字、画幅、声音和连续性。
+6. **登记最终交付**：通过预检后，在交付索引中列明最终素材、文案和对应工程；发布后更新台账。
 
-| 项目 | 使用说明 |
-| --- | --- |
-| 包装关系 | 红色手提皮革包内放木质礼盒，木质礼盒内放威士忌酒瓶 |
-| 视觉特征 | 红色皮革纹理、双提手、翻盖、圆形金属扣与叶形吊饰；不同视角保持一致 |
-| 尺寸边界 | 图中标注长30 cm × 深17 cm × 包身高14 cm，高度不含提手；仅作图示参考，不是实测或内腔尺寸证据 |
-| 素材来源 | 用户提供的多角度展示板，拍摄或生成方式未核验；独立登记于资产清单的 `supplementary_assets`，不计入原23张AIGC核心图 |
-| 使用边界 | 不推断真皮或具体皮料、内衬结构、售价、免费赠送条件或所有订单均包含皮包 |
+文件存在、哈希一致和脚本通过，只能证明相应结构检查通过。产品外观、事实表达及成片视听质量仍需实际审阅，不能用计划文件代替最终成片验收。
 
-需要开包露出木盒时，同时使用木盒参考；需要开盒露瓶时，继续使用酒瓶几何母版和尺寸校准图。闭合皮包无需强行展示内部；三件展开陈列可分别展示，但不应误画成酒瓶直接装入皮包。皮包图不替代木盒结构或酒瓶几何参考。
+## 安装与快速使用
 
-- [礼包事实与包装边界](references/product-facts.md)
-- [补充素材的选图与使用规则](references/visual-asset-library.md)
-- [产品视觉验收规则](references/product-visual-consistency-system.md)
+### 安装
 
-## 系统能生成什么
-
-| 模块 | 输出 |
-| --- | --- |
-| 选题 | 母题、钩子、爆款公式、受众需求、事实锚点、热度与风险 |
-| 小红书 | 采用标题、动态页数、高奢艺术方向、逐页提示词、图片内文字、正文、Tag、首评、QA |
-| 抖音 | 标题、3秒钩子、逐镜分镜、旁白、字幕、简介、Tag、置顶评论 |
-| 视频号 | 标题、5秒观看理由、逐镜分镜、描述、Tag、首评、朋友圈转发文案 |
-| AIGC | 参考图职责、完整提示词、负面提示词、产品锁定、局部重绘与QA |
-| 内容管理 | 标准运行目录、媒体命名、创意台账、近期防重复、发布清单、产品视觉验收和发布前自动校验 |
-| 运营闭环 | 评论、私信、企微、店铺、品鉴会、成熟数据复盘和单变量内容实验 |
-| 电商资产 | 原生1:1商品缩略图、详情长图信息架构、商品文案与独立验收卡 |
-
-生成图片只是一个环节。系统要求每套内容同时具备可直接发布的采用标题、正文/描述、平台标签、首评或置顶评论、CTA、最终素材顺序与内部素材来源记录。
-
-## 核心场景
-
-### 小红书图文生成
-
-根据内容信息量选择3–8页，而不是固定生成8页。第1页承担封面职责，后续页按证据、解释、判断、总结和互动分工。生成前先锁定逐页 `view_id`，相邻页面不得使用相同机位；每张首轮原生成文件必须直接通过精确3:4画幅检查，不用裁切或拉伸补救。
-
-每套先选择 `archive-label`、`valentine-time`、`sherry-depth`、`collector-restraint`、`gift-ritual` 或 `quiet-modern` 之一作为整套高奢编辑方向，再在内页轮换不同版式结构。系统用 `creative-record.json` 和近期台账避免主题、事实、首图机位、钩子与版式组合重复。
-
-### 抖音短视频脚本
-
-生成25–60秒竖屏脚本，包含3秒钩子、逐镜画面、旁白、字幕、封面字、简介、话题标签和置顶评论。系统会读取成熟表现数据：前段跳出偏高时，首秒先呈现产品或酒标动作，5秒内兑现标题承诺；每条视频只保留一个可回测的实验变量。
-
-### 视频号内容策划
-
-生成30–90秒完整叙事，强调年份、纪念日、礼赠或品鉴判断，并提供适合朋友圈转发的文案。
-
-### 外部 Seedance 协作
-
-抖音与视频号共用一个原生9:16视频母版。先由 Agent 直接生成每个静态镜头成图及每个 Seedance 镜头的首帧/主参考图；用户只需把任务包内实际图片和提示词提交至任意支持 Seedance 的第三方平台。Seedance提示词只描述产品、礼盒、真实环境、自然光和镜头运动；字幕、日期、参数、时间线、扫描线、图形卡等由ChatCut在可编辑时间线上制作，绝不写入外部生成提示词。ChatCut 默认承担可编辑剪辑、字幕、声音与导出，只有当前任务明确授权时才使用其付费视频生成功能。详见 [三层交接系统](references/agent-image-seedance-chatcut-system.md)。
-
-V4静帧视频要求“一张图对应一个连续镜头”。同一图片不得拆成多张静态裁切图模拟移动；默认从100%克制推近，用户指定106%时延续到镜头最后可见帧，且不能裁字。支持当次要求的静止、缩小或平移；运动覆盖转场与片尾延长，不重新起算。首段、旁白段、末尾音乐分别试听，尾声不因旁白结束突然解除压低或抬高。
-
-每个运行包同时生成 `release-manifest.json`、`product-visual-qa.md` 和 `deliverables.md`。发布前运行 `python scripts/validate_release_preflight.py <运行目录>`；视频还须运行 `python scripts/validate_video_motion_plan.py <运行目录>/video-master/motion-plan.json`。只有通过事实、证据、产品几何、文字洁净度、原生画幅、公开文案、媒体、音频、运动、交付与多样性门槛的资产才能进入最终索引。
-
-### 电商商品资产
-
-电商素材使用独立 `ecommerce` 运行包：1:1 缩略图与详情长图不再套用小红书或视频画幅逻辑。缩略图优先保证酒瓶、木质礼盒与酒标的结构一致性；每张图同时验收产品比例、边缘融合、文字洁净度（无波纹、摩尔纹或变形）和裁切安全区。
+需要Codex或兼容Agent Skills的运行环境。仓库根目录就是Skill根目录；将完整仓库放入该环境的Skills目录，保留参考图、脚本和模板。
 
 ```powershell
-python scripts\create_content_run.py `
-  --root outputs `
-  --date 2026-08-20 `
-  --slug valentine-thumbnail `
-  --product "马克瑞普之选 · 单桶苏格兰威士忌" `
-  --platforms ecommerce
+git clone https://github.com/ifeihong/wxyj-content-system.git
 ```
+
+Windows默认目录示例：
 
 ```text
-video-master/
-├── external-generation/  # 逐镜任务卡、提示词、参考图
-├── incoming/             # 用户回传原件，永不覆盖
-├── accepted/             # 验收通过的副本
-├── storyboard.md
-└── edit-plan.md
+C:\Users\<用户名>\.codex\skills\wxyj-content-system\SKILL.md
 ```
 
-```powershell
-python scripts\create_external_video_handoff.py `
-  --run-dir <内容运行目录> `
-  --spec <镜头规格.json> `
-  --source-root <参考图目录>
+实际安装位置以运行环境配置为准。校验脚本需要Python 3.10或更高版本，图片检查需要Pillow，视频元数据检查需要ffprobe。完整安装和既有副本同步方法见[开始使用](docs/getting-started.md)。
 
-python scripts\validate_external_video_return.py `
-  <video-master\incoming\镜头.mp4> `
-  --shot-dir <video-master\external-generation\SNN-shot-slug>
-```
+### 调用Skill
 
-### 威士忌 AIGC 内容
-
-使用真实酒瓶、酒标、桶号、包装和文件作为身份或事实参考；AIGC 负责氛围、解释与视觉表达，不冒充真实酒厂、历史现场或顾客反馈。
-
-## 项目结构
-
-```text
-wxyj-content-system/
-├── SKILL.md
-├── agents/
-├── assets/
-│   ├── products/
-│   │   └── mackillops-choice-aberlour-1996/
-│   │       ├── asset-manifest.json
-│   │       └── reference-images/  # 23张核心参考图 + 1张节日皮包补充图
-│   └── templates/
-├── references/
-│   ├── product-visual-consistency-system.md
-│   ├── ecommerce-production-system.md
-│   ├── video-direction-and-audio-system.md
-│   ├── style-anchor-frame-system.md
-│   └── evidence-asset-system.md
-├── scripts/
-├── examples/
-│   ├── content-runs/
-│   └── strategy/
-├── docs/
-├── tests/
-├── README.md                 # 唯一项目说明入口（中文）
-├── CHANGELOG.md
-├── VERSION
-├── OPEN_SOURCE.md
-└── outputs/
-```
-
-视频运行包在 `video-master/` 内额外维护 `style-anchor.md` 与 `style-frames/`：先锁定共享风格，再为每个镜头生成原生 9:16 构图帧，Seedance 动态镜头与静态 ChatCut 镜头都从对应构图帧出发。风格帧只约束色彩、光线、材质、镜头和安全区；酒瓶、酒标、礼盒与尺寸示意图仍拥有最高优先级。
-
-从 3.1.0 起，真正可用的静态成图与 Seedance 首帧分别保存到 `video-master/agent-images/static-shots/` 和 `video-master/agent-images/seedance-references/`；外部任务卡会复制 Agent 首帧，ChatCut 只读取这些静态图、验收通过的动态原片及剪辑方案。
-
-仓库根目录就是 Skill 根目录。`SKILL.md`、运行脚本、参考资料和模板均可从根目录直接访问。由于本 Skill 面向中文运营团队和中文平台内容生产，仓库只维护中文 `README.md`，不再维护容易与产品事实漂移的英文副本。
-
-## 快速开始
-
-### 1. 安装 Skill
-
-将克隆后的整个仓库目录复制到 Codex Skills 目录。
-
-Windows 默认安装目标：
-
-```text
-C:\Users\<用户名>\.codex\skills\wxyj-content-system
-```
-
-### 2. 调用
+小红书图文：
 
 ```text
 使用 $wxyj-content-system，为马克瑞普之选 · 单桶苏格兰威士忌
-生成一套8月1日小红书图文，
-同时生成采用标题、备选标题记录、发布正文、Tag、首评、逐页提示词和QA。
+制作一套小红书图文，按信息量决定页数。
+交付图片、采用标题、正文、标签、首评、逐页提示词和QA。
 ```
 
-节日礼包调用示例：
+节日礼赠套装：
 
 ```text
-使用 $wxyj-content-system，为马克瑞普之选 · 单桶苏格兰威士忌
-策划一套节日礼赠小红书图文，使用内置红色皮革手提包参考图，
-保持“手提皮革包 → 木质礼盒 → 酒瓶”的包装层级，
-同时交付图片、标题、正文、标签、首评与QA。
+使用 $wxyj-content-system，策划一套节日礼赠内容。
+采用内置红色皮革手提包参考图，保持“皮包 → 木质礼盒 → 酒瓶”的包装层级，
+提供套装展示方案、配套发布文案和产品视觉验收记录。
 ```
 
-### 3. 创建标准内容运行包
+抖音与视频号：
+
+```text
+使用 $wxyj-content-system，围绕这款酒的纪念日主题，
+策划一条抖音与视频号共用的竖屏视频母版。
+提供逐镜分镜、参考帧、外部Seedance任务包、剪辑与声音方案，
+并分别输出两个平台的发布文案。
+```
+
+### 创建运行目录与验证
+
+在仓库根目录执行，示例日期按实际任务调整：
 
 ```powershell
-python scripts\create_content_run.py `
-  --root outputs `
-  --date 2026-08-01 `
-  --slug label-reading `
-  --product "马克瑞普之选 · 单桶苏格兰威士忌" `
-  --platforms xiaohongshu
+python scripts/create_content_run.py --root outputs --date 2026-11-24 --slug festive-gift --platforms xiaohongshu
+python scripts/validate_product_assets.py
 ```
 
-系统创建：
+电商任务改用 `--platforms ecommerce`；多平台任务可使用 `--platforms xiaohongshu douyin weixin-channels`。
 
-```text
-outputs/2026/08/2026-08-01-label-reading/
-├── manifest.yaml
-├── release-manifest.json
-├── creative-record.json
-├── brief.md
-├── sources.md
-├── product-visual-qa.md
-├── deliverables.md
-└── xiaohongshu/
-    ├── publish.md
-    ├── prompts.md
-    ├── qa.md
-    └── media/
-```
-
-### 4. 验证
+内容完成后，检查对应运行包：
 
 ```powershell
-python scripts\validate_product_assets.py
-
-python scripts\validate_content_run.py `
-  outputs\2026\08\2026-08-01-label-reading
-
-python scripts\validate_release_preflight.py `
-  outputs\2026\08\2026-08-01-label-reading
-
-python scripts\validate_content_diversity.py `
-  outputs\2026\08\2026-08-01-label-reading\creative-record.json `
-  --ledger <运营内容库>\creative-ledger.csv
-
-python scripts\analyze_performance.py `
-  <运营内容库>\performance-log.csv `
-  --date 2026-08-08 `
-  --theme-family flavor-journey `
-  --output outputs\2026\08\2026-08-08-flavor-journey\performance-brief.json
+python scripts/validate_content_run.py outputs/2026/11/2026-11-24-festive-gift
+python scripts/validate_release_preflight.py outputs/2026/11/2026-11-24-festive-gift
 ```
 
-产品资产校验器同时检查23张核心参考图与 `supplementary_assets` 中登记的节日皮包补充图，核对文件存在、重复登记、未登记文件及 SHA-256；文件校验通过仍不等于视觉与事实已验收；内容运行校验器检查目录和发布字段；发布预检检查原生画幅、产品人工签核、媒体、音频与交付状态；多样性校验检查30天创意指纹、14天视觉配方和版式路线轮换。效果分析器只把发布满48小时的数据用于下次提示，少于10条可比成熟内容只输出实验假设。
+资产校验覆盖24张已登记参考图及其哈希；运行包和发布预检分别检查目录、文案字段、媒体登记与交付条件。视频另外按任务运行[运动计划检查](scripts/validate_video_motion_plan.py)和[生产计划检查](scripts/validate_video_production_plan.py)。
 
-## 小红书发布包标准
+## 内容包与项目结构
 
-每个 `xiaohongshu/publish.md` 必须包含：
-
-1. 采用标题；
-2. 主标题与备选标题策划记录；
-3. 一句话钩子；
-4. 完整发布正文；
-5. 5–10个聚焦话题标签；
-6. 首评；
-7. CTA；
-8. 最终素材顺序。
-
-AIGC来源与事实核验只记录在内部 `sources.md` 和 `qa.md`，不进入公开成图或发布文案。
-
-详细规范参见：
-
-- [内容交付契约](docs/content-contract.md)
-- [输出目录](docs/output-structure.md)
-- [文件命名](docs/naming-convention.md)
-- [合规边界](docs/compliance.md)
-
-## 文件命名示例
+每次任务保存独立运行包，便于修改、交接和复盘：
 
 ```text
-20260801-xhs-label-reading-p01-cover-v01.png
-20260801-xhs-label-reading-p02-dates-v01.png
-20260801-xhs-label-reading-p03-cask-data-v02.png
-20260801-xhs-label-reading-p00-qa-overview-v01.png
+outputs/年/月/日期-主题/
+├── brief.md                 # 当次任务简报
+├── sources.md               # 内部来源与事实核验
+├── creative-record.json     # 创意与实验记录
+├── release-manifest.json    # 媒体及发布状态
+├── product-visual-qa.md      # 产品人工验收
+├── deliverables.md          # 最终交付索引
+├── xiaohongshu/             # 对应平台文案、提示词、QA与媒体
+└── video-master/            # 视频任务的分镜、素材、任务卡与剪辑计划
 ```
 
-不使用“最终版”“最新版”“新图2”等无法追踪的文件名。视觉发生变化时增加 `vNN`，不覆盖已发布版本。
+平台目录按任务创建；视频原始回传保存在 `incoming/`，验收副本进入 `accepted/`。媒体文件采用日期、平台、主题、页或镜、角色和版本号命名，保留可追踪版本。
+
+| 仓库位置 | 内容 |
+| --- | --- |
+| [SKILL.md](SKILL.md) | Skill入口、任务路由与交付要求 |
+| [references/](references/) | 产品知识、平台策略、视觉规范和复盘规则 |
+| [assets/](assets/) | 产品参考图与内容模板 |
+| [scripts/](scripts/) | 运行包创建、素材验证、交接与数据分析 |
+| [examples/](examples/) | 标准内容与工作流示例 |
+| [docs/](docs/) | 安装、交付、命名与合规说明 |
+| [tests/](tests/) | 脚本与仓库约定的回归测试 |
+| [llms.txt](llms.txt) | 供Agent读取的项目身份与文档导航 |
 
 ## 常见问题
 
-### 这只是图片生成 Skill 吗？
+### WXYJ Content System是什么？
 
-不是。图片只是媒体资产。系统同时生成选题、标题、正文、Tag、首评、CTA、提示词、分镜、QA和内容目录。
+它是威熏邑境品牌专属的AI内容工作流Skill，将产品知识、视觉参考、平台文案、分镜、审核和归档结合起来，支持当前核心威士忌商品的持续内容生产。
 
-### 是否固定每次生成8张小红书图片？
+### 支持哪些平台和内容形式？
 
-不固定。轻内容通常3–4页，标准内容5–6页，只有信息量足够的深度主题使用7–8页。
+主要支持小红书图文、抖音短视频、视频号内容，也提供电商缩略图与详情长图的生产规范，以及私信、企微、店铺和品鉴活动的承接建议。
 
-### 是否可以使用同一张酒瓶参考图完成全部页面？
+### 能直接生成图片和视频吗？
 
-不建议。系统根据页面功能选择正面、45度、酒标、礼盒或文件参考，同时使用统一视觉母版保持连续性。
+Skill提供可执行的创作要求、参考素材和交接流程。实际生图、视频生成与剪辑依赖当前Agent可用的工具、服务权限及素材。缺少能力或证据时应说明缺口，不把提示词或分镜称作已完成媒体。
 
-### 如何避免一套图里的酒瓶忽胖忽瘦？
+### 小红书是否固定8页，三个平台是否使用同一稿？
 
-完整正面酒瓶统一以 `酒瓶-正面.png` 为唯一几何母版，并检查瓶身宽高、瓶盖宽度、瓶肩位置和5%容差。五页套图默认最多出现2页完整酒瓶；其余页面使用酒标证据窗口、礼盒、文件或风味静物，减少无意义的产品重绘。
+小红书按信息量选择页数，通常为3–8页。三个平台共享母题与事实，但分别设计开头、内容结构和CTA；抖音与视频号可共享经过验收的视频母版。
 
-### 如何避免多页重复强调桶号或混入废片？
+### 节日皮包、木盒和酒瓶是什么关系？
 
-每页先登记唯一 `primary_fact_id`，桶号只允许一个主视觉事实页。生成版本在QA中标记为 `working`、`rejected` 或 `publish`，发布清单和缩略图总览只引用 `publish` 文件。
+红色手提皮革包是节日外层礼包，内放木质礼盒，木盒内再放威士忌酒瓶。礼包展示应保持这一包装层级；是否随单提供、具体皮料及价格须另行确认。
 
-### 是否会把AIGC图片当成产品证据？
+### 参考图能作为真实商品证据吗？
 
-不会。产品事实应由实物酒标、真实产品、进口与溯源材料支撑；AIGC只承担创意表达。来源记录保存在内部文件，平台要求AI标签时只使用后台原生开关，不把内部说明写入公开内容。
+不能。AIGC参考图和来源未核验的补充图用于视觉一致性；消费者事实仍需真实酒标、实物照片和相关文件支持。总装瓶数也不能当作当前库存。
 
-### 能否用于其他威士忌产品？
+### 能保证内容涨粉、成交或自动发布吗？
 
-当前 Skill 默认且主要服务马克瑞普之选 · 单桶苏格兰威士忌。未来产品只有在威熏邑境明确提供并核验产品卡、素材和传播边界后才接入，不会自动把通用威士忌内容替代当前商品。
+系统提供策划、内容实验、审核与复盘方法，不保证平台效果。生成发布包不等于自动发布，实际发布和外部服务操作取决于当次授权与可用工具。
 
-## 文档与维护
+### 能用于其他威士忌商品吗？
 
-- [开始使用](docs/getting-started.md)
-- [标准内容示例](examples/README.md)
-- [版本策略](docs/versioning.md)
-- [更新记录](CHANGELOG.md)
-- [开放范围](OPEN_SOURCE.md)
-- [参与贡献](CONTRIBUTING.md)
+当前默认且主要服务马克瑞普之选 · 单桶苏格兰威士忌。新增产品须先由用户提供并核验产品卡、素材和传播边界，再扩展相关知识与工作流。
 
-README 是项目对外唯一的快速入口；版本、产品事实和工作流发生变化时，应同步更新 `CHANGELOG.md`、`VERSION`、`metadata/project.json` 与相关参考文档，并运行仓库测试和 Skill 校验。
+## 文档与许可
 
-## 许可
+- [产品事实库](references/product-facts.md)
+- [包装品鉴词与品牌故事](references/product-packaging-copy.md)
+- [品牌定位与内容比例](references/brand-positioning.md)
+- [内容交付标准](docs/content-contract.md)
+- [输出目录](docs/output-structure.md)与[文件命名](docs/naming-convention.md)
+- [电商资产规范](references/ecommerce-production-system.md)
+- [视频生产与剪辑交接](references/agent-image-seedance-chatcut-system.md)
+- [内容多样性](references/content-diversity-system.md)与[数据驱动复盘](references/performance-adaptive-system.md)
+- [合规说明](docs/compliance.md)与[参与贡献](CONTRIBUTING.md)
 
-代码、模板与公开文档使用 Apache-2.0。威熏邑境名称、商标、产品图片、包装设计、授权文件及第三方平台标识不因本许可而授权。详见 [OPEN_SOURCE.md](OPEN_SOURCE.md)。
+代码、模板与公开文档使用Apache-2.0。威熏邑境名称、商标、产品图片、包装设计、授权文件及第三方标识不因代码许可而自动授权。产品参考图片属于受限品牌资产，不适用Apache-2.0；使用范围见 [OPEN_SOURCE.md](OPEN_SOURCE.md) 和 [LICENSE](LICENSE)。
