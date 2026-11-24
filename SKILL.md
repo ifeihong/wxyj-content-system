@@ -14,6 +14,10 @@ description: Use when creating, repurposing, reviewing, scheduling, storing, or 
 - 每次图片或视频生产都先读取 `references/visual-asset-library.md` 和 `assets/products/mackillops-choice-aberlour-1996/asset-manifest.json`，从内置23张参考图中按职责选图；凡完整酒瓶、瓶盒同框或产品局部重绘，均将 `尺寸示意图.png` 作为几何校准依据。
 - 新产品只有在用户明确提供并核验产品卡后才能接入；不得因此稀释当前核心产品定位。
 
+## 节日手提皮革包礼包
+
+涉及节日礼包、皮包或礼赠套装时，读取 `references/product-facts.md` 的“节日手提皮革包礼包”及 `references/visual-asset-library.md` 的补充参考。用户已确认包装层级：**红色手提皮革包 → 木质礼盒 → 威士忌酒瓶**；新增附件为原23张核心参考之外的补充素材，不以皮包替代木盒。
+
 ## 核心原则
 
 从真实产品事实出发，一题三做，先增长后转化。每次可发布内容都同时交付视觉/分镜与匹配的标题、正文、标签、评论和 CTA，并保存为可追踪的内容运行包。
